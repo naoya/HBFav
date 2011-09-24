@@ -13,3 +13,12 @@
 ![home](http://bloghackers.net/~naoya/images/hbfav01.png)
 ![permalink](http://bloghackers.net/~naoya/images/hbfav02.png)
 ![webview](http://bloghackers.net/~naoya/images/hbfav03.png)
+
+TODO
+--------------------
+
+* Pull to refresh
+* Paging
+* Link to /entry
+* Connect to Instapaper 
+* Configuration
