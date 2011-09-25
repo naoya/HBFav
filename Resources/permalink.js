@@ -22,7 +22,8 @@
     width: 48,
     height: 48,
     top: 10,
-    left: 10
+    left: 10,
+    borderRadius: 5
   });
   name = Ti.UI.createLabel({
     width: 'auto',
