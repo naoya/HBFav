@@ -8,6 +8,145 @@ tableView = Ti.UI.createTableView
 
 win.add tableView
 
+## Pull to Refresh
+
+# function formatDate()
+# {
+#   var date = new Date();
+#   var datestr = date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear();
+#   if (date.getHours()>=12)
+#   {
+#     datestr+=' '+(date.getHours()==12 ? date.getHours() : date.getHours()-12)+':'+date.getMinutes()+' PM';
+#   }
+#   else
+#   {
+#     datestr+=' '+date.getHours()+':'+date.getMinutes()+' AM';
+#   }
+#   return datestr;
+# }
+
+# var data = [
+#   {title:"Row 1"},
+#   {title:"Row 2"},
+#   {title:"Row 3"}
+# ];
+#
+# var lastRow = 4;
+
+border = Ti.UI.createView
+  backgroundColor:"#576c89"
+  height:2
+  bottom:0
+
+tableHeader = Ti.UI.createView
+  backgroundColor:"#e2e7ed"
+  width:320
+  height:60
+
+tableHeader.add border
+
+arrow = Ti.UI.createView
+  backgroundImage:"./images/whiteArrow.png"
+  width:23
+  height:60
+  bottom:10
+  left:20
+
+statusLabel = Ti.UI.createLabel
+  text: "画面を引き下げて…"
+  left:55
+  width:200
+  bottom:30
+  height:"auto"
+  color:"#576c89"
+  textAlign:"center"
+  font:
+    fontSize:12
+    fontWeight:"bold"
+  shadowColor:"#999"
+  shadowOffset:
+    x:0
+    y:1
+
+lastUpdatedLabel = Ti.UI.createLabel
+  # text:"Last Updated: "+formatDate(),
+  text: "最後の更新: "
+  left:55
+  width:200
+  bottom:15
+  height:"auto"
+  color:"#576c89"
+  textAlign:"center"
+  font:
+    fontSize:11
+  shadowColor:"#999",
+  shadowOffset:
+    x:0
+    y:1
+
+actInd = Titanium.UI.createActivityIndicator
+  left:20
+  bottom:13
+  width:30
+  height:30
+
+tableHeader.add arrow
+tableHeader.add statusLabel
+tableHeader.add lastUpdatedLabel
+tableHeader.add actInd
+
+tableView.headerPullView = tableHeader
+
+pulling   = false
+reloading = false
+
+beginReloading = ->
+  # just mock out the reload
+  setTimeout endReloading, 2000
+
+endReloading = ->
+  # simulate loading
+  # for (var c=lastRow;c<lastRow+10;c++)
+  # {
+  #   tableView.appendRow({title:"Row "+c});
+  # }
+  # lastRow += 10;
+
+  ## when you're done, just reset
+  tableView.setContentInsets({top:0},{animated:true})
+  reloading = false
+  ## lastUpdatedLabel.text = "Last Updated: "+formatDate();
+  lastUpdatedLabel.text = "最後の更新: "
+  statusLabel.text = "画面を引き下げて…";
+  actInd.hide()
+  arrow.show()
+
+tableView.addEventListener 'scroll', (e) ->
+  offset = e.contentOffset.y;
+  if offset <= -65.0 and not pulling
+    t = Ti.UI.create2DMatrix()
+    t = t.rotate -180
+    pulling = true
+    arrow.animate transform:t, duration:180
+    statusLabel.text = "指をはなして更新…"
+  else if pulling and offset > -65.0 and offset < 0
+    pulling = false;
+    t = Ti.UI.create2DMatrix()
+    arrow.animate transform:t,duration:180
+    statusLabel.text = "画面を引き下げて…"
+
+tableView.addEventListener 'scrollEnd', (e) ->
+  if pulling and not reloading and e.contentOffset.y <= -65.0
+    reloading = true
+    pulling = false
+    arrow.hide()
+    actInd.show()
+    statusLabel.text = "読み込み中…"
+    tableView.setContentInsets({top:60},{animated:true})
+    arrow.transform=Ti.UI.create2DMatrix();
+    beginReloading();
+
+## Reloading
 user = 'naoya'
 url = "http://localhost:3000/#{user}"
 
