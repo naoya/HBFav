@@ -1,5 +1,8 @@
 require 'lib/underscore'
 
+user = 'naoya'
+url = "http://localhost:3000/#{user}"
+
 win = Ti.UI.currentWindow
 
 data = []
@@ -24,14 +27,6 @@ win.add tableView
 #   }
 #   return datestr;
 # }
-
-# var data = [
-#   {title:"Row 1"},
-#   {title:"Row 2"},
-#   {title:"Row 3"}
-# ];
-#
-# var lastRow = 4;
 
 border = Ti.UI.createView
   backgroundColor:"#576c89"
@@ -101,18 +96,15 @@ pulling   = false
 reloading = false
 
 beginReloading = ->
-  # just mock out the reload
-  setTimeout endReloading, 2000
+  xhr = Ti.Network.createHTTPClient()
+  xhr.open 'GET', url
+  xhr.onload = ->
+    feed = JSON.parse @.responseText
+    endReloading(feed)
+  xhr.send()
 
-endReloading = ->
-  # simulate loading
-  # for (var c=lastRow;c<lastRow+10;c++)
-  # {
-  #   tableView.appendRow({title:"Row "+c});
-  # }
-  # lastRow += 10;
-
-  ## when you're done, just reset
+endReloading = (feed) ->
+  updateTimeline(feed)
   tableView.setContentInsets({top:0},{animated:true})
   reloading = false
   ## lastUpdatedLabel.text = "Last Updated: "+formatDate();
@@ -146,15 +138,15 @@ tableView.addEventListener 'scrollEnd', (e) ->
     arrow.transform=Ti.UI.create2DMatrix();
     beginReloading();
 
-## Reloading
-user = 'naoya'
-url = "http://localhost:3000/#{user}"
-
+## Initializing
 xhr = Ti.Network.createHTTPClient()
 xhr.open 'GET', url
 xhr.onload = ->
   feed = JSON.parse @.responseText
+  updateTimeline(feed)
+xhr.send()
 
+updateTimeline = (feed) ->
   tableView.setData _(feed.bookmarks).map (bookmark) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'
@@ -253,15 +245,21 @@ xhr.onload = ->
     row.add name
     row.add bodyContainer
     row.add date
+
+    row.addEventListener 'click', (e) ->
+      permalink = Ti.UI.createWindow
+        url: 'permalink.js'
+        title: bookmark.user.name
+        backgroundColor: '#fff'
+        bookmark: bookmark
+      Ti.UI.currentTab.open permalink
+
     row
-
-  tableView.addEventListener 'click', (e) ->
-    bookmark = feed.bookmarks[e.index]
-    permalink = Ti.UI.createWindow
-      url: 'permalink.js'
-      title: bookmark.user.name
-      backgroundColor: '#fff'
-      bookmark: bookmark
-    Ti.UI.currentTab.open permalink
-
-xhr.send()
+  # tableView.addEventListener 'click', (e) ->
+  #   bookmark = feed.bookmarks[e.index]
+  #   permalink = Ti.UI.createWindow
+  #     url: 'permalink.js'
+  #     title: bookmark.user.name
+  #     backgroundColor: '#fff'
+  #     bookmark: bookmark
+  #   Ti.UI.currentTab.open permalink

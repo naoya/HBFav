@@ -1,6 +1,8 @@
 (function() {
-  var actInd, arrow, beginReloading, border, data, endReloading, lastUpdatedLabel, pulling, reloading, statusLabel, tableHeader, tableView, url, user, win, xhr;
+  var actInd, arrow, beginReloading, border, data, endReloading, lastUpdatedLabel, pulling, reloading, statusLabel, tableHeader, tableView, updateTimeline, url, user, win, xhr;
   require('lib/underscore');
+  user = 'naoya';
+  url = "http://localhost:3000/" + user;
   win = Ti.UI.currentWindow;
   data = [];
   tableView = Ti.UI.createTableView({
@@ -74,9 +76,18 @@
   pulling = false;
   reloading = false;
   beginReloading = function() {
-    return setTimeout(endReloading, 2000);
+    var xhr;
+    xhr = Ti.Network.createHTTPClient();
+    xhr.open('GET', url);
+    xhr.onload = function() {
+      var feed;
+      feed = JSON.parse(this.responseText);
+      return endReloading(feed);
+    };
+    return xhr.send();
   };
-  endReloading = function() {
+  endReloading = function(feed) {
+    updateTimeline(feed);
     tableView.setContentInsets({
       top: 0
     }, {
@@ -126,14 +137,16 @@
       return beginReloading();
     }
   });
-  user = 'naoya';
-  url = "http://localhost:3000/" + user;
   xhr = Ti.Network.createHTTPClient();
   xhr.open('GET', url);
   xhr.onload = function() {
     var feed;
     feed = JSON.parse(this.responseText);
-    tableView.setData(_(feed.bookmarks).map(function(bookmark) {
+    return updateTimeline(feed);
+  };
+  xhr.send();
+  updateTimeline = function(feed) {
+    return tableView.setData(_(feed.bookmarks).map(function(bookmark) {
       var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref, _ref2;
       row = Ti.UI.createTableViewRow({
         height: 'auto',
@@ -233,19 +246,17 @@
       row.add(name);
       row.add(bodyContainer);
       row.add(date);
+      row.addEventListener('click', function(e) {
+        var permalink;
+        permalink = Ti.UI.createWindow({
+          url: 'permalink.js',
+          title: bookmark.user.name,
+          backgroundColor: '#fff',
+          bookmark: bookmark
+        });
+        return Ti.UI.currentTab.open(permalink);
+      });
       return row;
     }));
-    return tableView.addEventListener('click', function(e) {
-      var bookmark, permalink;
-      bookmark = feed.bookmarks[e.index];
-      permalink = Ti.UI.createWindow({
-        url: 'permalink.js',
-        title: bookmark.user.name,
-        backgroundColor: '#fff',
-        bookmark: bookmark
-      });
-      return Ti.UI.currentTab.open(permalink);
-    });
   };
-  xhr.send();
 }).call(this);
