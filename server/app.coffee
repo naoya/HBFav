@@ -49,7 +49,9 @@ app.get "/:id", (req, res) ->
   parser.addListener 'end', (result) ->
     res.send new Timeline result
 
-  url = "http://b.hatena.ne.jp/#{req.params.id}/favorite.rss"
+  offset = req.param('of') ? 0
+  console.log offset
+  url = "http://b.hatena.ne.jp/#{req.params.id}/favorite.rss?of=#{offset}"
   request url, (error, response, body) ->
     if not error and response.statusCode is 200
       try

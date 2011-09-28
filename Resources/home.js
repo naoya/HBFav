@@ -1,8 +1,9 @@
 (function() {
-  var actInd, arrow, beginReloading, border, data, endReloading, lastUpdatedLabel, pulling, reloading, statusLabel, tableHeader, tableView, updateTimeline, url, user, win, xhr;
+  var actInd, arrow, beginReloading, beginUpdate, border, data, endReloading, endUpdate, feedToRow, lastDistance, lastRow, lastUpdatedLabel, loadingRow, navActInd, pulling, reloading, statusLabel, tableHeader, tableView, updateTimeline, updating, url, user, win, xhr;
   require('lib/underscore');
   user = 'naoya';
   url = "http://localhost:3000/" + user;
+  lastRow = 0;
   win = Ti.UI.currentWindow;
   data = [];
   tableView = Ti.UI.createTableView({
@@ -145,8 +146,8 @@
     return updateTimeline(feed);
   };
   xhr.send();
-  updateTimeline = function(feed) {
-    return tableView.setData(_(feed.bookmarks).map(function(bookmark) {
+  feedToRow = function(feed) {
+    return _(feed.bookmarks).map(function(bookmark) {
       var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref, _ref2;
       row = Ti.UI.createTableViewRow({
         height: 'auto',
@@ -257,6 +258,60 @@
         return Ti.UI.currentTab.open(permalink);
       });
       return row;
-    }));
+    });
   };
+  updateTimeline = function(feed) {
+    tableView.setData(feedToRow(feed));
+    return lastRow = feed.bookmarks.length;
+  };
+  navActInd = Ti.UI.createActivityIndicator();
+  win.setRightNavButton(navActInd);
+  updating = false;
+  loadingRow = Ti.UI.createTableViewRow({
+    title: "更新中…"
+  });
+  beginUpdate = function() {
+    updating = true;
+    navActInd.show();
+    tableView.appendRow(loadingRow);
+    xhr = Ti.Network.createHTTPClient();
+    xhr.open('GET', url + ("?of=" + lastRow));
+    xhr.onload = function() {
+      var feed;
+      feed = JSON.parse(this.responseText);
+      return endUpdate(feed);
+    };
+    return xhr.send();
+  };
+  endUpdate = function(feed) {
+    var rows;
+    updating = false;
+    tableView.deleteRow(lastRow, {
+      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+    });
+    rows = feedToRow(feed);
+    _(rows).each(function(row) {
+      return tableView.appendRow(row, {
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+      });
+    });
+    lastRow += rows.length;
+    return navActInd.hide();
+  };
+  lastDistance = 0;
+  tableView.addEventListener('scroll', function(e) {
+    var distance, height, nearEnd, offset, theEnd, total;
+    offset = e.contentOffset.y;
+    height = e.size.height;
+    total = offset + height;
+    theEnd = e.contentSize.height;
+    distance = theEnd - total;
+    if (distance < lastDistance) {
+      nearEnd = theEnd * .75;
+      if (!updating && (total >= nearEnd)) {
+        beginUpdate();
+      }
+    }
+    return lastDistance = distance;
+  });
 }).call(this);

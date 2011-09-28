@@ -2,6 +2,7 @@ require 'lib/underscore'
 
 user = 'naoya'
 url = "http://localhost:3000/#{user}"
+lastRow = 0
 
 win = Ti.UI.currentWindow
 
@@ -100,7 +101,7 @@ beginReloading = ->
   xhr.open 'GET', url
   xhr.onload = ->
     feed = JSON.parse @.responseText
-    endReloading(feed)
+    endReloading feed
   xhr.send()
 
 endReloading = (feed) ->
@@ -143,11 +144,11 @@ xhr = Ti.Network.createHTTPClient()
 xhr.open 'GET', url
 xhr.onload = ->
   feed = JSON.parse @.responseText
-  updateTimeline(feed)
+  updateTimeline feed
 xhr.send()
 
-updateTimeline = (feed) ->
-  tableView.setData _(feed.bookmarks).map (bookmark) ->
+feedToRow = (feed) ->
+  return _(feed.bookmarks).map (bookmark) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'
       layout: 'absolute'
@@ -253,13 +254,55 @@ updateTimeline = (feed) ->
         backgroundColor: '#fff'
         bookmark: bookmark
       Ti.UI.currentTab.open permalink
-
     row
-  # tableView.addEventListener 'click', (e) ->
-  #   bookmark = feed.bookmarks[e.index]
-  #   permalink = Ti.UI.createWindow
-  #     url: 'permalink.js'
-  #     title: bookmark.user.name
-  #     backgroundColor: '#fff'
-  #     bookmark: bookmark
-  #   Ti.UI.currentTab.open permalink
+
+updateTimeline = (feed) ->
+  tableView.setData feedToRow feed
+  lastRow = feed.bookmarks.length
+
+## Paging
+navActInd = Ti.UI.createActivityIndicator()
+win.setRightNavButton navActInd
+
+updating = false
+loadingRow = Ti.UI.createTableViewRow
+  title: "更新中…"
+
+beginUpdate = ->
+  updating = true
+  navActInd.show()
+  tableView.appendRow loadingRow
+
+  xhr = Ti.Network.createHTTPClient()
+  xhr.open 'GET', url + "?of=#{lastRow}"
+  xhr.onload = ->
+    feed = JSON.parse @.responseText
+    endUpdate feed
+  xhr.send()
+
+endUpdate = (feed) ->
+  updating = false
+  tableView.deleteRow lastRow,
+    animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+  rows = feedToRow feed
+  _(rows).each (row) ->
+    tableView.appendRow row,
+      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+  lastRow += rows.length
+  # tableView.scrollToIndex lastRow - rows.length - 1,
+  #  animated:true
+  #  position:Ti.UI.iPhone.TableViewScrollPosition.BOTTOM
+  navActInd.hide()
+
+lastDistance = 0
+tableView.addEventListener 'scroll', (e) ->
+  offset   = e.contentOffset.y
+  height   = e.size.height
+  total    = offset + height
+  theEnd   = e.contentSize.height
+  distance = theEnd - total
+  if distance < lastDistance
+    nearEnd = theEnd * .75
+    if not updating and (total >= nearEnd)
+      beginUpdate()
+  lastDistance = distance
