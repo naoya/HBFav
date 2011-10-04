@@ -3,7 +3,7 @@ tabGroup = Ti.UI.createTabGroup()
 
 win = Ti.UI.createWindow
   url: 'home.js'
-  title: 'はてなブックマーク'
+  title: 'お気に入り'
   backgroundColor: '#fff'
 
 tab1 = Ti.UI.createTab

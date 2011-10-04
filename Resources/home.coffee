@@ -3,6 +3,8 @@ Feed = require('feed').Feed
 
 user = 'naoya'
 url = "http://localhost:3000/#{user}"
+
+## FIXME: global variable
 lastRow = 0
 
 win = Ti.UI.currentWindow
@@ -13,35 +15,7 @@ tableView = Ti.UI.createTableView
 
 win.add tableView
 
-updateTimeline = (feed) ->
-  tableView.setData feed.toRows()
-  lastRow = feed.size()
-
-## Initializing
-xhr = Ti.Network.createHTTPClient()
-xhr.open 'GET', url
-xhr.onload = ->
-  data = JSON.parse @.responseText
-  updateTimeline new Feed data
-xhr.send()
-
-## Pull to Refresh
-
-# function formatDate()
-# {
-#   var date = new Date();
-#   var datestr = date.getMonth()+'/'+date.getDate()+'/'+date.getFullYear();
-#   if (date.getHours()>=12)
-#   {
-#     datestr+=' '+(date.getHours()==12 ? date.getHours() : date.getHours()-12)+':'+date.getMinutes()+' PM';
-#   }
-#   else
-#   {
-#     datestr+=' '+date.getHours()+':'+date.getMinutes()+' AM';
-#   }
-#   return datestr;
-# }
-
+## Pull to Refresh 用
 border = Ti.UI.createView
   backgroundColor:"#576c89"
   height:2
@@ -106,95 +80,149 @@ tableHeader.add actInd
 
 tableView.headerPullView = tableHeader
 
-pulling   = false
-reloading = false
-
-beginReloading = ->
-  xhr = Ti.Network.createHTTPClient()
-  xhr.open 'GET', url
-  xhr.onload = ->
-    data = JSON.parse @.responseText
-    endReloading new Feed data
-  xhr.send()
-
-endReloading = (feed) ->
-  updateTimeline(feed)
-  tableView.setContentInsets({top:0},{animated:true})
-  reloading = false
-  ## lastUpdatedLabel.text = "Last Updated: "+formatDate();
-  lastUpdatedLabel.text = "最後の更新: "
-  statusLabel.text = "画面を引き下げて…";
-  actInd.hide()
-  arrow.show()
-
-tableView.addEventListener 'scroll', (e) ->
-  offset = e.contentOffset.y;
-  if offset <= -65.0 and not pulling
-    t = Ti.UI.create2DMatrix()
-    t = t.rotate -180
-    pulling = true
-    arrow.animate transform:t, duration:180
-    statusLabel.text = "指をはなして更新…"
-  else if pulling and offset > -65.0 and offset < 0
-    pulling = false;
-    t = Ti.UI.create2DMatrix()
-    arrow.animate transform:t,duration:180
-    statusLabel.text = "画面を引き下げて…"
-
-tableView.addEventListener 'scrollEnd', (e) ->
-  if pulling and not reloading and e.contentOffset.y <= -65.0
-    reloading = true
-    pulling = false
-    arrow.hide()
-    actInd.show()
-    statusLabel.text = "読み込み中…"
-    tableView.setContentInsets({top:60},{animated:true})
-    arrow.transform=Ti.UI.create2DMatrix();
-    beginReloading();
-
-## Paging
+## Paging用
 navActInd = Ti.UI.createActivityIndicator()
 win.setRightNavButton navActInd
-
-updating = false
 loadingRow = Ti.UI.createTableViewRow
   title: "更新中…"
 
-beginUpdate = ->
-  updating = true
-  navActInd.show()
-  tableView.appendRow loadingRow
+## State pattern
+state = null
 
-  xhr = Ti.Network.createHTTPClient()
-  xhr.open 'GET', url + "?of=#{lastRow}"
-  xhr.onload = ->
-    data = JSON.parse @.responseText
-    endUpdate new Feed data
-  xhr.send()
+transitState = (nextState) ->
+  Ti.API.debug " -> "  + nextState.toString()
+  state = nextState
+  do state.execute
 
-endUpdate = (feed) ->
-  updating = false
-  tableView.deleteRow lastRow,
-    animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-  rows = feed.toRows()
-  _(rows).each (row) ->
-    tableView.appendRow row,
+class AbstractState
+  toString : () ->  'AbstractState'
+  constructor: () ->
+  getFeed : (url) ->
+    cb = @.onload
+    xhr = Ti.Network.createHTTPClient()
+    xhr.open 'GET', url
+    xhr.onload = ->
+      data = JSON.parse @.responseText
+      cb data
+    xhr.send()
+  ## events (do nothing)
+  onload :    ()  ->
+  scroll :    (e) ->
+  scrollEnd : (e) ->
+  execute :   ()  ->
+
+class NormalState extends AbstractState
+  toString : () -> 'NormalState'
+  constructor: () ->
+    # @pulling = false
+    @lastDistance = 0
+  scroll : (e) ->
+    offset = e.contentOffset.y;
+    if offset <= -65.0
+      ## pull to refresh
+      t = Ti.UI.create2DMatrix()
+      t = t.rotate -180
+      arrow.animate transform:t, duration:180
+      statusLabel.text = "指をはなして更新…"
+      transitState new PullingState
+    else
+      ## paging
+      height   = e.size.height
+      total    = offset + height
+      theEnd   = e.contentSize.height
+      distance = theEnd - total
+      if distance < @lastDistance
+        nearEnd = theEnd * .75
+        if total >= nearEnd
+          transitState new PagingStartState
+      @lastDistance = distance
+
+class PullingState extends AbstractState
+  toString: () -> "PullingState"
+  scroll: (e) ->
+    offset = e.contentOffset.y;
+    if offset > -65.0 and offset < 0
+      t = Ti.UI.create2DMatrix()
+      arrow.animate transform:t,duration:180
+      statusLabel.text = "画面を引き下げて…"
+      transitState new NormalState
+  scrollEnd: (e) ->
+    if e.contentOffset.y <= -65.0
+      arrow.hide()
+      actInd.show()
+      statusLabel.text = "読み込み中…"
+      tableView.setContentInsets({top:60},{animated:true})
+      arrow.transform = Ti.UI.create2DMatrix();
+      transitState new ReloadStartState
+
+class ReloadStartState extends AbstractState
+  toString : () ->  "ReloadStartState"
+  execute: () ->
+    @.getFeed url
+  onload : (data) ->
+    transitState new ReloadEndState data
+
+class ReloadEndState extends AbstractState
+  toString : () -> "ReloadEndState"
+  constructor: (@data) ->
+  execute : () ->
+    feed = new Feed @data
+    tableView.setData feed.toRows()
+    lastRow = feed.size()
+    tableView.setContentInsets({top:0},{animated:true})
+    lastUpdatedLabel.text = "最後の更新: "
+    statusLabel.text = "画面を引き下げて…";
+    actInd.hide()
+    arrow.show()
+    transitState new NormalState
+
+class PagingStartState extends AbstractState
+  toString: () -> "PagingStartState"
+  execute: () ->
+    navActInd.show()
+    tableView.appendRow loadingRow
+    @.getFeed url + "?of=#{lastRow}"
+  onload: (data) ->
+    transitState new PagingEndState data
+
+class PagingEndState extends AbstractState
+  toString: () -> "PagingEndState"
+  constructor: (@data) ->
+  execute: () ->
+    feed = new Feed @data
+    tableView.deleteRow lastRow,
       animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-  lastRow += feed.size()
-  # tableView.scrollToIndex lastRow - rows.length - 1,
-  #  animated:true
-  #  position:Ti.UI.iPhone.TableViewScrollPosition.BOTTOM
-  navActInd.hide()
+    rows = feed.toRows()
+    _(rows).each (row) ->
+      tableView.appendRow row,
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+    lastRow += feed.size()
+    # tableView.scrollToIndex lastRow - rows.length - 1,
+    #  animated:true
+    #  position:Ti.UI.iPhone.TableViewScrollPosition.BOTTOM
+    navActInd.hide()
+    transitState new NormalState
 
-lastDistance = 0
+class InitStartState extends AbstractState
+  toString : () -> "InitStartState"
+  execute: () ->
+    @.getFeed url
+  onload : (data) ->
+    transitState new InitEndState data
+
+class InitEndState extends AbstractState
+  toString : () -> "InitEndState"
+  constructor: (@data) ->
+  execute : () ->
+    feed = new Feed @data
+    tableView.setData feed.toRows()
+    lastRow = feed.size()
+    transitState new NormalState
+
+transitState new InitStartState
+
 tableView.addEventListener 'scroll', (e) ->
-  offset   = e.contentOffset.y
-  height   = e.size.height
-  total    = offset + height
-  theEnd   = e.contentSize.height
-  distance = theEnd - total
-  if distance < lastDistance
-    nearEnd = theEnd * .75
-    if not updating and (total >= nearEnd)
-      beginUpdate()
-  lastDistance = distance
+  state.scroll e
+
+tableView.addEventListener 'scrollEnd', (e) ->
+  state.scrollEnd e
