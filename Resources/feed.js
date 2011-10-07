@@ -31,24 +31,24 @@
           left: 10,
           borderRadius: 5
         });
+        bodyContainer = Ti.UI.createView({
+          layout: 'vertical',
+          width: 245,
+          height: 'auto',
+          left: 65,
+          bottom: 10
+        });
         name = Ti.UI.createLabel({
           width: 'auto',
           height: 'auto',
-          left: 65,
+          left: 0,
           top: 10,
+          bottom: 6,
           color: "#000",
           font: {
             "font-size": 12,
             fontWeight: 'bold'
           }
-        });
-        bodyContainer = Ti.UI.createView({
-          layout: 'vertical',
-          width: 245,
-          height: 'auto',
-          top: 33,
-          left: 65,
-          bottom: 10
         });
         comment = Ti.UI.createLabel({
           color: '#000',
@@ -96,6 +96,7 @@
           }
         });
         imageContainer.add(image);
+        bodyContainer.add(name);
         if (((_ref = bookmark.comment) != null ? _ref.length : void 0) > 0) {
           bodyContainer.add(comment);
         }
@@ -107,7 +108,6 @@
         title.text = bookmark.title;
         date.text = bookmark.created_at;
         row.add(imageContainer);
-        row.add(name);
         row.add(bodyContainer);
         row.add(date);
         row.addEventListener('click', function(e) {

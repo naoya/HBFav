@@ -6,7 +6,7 @@
   win = Ti.UI.createWindow({
     url: 'timeline.js',
     feedUrl: "http://localhost:3000/" + user,
-    title: 'はてなブックマーク',
+    title: 'タイムライン',
     backgroundColor: '#fff'
   });
   button = Ti.UI.createButton({
