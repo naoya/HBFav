@@ -1,6 +1,6 @@
 (function() {
-  var AbstractState, Feed, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, actInd, arrow, border, data, lastRow, lastUpdatedLabel, loadingRow, navActInd, state, statusLabel, tableHeader, tableView, transitState, url, user, win;
-  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var AbstractState, Feed, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, feedView, state, transitState, url, user, win;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -10,84 +10,120 @@
   };
   require('lib/underscore');
   Feed = require('feed').Feed;
-  user = 'naoya';
-  url = "http://localhost:3000/" + user;
-  lastRow = 0;
-  win = Ti.UI.currentWindow;
-  data = [];
-  tableView = Ti.UI.createTableView({
-    data: data
-  });
-  win.add(tableView);
-  border = Ti.UI.createView({
-    backgroundColor: "#576c89",
-    height: 2,
-    bottom: 0
-  });
-  tableHeader = Ti.UI.createView({
-    backgroundColor: "#e2e7ed",
-    width: 320,
-    height: 60
-  });
-  tableHeader.add(border);
-  arrow = Ti.UI.createView({
-    backgroundImage: "./images/whiteArrow.png",
-    width: 23,
-    height: 60,
-    bottom: 10,
-    left: 20
-  });
-  statusLabel = Ti.UI.createLabel({
-    text: "画面を引き下げて…",
-    left: 55,
-    width: 200,
-    bottom: 30,
-    height: "auto",
-    color: "#576c89",
-    textAlign: "center",
-    font: {
-      fontSize: 12,
-      fontWeight: "bold"
-    },
-    shadowColor: "#999",
-    shadowOffset: {
-      x: 0,
-      y: 1
+  FeedView = (function() {
+    function FeedView(win) {
+      var actInd, arrow, border, header, lastUpdatedLabel, navActInd, statusLabel, table;
+      this.win = win;
+      table = Ti.UI.createTableView({
+        data: []
+      });
+      border = Ti.UI.createView({
+        backgroundColor: "#576c89",
+        height: 2,
+        bottom: 0
+      });
+      header = Ti.UI.createView({
+        backgroundColor: "#e2e7ed",
+        width: 320,
+        height: 60
+      });
+      header.add(border);
+      arrow = Ti.UI.createView({
+        backgroundImage: "./images/whiteArrow.png",
+        width: 23,
+        height: 60,
+        bottom: 10,
+        left: 20
+      });
+      statusLabel = Ti.UI.createLabel({
+        text: "画面を引き下げて…",
+        left: 55,
+        width: 200,
+        bottom: 30,
+        height: "auto",
+        color: "#576c89",
+        textAlign: "center",
+        font: {
+          fontSize: 12,
+          fontWeight: "bold"
+        },
+        shadowColor: "#999",
+        shadowOffset: {
+          x: 0,
+          y: 1
+        }
+      });
+      lastUpdatedLabel = Ti.UI.createLabel({
+        text: "最後の更新: ",
+        left: 55,
+        width: 200,
+        bottom: 15,
+        height: "auto",
+        color: "#576c89",
+        textAlign: "center",
+        font: {
+          fontSize: 11
+        },
+        shadowColor: "#999",
+        shadowOffset: {
+          x: 0,
+          y: 1
+        }
+      });
+      actInd = Titanium.UI.createActivityIndicator({
+        left: 20,
+        bottom: 13,
+        width: 30,
+        height: 30
+      });
+      header.add(arrow);
+      header.add(statusLabel);
+      header.add(lastUpdatedLabel);
+      header.add(actInd);
+      table.headerPullView = header;
+      this.lastRow = 0;
+      this.table = table;
+      this.header = {};
+      this.header.arrow = arrow;
+      this.header.statusLabel = statusLabel;
+      this.header.lastUpdatedLabel = lastUpdatedLabel;
+      this.header.indicator = actInd;
+      navActInd = Ti.UI.createActivityIndicator();
+      this.win.setRightNavButton(navActInd);
+      this.pager = {};
+      this.pager.createRow = function() {
+        return Ti.UI.createTableViewRow({
+          title: "更新中…"
+        });
+      };
+      this.pager.indicator = navActInd;
+      this.pager.show = __bind(function() {
+        this.pager.indicator.show();
+        return this.table.appendRow(this.pager.createRow());
+      }, this);
+      this.pager.hide = __bind(function() {
+        this.table.deleteRow(this.lastRow, {
+          animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        });
+        return this.pager.indicator.hide();
+      }, this);
     }
-  });
-  lastUpdatedLabel = Ti.UI.createLabel({
-    text: "最後の更新: ",
-    left: 55,
-    width: 200,
-    bottom: 15,
-    height: "auto",
-    color: "#576c89",
-    textAlign: "center",
-    font: {
-      fontSize: 11
-    },
-    shadowColor: "#999",
-    shadowOffset: {
-      x: 0,
-      y: 1
-    }
-  });
-  actInd = Titanium.UI.createActivityIndicator({
-    left: 20,
-    bottom: 13,
-    width: 30,
-    height: 30
-  });
-  tableHeader.add(arrow);
-  tableHeader.add(statusLabel);
-  tableHeader.add(lastUpdatedLabel);
-  tableHeader.add(actInd);
-  tableView.headerPullView = tableHeader;
-  navActInd = Ti.UI.createActivityIndicator();
-  win.setRightNavButton(navActInd);
-  loadingRow = Ti.UI.createTableViewRow({
-    title: "更新中…"
-  });
+    FeedView.prototype.setFeed = function(feed) {
+      this.table.setData(feed.toRows());
+      return this.lastRow = feed.size();
+    };
+    FeedView.prototype.appendFeed = function(feed) {
+      var rows;
+      rows = feed.toRows();
+      _(rows).each(__bind(function(row) {
+        return this.table.appendRow(row, {
+          animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        });
+      }, this));
+      return this.lastRow += feed.size();
+    };
+    return FeedView;
+  })();
   state = null;
   transitState = function(nextState) {
     Ti.API.debug(" -> " + nextState.toString());
@@ -98,19 +134,23 @@
     AbstractState.prototype.toString = function() {
       return 'AbstractState';
     };
-    function AbstractState() {}
+    function AbstractState(feedView) {
+      this.feedView = feedView;
+    }
     AbstractState.prototype.getFeed = function(url) {
-      var cb, xhr;
+      var cb, self, xhr;
+      self = this;
       cb = this.onload;
       xhr = Ti.Network.createHTTPClient();
       xhr.open('GET', url);
       xhr.onload = function() {
+        var data;
         data = JSON.parse(this.responseText);
-        return cb(data);
+        return cb.apply(self, [data]);
       };
       return xhr.send();
     };
-    AbstractState.prototype.onload = function() {};
+    AbstractState.prototype.onload = function(feedView, data) {};
     AbstractState.prototype.scroll = function(e) {};
     AbstractState.prototype.scrollEnd = function(e) {};
     AbstractState.prototype.execute = function() {};
@@ -121,7 +161,8 @@
     NormalState.prototype.toString = function() {
       return 'NormalState';
     };
-    function NormalState() {
+    function NormalState(feedView) {
+      this.feedView = feedView;
       this.lastDistance = 0;
     }
     NormalState.prototype.scroll = function(e) {
@@ -130,12 +171,12 @@
       if (offset <= -65.0) {
         t = Ti.UI.create2DMatrix();
         t = t.rotate(-180);
-        arrow.animate({
+        this.feedView.header.arrow.animate({
           transform: t,
           duration: 180
         });
-        statusLabel.text = "指をはなして更新…";
-        return transitState(new PullingState);
+        this.feedView.header.statusLabel.text = "指をはなして更新…";
+        return transitState(new PullingState(this.feedView));
       } else {
         height = e.size.height;
         total = offset + height;
@@ -144,7 +185,7 @@
         if (distance < this.lastDistance) {
           nearEnd = theEnd * .75;
           if (total >= nearEnd) {
-            transitState(new PagingStartState);
+            transitState(new PagingStartState(this.feedView));
           }
         }
         return this.lastDistance = distance;
@@ -165,26 +206,26 @@
       offset = e.contentOffset.y;
       if (offset > -65.0 && offset < 0) {
         t = Ti.UI.create2DMatrix();
-        arrow.animate({
+        this.feedView.header.arrow.animate({
           transform: t,
           duration: 180
         });
-        statusLabel.text = "画面を引き下げて…";
-        return transitState(new NormalState);
+        this.feedView.header.statusLabel.text = "画面を引き下げて…";
+        return transitState(new NormalState(this.feedView));
       }
     };
     PullingState.prototype.scrollEnd = function(e) {
       if (e.contentOffset.y <= -65.0) {
-        arrow.hide();
-        actInd.show();
-        statusLabel.text = "読み込み中…";
-        tableView.setContentInsets({
+        this.feedView.header.arrow.hide();
+        this.feedView.header.indicator.show();
+        this.feedView.header.statusLabel.text = "読み込み中…";
+        this.feedView.table.setContentInsets({
           top: 60
         }, {
           animated: true
         });
-        arrow.transform = Ti.UI.create2DMatrix();
-        return transitState(new ReloadStartState);
+        this.feedView.header.arrow.transform = Ti.UI.create2DMatrix();
+        return transitState(new ReloadStartState(this.feedView));
       }
     };
     return PullingState;
@@ -201,7 +242,7 @@
       return this.getFeed(url);
     };
     ReloadStartState.prototype.onload = function(data) {
-      return transitState(new ReloadEndState(data));
+      return transitState(new ReloadEndState(this.feedView, data));
     };
     return ReloadStartState;
   })();
@@ -210,24 +251,24 @@
     ReloadEndState.prototype.toString = function() {
       return "ReloadEndState";
     };
-    function ReloadEndState(data) {
+    function ReloadEndState(feedView, data) {
+      this.feedView = feedView;
       this.data = data;
     }
     ReloadEndState.prototype.execute = function() {
       var feed;
       feed = new Feed(this.data);
-      tableView.setData(feed.toRows());
-      lastRow = feed.size();
-      tableView.setContentInsets({
+      this.feedView.setFeed(feed);
+      this.feedView.table.setContentInsets({
         top: 0
       }, {
         animated: true
       });
-      lastUpdatedLabel.text = "最後の更新: ";
-      statusLabel.text = "画面を引き下げて…";
-      actInd.hide();
-      arrow.show();
-      return transitState(new NormalState);
+      this.feedView.header.lastUpdatedLabel.text = "最後の更新: ";
+      this.feedView.header.statusLabel.text = "画面を引き下げて…";
+      this.feedView.header.indicator.hide();
+      this.feedView.header.arrow.show();
+      return transitState(new NormalState(this.feedView));
     };
     return ReloadEndState;
   })();
@@ -240,12 +281,11 @@
       return "PagingStartState";
     };
     PagingStartState.prototype.execute = function() {
-      navActInd.show();
-      tableView.appendRow(loadingRow);
-      return this.getFeed(url + ("?of=" + lastRow));
+      this.feedView.pager.show();
+      return this.getFeed(url + ("?of=" + this.feedView.lastRow));
     };
     PagingStartState.prototype.onload = function(data) {
-      return transitState(new PagingEndState(data));
+      return transitState(new PagingEndState(this.feedView, data));
     };
     return PagingStartState;
   })();
@@ -254,24 +294,16 @@
     PagingEndState.prototype.toString = function() {
       return "PagingEndState";
     };
-    function PagingEndState(data) {
+    function PagingEndState(feedView, data) {
+      this.feedView = feedView;
       this.data = data;
     }
     PagingEndState.prototype.execute = function() {
-      var feed, rows;
+      var feed;
       feed = new Feed(this.data);
-      tableView.deleteRow(lastRow, {
-        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-      });
-      rows = feed.toRows();
-      _(rows).each(function(row) {
-        return tableView.appendRow(row, {
-          animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-        });
-      });
-      lastRow += feed.size();
-      navActInd.hide();
-      return transitState(new NormalState);
+      this.feedView.pager.hide();
+      this.feedView.appendFeed(feed);
+      return transitState(new NormalState(this.feedView));
     };
     return PagingEndState;
   })();
@@ -287,7 +319,7 @@
       return this.getFeed(url);
     };
     InitStartState.prototype.onload = function(data) {
-      return transitState(new InitEndState(data));
+      return transitState(new InitEndState(this.feedView, data));
     };
     return InitStartState;
   })();
@@ -296,23 +328,29 @@
     InitEndState.prototype.toString = function() {
       return "InitEndState";
     };
-    function InitEndState(data) {
+    function InitEndState(feedView, data) {
+      this.feedView = feedView;
       this.data = data;
     }
     InitEndState.prototype.execute = function() {
       var feed;
       feed = new Feed(this.data);
-      tableView.setData(feed.toRows());
-      lastRow = feed.size();
-      return transitState(new NormalState);
+      this.feedView.setFeed(feed);
+      Ti.API.debug('setFeed done.');
+      return transitState(new NormalState(this.feedView));
     };
     return InitEndState;
   })();
-  transitState(new InitStartState);
-  tableView.addEventListener('scroll', function(e) {
+  win = Ti.UI.currentWindow;
+  user = 'naoya';
+  url = "http://localhost:3000/" + user;
+  feedView = new FeedView(win);
+  feedView.table.addEventListener('scroll', function(e) {
     return state.scroll(e);
   });
-  tableView.addEventListener('scrollEnd', function(e) {
+  feedView.table.addEventListener('scrollEnd', function(e) {
     return state.scrollEnd(e);
   });
+  win.add(feedView.table);
+  transitState(new InitStartState(feedView));
 }).call(this);

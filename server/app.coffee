@@ -50,13 +50,14 @@ app.get "/:id", (req, res) ->
     res.send new Timeline result
 
   offset = req.param('of') ? 0
-  console.log offset
   url = "http://b.hatena.ne.jp/#{req.params.id}/favorite.rss?of=#{offset}"
+  console.log url
   request url, (error, response, body) ->
     if not error and response.statusCode is 200
       try
         parser.parseString body
       catch e
+        console.log response.statusCode
         console.log e
 
 app.listen 3000
