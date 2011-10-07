@@ -122,19 +122,23 @@ class AbstractState
   constructor: (@feedView) ->
   getFeed : (url) ->
     self = @
-    cb = @.onload
+    onload = @.onload
+    onerror = @.onerror
 
     xhr = Ti.Network.createHTTPClient()
     xhr.open 'GET', url
     xhr.onload = ->
       data = JSON.parse @.responseText
-      cb.apply(self, [ data ])
+      onload.apply(self, [ data ])
+    xhr.onerror = (err) ->
+      onerror.apply(self, [ err ])
     xhr.send()
   ## events
-  onload :    (feedView, data)  ->
+  onload :  (data)  ->
   scroll :    (e) ->
   scrollEnd : (e) ->
   execute :   ()  ->
+  onerror : (err) -> alert err.error
 
 class NormalState extends AbstractState
   toString : () -> 'NormalState'

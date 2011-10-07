@@ -139,22 +139,29 @@
       this.feedView = feedView;
     }
     AbstractState.prototype.getFeed = function(url) {
-      var cb, self, xhr;
+      var onerror, onload, self, xhr;
       self = this;
-      cb = this.onload;
+      onload = this.onload;
+      onerror = this.onerror;
       xhr = Ti.Network.createHTTPClient();
       xhr.open('GET', url);
       xhr.onload = function() {
         var data;
         data = JSON.parse(this.responseText);
-        return cb.apply(self, [data]);
+        return onload.apply(self, [data]);
+      };
+      xhr.onerror = function(err) {
+        return onerror.apply(self, [err]);
       };
       return xhr.send();
     };
-    AbstractState.prototype.onload = function(feedView, data) {};
+    AbstractState.prototype.onload = function(data) {};
     AbstractState.prototype.scroll = function(e) {};
     AbstractState.prototype.scrollEnd = function(e) {};
     AbstractState.prototype.execute = function() {};
+    AbstractState.prototype.onerror = function(err) {
+      return alert(err.error);
+    };
     return AbstractState;
   })();
   NormalState = (function() {
