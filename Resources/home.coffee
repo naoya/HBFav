@@ -82,7 +82,7 @@ class FeedView
 
     ## Paging用
     navActInd = Ti.UI.createActivityIndicator()
-    @win.setRightNavButton navActInd
+    @win.setLeftNavButton navActInd
 
     @pager = {}
     @pager.createRow = () ->
@@ -98,7 +98,7 @@ class FeedView
       @pager.indicator.hide()
 
   setFeed: (feed) ->
-    # Ti.API.debug feed
+    Ti.API.debug "setFeed()"
     @table.setData feed.toRows()
     @lastRow = feed.size()
 

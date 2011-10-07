@@ -6,6 +6,20 @@ win = Ti.UI.createWindow
   title: 'お気に入り'
   backgroundColor: '#fff'
 
+button = Ti.UI.createButton
+  title: '設定'
+  visible: true
+
+button.addEventListener 'click', (e) ->
+  config = Ti.UI.createWindow
+    modal: true
+    url: 'config.js'
+    title: '設定'
+    backgroundColor: '#fff'
+  config.open()
+
+win.setRightNavButton button
+
 tab1 = Ti.UI.createTab
   window: win
 

@@ -89,7 +89,7 @@
       this.header.lastUpdatedLabel = lastUpdatedLabel;
       this.header.indicator = actInd;
       navActInd = Ti.UI.createActivityIndicator();
-      this.win.setRightNavButton(navActInd);
+      this.win.setLeftNavButton(navActInd);
       this.pager = {};
       this.pager.createRow = function() {
         return Ti.UI.createTableViewRow({
@@ -109,6 +109,7 @@
       }, this);
     }
     FeedView.prototype.setFeed = function(feed) {
+      Ti.API.debug("setFeed()");
       this.table.setData(feed.toRows());
       return this.lastRow = feed.size();
     };
