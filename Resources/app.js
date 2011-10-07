@@ -1,10 +1,12 @@
 (function() {
-  var button, tab1, tabGroup, win;
+  var button, tab1, tabGroup, user, win;
   Ti.UI.setBackgroundColor('#fff');
   tabGroup = Ti.UI.createTabGroup();
+  user = 'naoya';
   win = Ti.UI.createWindow({
-    url: 'home.js',
-    title: 'お気に入り',
+    url: 'timeline.js',
+    feedUrl: "http://localhost:3000/" + user,
+    title: 'はてなブックマーク',
     backgroundColor: '#fff'
   });
   button = Ti.UI.createButton({

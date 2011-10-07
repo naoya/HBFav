@@ -133,7 +133,15 @@ view.add imageContainer
 view.add name
 view.add bodyContainer
 
-titleContainer.addEventListener 'click', ->
+imageContainer.addEventListener 'click', ->
+  userWin = Ti.UI.createWindow
+    url: 'timeline.js'
+    feedUrl: "http://localhost:3000/#{bookmark.user.name}/bookmark"
+    title: bookmark.user.name
+    backgroundColor: '#fff'
+  Ti.UI.currentTab.open userWin
+
+bodyContainer.addEventListener 'click', ->
   webView = Ti.UI.createWindow
     url: 'webview.js'
     title: bookmark.title

@@ -135,7 +135,17 @@
   view.add(imageContainer);
   view.add(name);
   view.add(bodyContainer);
-  titleContainer.addEventListener('click', function() {
+  imageContainer.addEventListener('click', function() {
+    var userWin;
+    userWin = Ti.UI.createWindow({
+      url: 'timeline.js',
+      feedUrl: "http://localhost:3000/" + bookmark.user.name + "/bookmark",
+      title: bookmark.user.name,
+      backgroundColor: '#fff'
+    });
+    return Ti.UI.currentTab.open(userWin);
+  });
+  bodyContainer.addEventListener('click', function() {
     var webView;
     webView = Ti.UI.createWindow({
       url: 'webview.js',

@@ -1,5 +1,5 @@
 (function() {
-  var AbstractState, Feed, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, feedView, state, transitState, url, user, win;
+  var AbstractState, Feed, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, feedView, state, transitState, win;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -11,9 +11,9 @@
   require('lib/underscore');
   Feed = require('feed').Feed;
   FeedView = (function() {
-    function FeedView(win) {
-      var actInd, arrow, border, header, lastUpdatedLabel, navActInd, statusLabel, table;
-      this.win = win;
+    function FeedView(_arg) {
+      var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
+      this.win = _arg.win, this.url = _arg.url;
       table = Ti.UI.createTableView({
         data: []
       });
@@ -88,24 +88,19 @@
       this.header.statusLabel = statusLabel;
       this.header.lastUpdatedLabel = lastUpdatedLabel;
       this.header.indicator = actInd;
-      navActInd = Ti.UI.createActivityIndicator();
-      this.win.setLeftNavButton(navActInd);
       this.pager = {};
       this.pager.createRow = function() {
         return Ti.UI.createTableViewRow({
           title: "更新中…"
         });
       };
-      this.pager.indicator = navActInd;
       this.pager.show = __bind(function() {
-        this.pager.indicator.show();
         return this.table.appendRow(this.pager.createRow());
       }, this);
       this.pager.hide = __bind(function() {
-        this.table.deleteRow(this.lastRow, {
+        return this.table.deleteRow(this.lastRow, {
           animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
         });
-        return this.pager.indicator.hide();
       }, this);
     }
     FeedView.prototype.setFeed = function(feed) {
@@ -140,14 +135,19 @@
     }
     AbstractState.prototype.getFeed = function(url) {
       var onerror, onload, self, xhr;
+      Ti.API.debug('getFeed');
       self = this;
       onload = this.onload;
       onerror = this.onerror;
       xhr = Ti.Network.createHTTPClient();
+      xhr.timeout = 100000;
       xhr.open('GET', url);
       xhr.onload = function() {
         var data;
+        Ti.API.debug('onload');
+        Ti.API.debug(this.responseText);
         data = JSON.parse(this.responseText);
+        Ti.API.debug('json parsed');
         return onload.apply(self, [data]);
       };
       xhr.onerror = function(err) {
@@ -247,7 +247,7 @@
       return "ReloadStartState";
     };
     ReloadStartState.prototype.execute = function() {
-      return this.getFeed(url);
+      return this.getFeed(this.feedView.url);
     };
     ReloadStartState.prototype.onload = function(data) {
       return transitState(new ReloadEndState(this.feedView, data));
@@ -290,7 +290,7 @@
     };
     PagingStartState.prototype.execute = function() {
       this.feedView.pager.show();
-      return this.getFeed(url + ("?of=" + this.feedView.lastRow));
+      return this.getFeed(this.feedView.url + ("?of=" + this.feedView.lastRow));
     };
     PagingStartState.prototype.onload = function(data) {
       return transitState(new PagingEndState(this.feedView, data));
@@ -317,16 +317,20 @@
   })();
   InitStartState = (function() {
     __extends(InitStartState, AbstractState);
-    function InitStartState() {
-      InitStartState.__super__.constructor.apply(this, arguments);
-    }
     InitStartState.prototype.toString = function() {
       return "InitStartState";
     };
+    function InitStartState(feedView) {
+      this.feedView = feedView;
+      Ti.API.debug('constructor');
+    }
     InitStartState.prototype.execute = function() {
-      return this.getFeed(url);
+      Ti.API.debug('start execute');
+      this.getFeed(this.feedView.url);
+      return Ti.API.debug('end execute');
     };
     InitStartState.prototype.onload = function(data) {
+      Ti.API.debug('InitStartState::onload');
       return transitState(new InitEndState(this.feedView, data));
     };
     return InitStartState;
@@ -350,9 +354,10 @@
     return InitEndState;
   })();
   win = Ti.UI.currentWindow;
-  user = 'naoya';
-  url = "http://localhost:3000/" + user;
-  feedView = new FeedView(win);
+  feedView = new FeedView({
+    win: win,
+    url: win.feedUrl
+  });
   feedView.table.addEventListener('scroll', function(e) {
     return state.scroll(e);
   });

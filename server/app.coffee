@@ -44,13 +44,11 @@ app.configure "development", ->
 app.configure "production", ->
   app.use express.errorHandler()
 
-app.get "/:id", (req, res) ->
+rss2timeline = (url, cb) ->
   parser = new xml2js.Parser()
   parser.addListener 'end', (result) ->
-    res.send new Timeline result
+    cb new Timeline result
 
-  offset = req.param('of') ? 0
-  url = "http://b.hatena.ne.jp/#{req.params.id}/favorite.rss?of=#{offset}"
   request url, (error, response, body) ->
     console.log "[#{response.statusCode}] #{url}"
     if not error and response.statusCode is 200
@@ -59,6 +57,18 @@ app.get "/:id", (req, res) ->
       catch e
         console.log response.statusCode
         console.log e
+
+app.get "/:id", (req, res) ->
+  offset = req.param('of') ? 0
+  url = "http://b.hatena.ne.jp/#{req.params.id}/favorite.rss?of=#{offset}"
+  rss2timeline url, (timeline) ->
+    res.send timeline
+
+app.get "/:id/bookmark", (req, res) ->
+  offset = req.param('of') ? 0
+  url = "http://b.hatena.ne.jp/#{req.params.id}/rss?of=#{offset}"
+  rss2timeline url, (timeline) ->
+    res.send timeline
 
 app.listen 3000
 console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

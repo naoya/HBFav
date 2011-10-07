@@ -2,7 +2,7 @@ require 'lib/underscore'
 Feed = require('feed').Feed
 
 class FeedView
-  constructor: (@win) ->
+  constructor: (win: @win, url: @url) ->
     table = Ti.UI.createTableView
       data: []
 
@@ -81,21 +81,21 @@ class FeedView
     # @header.show = () ->
 
     ## Paging用
-    navActInd = Ti.UI.createActivityIndicator()
-    @win.setLeftNavButton navActInd
+    # navActInd = Ti.UI.createActivityIndicator()
+    # @win.setLeftNavButton navActInd
 
     @pager = {}
     @pager.createRow = () ->
       Ti.UI.createTableViewRow
         title: "更新中…"
-    @pager.indicator = navActInd
+    # @pager.indicator = navActInd
     @pager.show = ()=>
-      @pager.indicator.show()
+      # @pager.indicator.show()
       @table.appendRow @pager.createRow()
     @pager.hide = ()=>
       @table.deleteRow @lastRow,
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-      @pager.indicator.hide()
+      # @pager.indicator.hide()
 
   setFeed: (feed) ->
     Ti.API.debug "setFeed()"
@@ -121,18 +121,25 @@ class AbstractState
   toString : () ->  'AbstractState'
   constructor: (@feedView) ->
   getFeed : (url) ->
+    Ti.API.debug 'getFeed'
+
     self = @
     onload = @.onload
     onerror = @.onerror
 
     xhr = Ti.Network.createHTTPClient()
+    xhr.timeout = 100000
     xhr.open 'GET', url
     xhr.onload = ->
+      Ti.API.debug 'onload'
+      Ti.API.debug @.responseText
       data = JSON.parse @.responseText
+      Ti.API.debug 'json parsed'
       onload.apply(self, [ data ])
     xhr.onerror = (err) ->
       onerror.apply(self, [ err ])
     xhr.send()
+
   ## events
   onload :  (data)  ->
   scroll :    (e) ->
@@ -188,7 +195,7 @@ class PullingState extends AbstractState
 class ReloadStartState extends AbstractState
   toString : () ->  "ReloadStartState"
   execute: () ->
-    @.getFeed url
+    @.getFeed @feedView.url
   onload : (data) ->
     transitState new ReloadEndState @feedView, data
 
@@ -212,7 +219,7 @@ class PagingStartState extends AbstractState
   toString: () -> "PagingStartState"
   execute: () ->
     @feedView.pager.show()
-    @.getFeed url + "?of=#{@feedView.lastRow}"
+    @.getFeed @feedView.url + "?of=#{@feedView.lastRow}"
   onload: (data) ->
     transitState new PagingEndState @feedView, data
 
@@ -231,9 +238,14 @@ class PagingEndState extends AbstractState
 
 class InitStartState extends AbstractState
   toString : () -> "InitStartState"
+  constructor: (@feedView) ->
+    Ti.API.debug 'constructor'
   execute: () ->
-    @.getFeed url
+    Ti.API.debug 'start execute'
+    @.getFeed @feedView.url
+    Ti.API.debug 'end execute'
   onload : (data) ->
+    Ti.API.debug 'InitStartState::onload'
     transitState new InitEndState @feedView, data
 
 class InitEndState extends AbstractState
@@ -247,10 +259,8 @@ class InitEndState extends AbstractState
 
 ## main
 win = Ti.UI.currentWindow
-user = 'naoya'
-url = "http://localhost:3000/#{user}"
 
-feedView = new FeedView win
+feedView = new FeedView win: win, url: win.feedUrl
 feedView.table.addEventListener 'scroll', (e) ->
   state.scroll e
 feedView.table.addEventListener 'scrollEnd', (e) ->
