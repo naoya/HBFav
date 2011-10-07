@@ -36,14 +36,14 @@
           width: 245,
           height: 'auto',
           left: 65,
-          bottom: 10
+          top: 0
         });
         name = Ti.UI.createLabel({
           width: 'auto',
           height: 'auto',
           left: 0,
           top: 10,
-          bottom: 6,
+          bottom: 5,
           color: "#000",
           font: {
             "font-size": 12,
@@ -66,7 +66,8 @@
           width: 245,
           height: 'auto',
           top: 0,
-          left: 0
+          left: 0,
+          bottom: 10
         });
         favicon = Ti.UI.createImageView({
           image: bookmark.favicon_url,
