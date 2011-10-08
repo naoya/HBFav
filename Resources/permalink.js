@@ -1,13 +1,15 @@
 (function() {
-  var bodyContainer, bookmark, comment, count, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
+  var bodyContainer, bookmark, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
   win = Ti.UI.currentWindow;
+  win.layout = 'vertical';
   bookmark = win.bookmark;
   view = Ti.UI.createView({
     top: 0,
     left: 0,
     width: 'auto',
     height: 'auto',
-    layout: 'absolute'
+    layout: 'absolute',
+    backgroundColor: "#fff"
   });
   win.add(view);
   imageContainer = Ti.UI.createView({
@@ -15,7 +17,8 @@
     width: 320,
     height: '68',
     top: 0,
-    left: 0
+    left: 0,
+    backgroundColor: "stripped"
   });
   image = Ti.UI.createImageView({
     image: bookmark.user.profile_image_url,
@@ -100,19 +103,10 @@
     height: 'auto',
     top: 0,
     left: 0,
+    bottom: 10,
     color: '#999',
     font: {
       fontSize: 13
-    }
-  });
-  count = Ti.UI.createLabel({
-    width: 'auto',
-    height: 'auto',
-    top: 0,
-    left: 0,
-    color: '#999',
-    font: {
-      fontSize: 14
     }
   });
   imageContainer.add(image);
@@ -124,17 +118,33 @@
   bodyContainer.add(titleContainer);
   bodyContainer.add(link);
   footerContainer.add(date);
-  footerContainer.add(count);
   bodyContainer.add(footerContainer);
   name.text = bookmark.user.name;
   comment.text = (_ref2 = bookmark.comment) != null ? _ref2 : "";
   title.text = bookmark.title;
   link.text = bookmark.link;
   date.text = bookmark.created_at;
-  count.text = ", " + bookmark.count + "users";
   view.add(imageContainer);
   view.add(name);
   view.add(bodyContainer);
+  button = Ti.UI.createButton({
+    title: "" + bookmark.count + " users",
+    height: 40,
+    width: 300,
+    top: 10,
+    textAlign: "left"
+  });
+  button.addEventListener('click', function(e) {
+    var bookmarksWin;
+    bookmarksWin = Ti.UI.createWindow({
+      url: 'webview.js',
+      title: "" + bookmark.count + " users",
+      backgroundColor: "#fff",
+      link: "http://b.hatena.ne.jp/entry.touch/" + bookmark.link
+    });
+    return Ti.UI.currentTab.open(bookmarksWin);
+  });
+  win.add(button);
   imageContainer.addEventListener('click', function() {
     var userWin;
     userWin = Ti.UI.createWindow({

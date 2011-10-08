@@ -13,6 +13,14 @@ class Feed
         height: 'auto'
         layout: 'absolute'
 
+      row.addEventListener 'click', (e) ->
+        permalink = Ti.UI.createWindow
+          url: 'permalink.js'
+          title: bookmark.user.name
+          backgroundColor: '#fff'
+          bookmark: bookmark
+        Ti.UI.currentTab.open permalink
+
       imageContainer = Ti.UI.createView
         layout: 'vertical'
         width: 320
@@ -108,14 +116,6 @@ class Feed
       # row.add name
       row.add bodyContainer
       row.add date
-
-      row.addEventListener 'click', (e) ->
-        permalink = Ti.UI.createWindow
-          url: 'permalink.js'
-          title: bookmark.user.name
-          backgroundColor: '#fff'
-          bookmark: bookmark
-        Ti.UI.currentTab.open permalink
       row
 
 exports.Feed = Feed

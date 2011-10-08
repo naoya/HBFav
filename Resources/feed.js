@@ -16,6 +16,16 @@
           height: 'auto',
           layout: 'absolute'
         });
+        row.addEventListener('click', function(e) {
+          var permalink;
+          permalink = Ti.UI.createWindow({
+            url: 'permalink.js',
+            title: bookmark.user.name,
+            backgroundColor: '#fff',
+            bookmark: bookmark
+          });
+          return Ti.UI.currentTab.open(permalink);
+        });
         imageContainer = Ti.UI.createView({
           layout: 'vertical',
           width: 320,
@@ -111,16 +121,6 @@
         row.add(imageContainer);
         row.add(bodyContainer);
         row.add(date);
-        row.addEventListener('click', function(e) {
-          var permalink;
-          permalink = Ti.UI.createWindow({
-            url: 'permalink.js',
-            title: bookmark.user.name,
-            backgroundColor: '#fff',
-            bookmark: bookmark
-          });
-          return Ti.UI.currentTab.open(permalink);
-        });
         return row;
       });
     };

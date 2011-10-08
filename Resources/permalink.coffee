@@ -1,4 +1,6 @@
 win = Ti.UI.currentWindow
+win.layout = 'vertical'
+# win.backgroundColor = "stripped"
 bookmark = win.bookmark
 
 view = Ti.UI.createView
@@ -7,6 +9,7 @@ view = Ti.UI.createView
   width: 'auto'
   height: 'auto'
   layout: 'absolute'
+  backgroundColor: "#fff"
 
 win.add view
 
@@ -16,6 +19,9 @@ imageContainer = Ti.UI.createView
   height: '68'
   top: 0
   left: 0
+  # backgroundColor: "#fff"
+  # backgroundColor: "#B8C4D2"
+  backgroundColor: "stripped"
 
 image = Ti.UI.createImageView
   image: bookmark.user.profile_image_url
@@ -39,6 +45,7 @@ bodyContainer = Ti.UI.createView
   layout: 'vertical'
   width: 300
   height: 'auto'
+  # backgroundColor: "#000"
   top: 78
   left: 10
 
@@ -97,18 +104,19 @@ date = Ti.UI.createLabel
   height: 'auto'
   top: 0
   left: 0
+  bottom: 10
   color: '#999'
   font:
     fontSize: 13
 
-count = Ti.UI.createLabel
-  width: 'auto'
-  height: 'auto'
-  top: 0
-  left: 0
-  color: '#999'
-  font:
-    fontSize: 14
+# count = Ti.UI.createLabel
+#   width: 'auto'
+#   height: 'auto'
+#   top: 0
+#   left: 0
+#   color: '#999'
+#   font:
+#     fontSize: 14
 
 imageContainer.add image
 
@@ -119,7 +127,7 @@ titleContainer.add title
 bodyContainer.add titleContainer
 bodyContainer.add link
 footerContainer.add date
-footerContainer.add count
+# footerContainer.add count
 bodyContainer.add footerContainer
 
 name.text    = bookmark.user.name
@@ -127,11 +135,30 @@ comment.text = bookmark.comment ? ""
 title.text   = bookmark.title
 link.text    = bookmark.link
 date.text    = bookmark.created_at
-count.text   = ", #{bookmark.count}users"
+# count.text   = ", #{bookmark.count}users"
 
 view.add imageContainer
 view.add name
 view.add bodyContainer
+
+## xx users navigation
+button = Ti.UI.createButton
+  title: "#{bookmark.count} users"
+  height: 40
+  width: 300
+  top: 10
+  textAlign: "left"
+
+## これじゃ駄目。JSON 取ってきてまじめにレンダリングする
+button.addEventListener 'click', (e) ->
+  bookmarksWin = Ti.UI.createWindow
+    url: 'webview.js'
+    title: "#{bookmark.count} users"
+    backgroundColor: "#fff"
+    link: "http://b.hatena.ne.jp/entry.touch/#{bookmark.link}"
+  Ti.UI.currentTab.open bookmarksWin
+
+win.add button
 
 imageContainer.addEventListener 'click', ->
   userWin = Ti.UI.createWindow
