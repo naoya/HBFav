@@ -129,7 +129,7 @@
   view.add(name);
   view.add(bodyContainer);
   button = Ti.UI.createButton({
-    title: "" + bookmark.count + " users",
+    title: bookmark.count > 1 ? "" + bookmark.count + " users" : "" + bookmark.count + " user",
     height: 40,
     width: 300,
     top: 10,

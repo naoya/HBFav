@@ -41,7 +41,7 @@ xhr.onload = ->
           favicon_url: "http://favicon.st-hatena.com/?url=#{data.entry_url}"
           title: data.title
           count: data.count
-          link: data.entry_url
+          link: data.url
           created_at: b.timestamp
           comment: b.comment
       Ti.UI.currentTab.open permalink

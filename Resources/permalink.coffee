@@ -144,7 +144,7 @@ view.add bodyContainer
 
 ## xx users navigation
 button = Ti.UI.createButton
-  title: "#{bookmark.count} users"
+  title: if bookmark.count > 1 then "#{bookmark.count} users" else "#{bookmark.count} user"
   height: 40
   width: 300
   top: 10

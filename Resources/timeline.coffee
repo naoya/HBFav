@@ -2,9 +2,17 @@ require 'lib/underscore'
 Feed = require('feed').Feed
 
 class FeedView
+  state: null
+  transitState: (nextState) ->
+    Ti.API.debug " -> "  + nextState.toString()
+    @state = nextState
+    do @state.execute
+
   constructor: (win: @win, url: @url) ->
     table = Ti.UI.createTableView
       data: []
+
+    @win.add table
 
     ## Pull to Refresh 用
     border = Ti.UI.createView
@@ -109,14 +117,6 @@ class FeedView
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
     @lastRow += feed.size()
 
-## State pattern
-state = null
-
-transitState = (nextState) ->
-  Ti.API.debug " -> "  + nextState.toString()
-  state = nextState
-  do state.execute
-
 class AbstractState
   toString : () ->  'AbstractState'
   constructor: (@feedView) ->
@@ -159,7 +159,7 @@ class NormalState extends AbstractState
       t = t.rotate -180
       @feedView.header.arrow.animate transform:t, duration:180
       @feedView.header.statusLabel.text = "指をはなして更新…"
-      transitState new PullingState @feedView
+      @feedView.transitState new PullingState @feedView
     else
       ## paging
       height   = e.size.height
@@ -169,7 +169,7 @@ class NormalState extends AbstractState
       if distance < @lastDistance
         nearEnd = theEnd * .75
         if total >= nearEnd
-          transitState new PagingStartState @feedView
+          @feedView.transitState new PagingStartState @feedView
       @lastDistance = distance
 
 class PullingState extends AbstractState
@@ -181,7 +181,7 @@ class PullingState extends AbstractState
       t = Ti.UI.create2DMatrix()
       @feedView.header.arrow.animate transform:t,duration:180
       @feedView.header.statusLabel.text =  "画面を引き下げて…"
-      transitState new NormalState @feedView
+      @feedView.transitState new NormalState @feedView
   scrollEnd: (e) ->
     if e.contentOffset.y <= -65.0
       ## feedView.header.reloading()
@@ -190,14 +190,14 @@ class PullingState extends AbstractState
       @feedView.header.statusLabel.text = "読み込み中…"
       @feedView.table.setContentInsets({top:60},{animated:true})
       @feedView.header.arrow.transform = Ti.UI.create2DMatrix();
-      transitState new ReloadStartState @feedView
+      @feedView.transitState new ReloadStartState @feedView
 
 class ReloadStartState extends AbstractState
   toString : () ->  "ReloadStartState"
   execute: () ->
     @.getFeed @feedView.url
   onload : (data) ->
-    transitState new ReloadEndState @feedView, data
+    @feedView.transitState new ReloadEndState @feedView, data
 
 class ReloadEndState extends AbstractState
   toString : () -> "ReloadEndState"
@@ -212,8 +212,7 @@ class ReloadEndState extends AbstractState
     @feedView.header.statusLabel.text = "画面を引き下げて…";
     @feedView.header.indicator.hide()
     @feedView.header.arrow.show()
-
-    transitState new NormalState @feedView
+    @feedView.transitState new NormalState @feedView
 
 class PagingStartState extends AbstractState
   toString: () -> "PagingStartState"
@@ -221,7 +220,7 @@ class PagingStartState extends AbstractState
     @feedView.pager.show()
     @.getFeed @feedView.url + "?of=#{@feedView.lastRow}"
   onload: (data) ->
-    transitState new PagingEndState @feedView, data
+    @feedView.transitState new PagingEndState @feedView, data
 
 class PagingEndState extends AbstractState
   toString: () -> "PagingEndState"
@@ -246,7 +245,7 @@ class InitStartState extends AbstractState
     Ti.API.debug 'end execute'
   onload : (data) ->
     Ti.API.debug 'InitStartState::onload'
-    transitState new InitEndState @feedView, data
+    @feedView.transitState new InitEndState @feedView, data
 
 class InitEndState extends AbstractState
   toString : () -> "InitEndState"
@@ -255,17 +254,15 @@ class InitEndState extends AbstractState
     feed = new Feed @data
     @feedView.setFeed feed
     Ti.API.debug 'setFeed done.'
-    transitState new NormalState @feedView
+    @feedView.transitState new NormalState @feedView
 
 ## main
 win = Ti.UI.currentWindow
 
 feedView = new FeedView win: win, url: win.feedUrl
 feedView.table.addEventListener 'scroll', (e) ->
-  state.scroll e
+  feedView.state.scroll e
 feedView.table.addEventListener 'scrollEnd', (e) ->
-  state.scrollEnd e
+  feedView.state.scrollEnd e
 
-win.add feedView.table
-
-transitState new InitStartState(feedView)
+feedView.transitState new InitStartState feedView

@@ -1,5 +1,5 @@
 (function() {
-  var AbstractState, Feed, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, feedView, state, transitState, win;
+  var AbstractState, Feed, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState, feedView, win;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -11,12 +11,19 @@
   require('lib/underscore');
   Feed = require('feed').Feed;
   FeedView = (function() {
+    FeedView.prototype.state = null;
+    FeedView.prototype.transitState = function(nextState) {
+      Ti.API.debug(" -> " + nextState.toString());
+      this.state = nextState;
+      return this.state.execute();
+    };
     function FeedView(_arg) {
       var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
       this.win = _arg.win, this.url = _arg.url;
       table = Ti.UI.createTableView({
         data: []
       });
+      this.win.add(table);
       border = Ti.UI.createView({
         backgroundColor: "#576c89",
         height: 2,
@@ -120,12 +127,6 @@
     };
     return FeedView;
   })();
-  state = null;
-  transitState = function(nextState) {
-    Ti.API.debug(" -> " + nextState.toString());
-    state = nextState;
-    return state.execute();
-  };
   AbstractState = (function() {
     AbstractState.prototype.toString = function() {
       return 'AbstractState';
@@ -184,7 +185,7 @@
           duration: 180
         });
         this.feedView.header.statusLabel.text = "指をはなして更新…";
-        return transitState(new PullingState(this.feedView));
+        return this.feedView.transitState(new PullingState(this.feedView));
       } else {
         height = e.size.height;
         total = offset + height;
@@ -193,7 +194,7 @@
         if (distance < this.lastDistance) {
           nearEnd = theEnd * .75;
           if (total >= nearEnd) {
-            transitState(new PagingStartState(this.feedView));
+            this.feedView.transitState(new PagingStartState(this.feedView));
           }
         }
         return this.lastDistance = distance;
@@ -219,7 +220,7 @@
           duration: 180
         });
         this.feedView.header.statusLabel.text = "画面を引き下げて…";
-        return transitState(new NormalState(this.feedView));
+        return this.feedView.transitState(new NormalState(this.feedView));
       }
     };
     PullingState.prototype.scrollEnd = function(e) {
@@ -233,7 +234,7 @@
           animated: true
         });
         this.feedView.header.arrow.transform = Ti.UI.create2DMatrix();
-        return transitState(new ReloadStartState(this.feedView));
+        return this.feedView.transitState(new ReloadStartState(this.feedView));
       }
     };
     return PullingState;
@@ -250,7 +251,7 @@
       return this.getFeed(this.feedView.url);
     };
     ReloadStartState.prototype.onload = function(data) {
-      return transitState(new ReloadEndState(this.feedView, data));
+      return this.feedView.transitState(new ReloadEndState(this.feedView, data));
     };
     return ReloadStartState;
   })();
@@ -276,7 +277,7 @@
       this.feedView.header.statusLabel.text = "画面を引き下げて…";
       this.feedView.header.indicator.hide();
       this.feedView.header.arrow.show();
-      return transitState(new NormalState(this.feedView));
+      return this.feedView.transitState(new NormalState(this.feedView));
     };
     return ReloadEndState;
   })();
@@ -293,7 +294,7 @@
       return this.getFeed(this.feedView.url + ("?of=" + this.feedView.lastRow));
     };
     PagingStartState.prototype.onload = function(data) {
-      return transitState(new PagingEndState(this.feedView, data));
+      return this.feedView.transitState(new PagingEndState(this.feedView, data));
     };
     return PagingStartState;
   })();
@@ -331,7 +332,7 @@
     };
     InitStartState.prototype.onload = function(data) {
       Ti.API.debug('InitStartState::onload');
-      return transitState(new InitEndState(this.feedView, data));
+      return this.feedView.transitState(new InitEndState(this.feedView, data));
     };
     return InitStartState;
   })();
@@ -349,7 +350,7 @@
       feed = new Feed(this.data);
       this.feedView.setFeed(feed);
       Ti.API.debug('setFeed done.');
-      return transitState(new NormalState(this.feedView));
+      return this.feedView.transitState(new NormalState(this.feedView));
     };
     return InitEndState;
   })();
@@ -359,11 +360,10 @@
     url: win.feedUrl
   });
   feedView.table.addEventListener('scroll', function(e) {
-    return state.scroll(e);
+    return feedView.state.scroll(e);
   });
   feedView.table.addEventListener('scrollEnd', function(e) {
-    return state.scrollEnd(e);
+    return feedView.state.scrollEnd(e);
   });
-  win.add(feedView.table);
-  transitState(new InitStartState(feedView));
+  feedView.transitState(new InitStartState(feedView));
 }).call(this);
