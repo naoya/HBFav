@@ -10,6 +10,7 @@ view = Ti.UI.createView
   height: 'auto'
   layout: 'absolute'
   backgroundColor: "#fff"
+  showHorizontalScrollIndicator:true
 
 win.add view
 
@@ -152,10 +153,10 @@ button = Ti.UI.createButton
 ## これじゃ駄目。JSON 取ってきてまじめにレンダリングする
 button.addEventListener 'click', (e) ->
   bookmarksWin = Ti.UI.createWindow
-    url: 'webview.js'
+    url: 'bookmarks.js'
     title: "#{bookmark.count} users"
     backgroundColor: "#fff"
-    link: "http://b.hatena.ne.jp/entry.touch/#{bookmark.link}"
+    bookmark: bookmark
   Ti.UI.currentTab.open bookmarksWin
 
 win.add button

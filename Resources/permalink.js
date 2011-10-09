@@ -9,7 +9,8 @@
     width: 'auto',
     height: 'auto',
     layout: 'absolute',
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    showHorizontalScrollIndicator: true
   });
   win.add(view);
   imageContainer = Ti.UI.createView({
@@ -137,10 +138,10 @@
   button.addEventListener('click', function(e) {
     var bookmarksWin;
     bookmarksWin = Ti.UI.createWindow({
-      url: 'webview.js',
+      url: 'bookmarks.js',
       title: "" + bookmark.count + " users",
       backgroundColor: "#fff",
-      link: "http://b.hatena.ne.jp/entry.touch/" + bookmark.link
+      bookmark: bookmark
     });
     return Ti.UI.currentTab.open(bookmarksWin);
   });
