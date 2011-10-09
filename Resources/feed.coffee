@@ -7,7 +7,7 @@ class Feed
   size: ->
     @f.bookmarks.length
 
-  toRows: ->
+  toRows: (win) ->
     return _(@f.bookmarks).map (bookmark) ->
       row = Ti.UI.createTableViewRow
         height: 'auto'
@@ -131,4 +131,4 @@ class Feed
       row.add date
       row
 
-exports.Feed = Feed
+# exports.Feed = Feed

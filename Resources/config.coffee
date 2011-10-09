@@ -25,10 +25,8 @@ doneButton = Ti.UI.createButton
   visible: true
 
 doneButton.addEventListener 'click', (e) ->
-  # if nameField.value
   Ti.App.Properties.setString 'hatena_id', nameField.value
   win.close()
-  # win.initApp()
 
 win.setRightNavButton doneButton
 win.add nameField

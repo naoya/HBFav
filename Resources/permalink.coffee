@@ -1,3 +1,5 @@
+Ti.include 'feedview.js'
+
 win = Ti.UI.currentWindow
 win.layout = 'vertical'
 # win.backgroundColor = "stripped"
@@ -150,7 +152,6 @@ button = Ti.UI.createButton
   top: 10
   textAlign: "left"
 
-## これじゃ駄目。JSON 取ってきてまじめにレンダリングする
 button.addEventListener 'click', (e) ->
   bookmarksWin = Ti.UI.createWindow
     url: 'bookmarks.js'
@@ -163,10 +164,12 @@ win.add button
 
 imageContainer.addEventListener 'click', ->
   userWin = Ti.UI.createWindow
-    url: 'timeline.js'
-    feedUrl: "http://localhost:3000/#{bookmark.user.name}/bookmark"
     title: bookmark.user.name
     backgroundColor: '#fff'
+  fv = new FeedView
+    win: userWin
+    url: "http://localhost:3000/#{bookmark.user.name}/bookmark"
+  fv.initialize()
   Ti.UI.currentTab.open userWin
 
 bodyContainer.addEventListener 'click', ->
