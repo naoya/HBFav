@@ -171,14 +171,11 @@ button.addEventListener 'click', (e) ->
 win.add button
 
 imageContainer.addEventListener 'click', ->
-  userWin = Ti.UI.createWindow
+  profile = Ti.UI.createWindow
+    url: 'profile.js'
     title: bookmark.user.name
-    backgroundColor: '#fff'
-  fv = new FeedView
-    win: userWin
-    url: "http://localhost:3000/#{bookmark.user.name}/bookmark"
-  fv.initialize()
-  Ti.UI.currentTab.open userWin
+    user: bookmark.user
+  Ti.UI.currentTab.open profile
 
 bodyContainer.addEventListener 'click', ->
   webView = Ti.UI.createWindow

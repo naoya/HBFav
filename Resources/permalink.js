@@ -157,17 +157,13 @@ button.addEventListener('click', function(e) {
 });
 win.add(button);
 imageContainer.addEventListener('click', function() {
-  var fv, userWin;
-  userWin = Ti.UI.createWindow({
+  var profile;
+  profile = Ti.UI.createWindow({
+    url: 'profile.js',
     title: bookmark.user.name,
-    backgroundColor: '#fff'
+    user: bookmark.user
   });
-  fv = new FeedView({
-    win: userWin,
-    url: "http://localhost:3000/" + bookmark.user.name + "/bookmark"
-  });
-  fv.initialize();
-  return Ti.UI.currentTab.open(userWin);
+  return Ti.UI.currentTab.open(profile);
 });
 bodyContainer.addEventListener('click', function() {
   var webView;
