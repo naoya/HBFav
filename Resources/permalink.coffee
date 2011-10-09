@@ -97,16 +97,16 @@ footerContainer = Ti.UI.createView
   layout: 'horizontal'
   width: 'auto'
   height: 'auto'
-  top: 6
+  top: 3
   left: 0
 
 date = Ti.UI.createLabel
   width: 'auto'
   height: 'auto'
   top: 0
-  left: 0
+  left: 20
   bottom: 10
-  color: '#999'
+  color: '#666'
   font:
     fontSize: 13
 

@@ -61,7 +61,7 @@
         height: 48,
         top: 10,
         left: 10,
-        borderRaidus: 5
+        borderRadius: 5
       });
       imageContainer.add(image);
       bodyContainer = Ti.UI.createView({

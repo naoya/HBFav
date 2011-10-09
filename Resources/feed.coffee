@@ -71,6 +71,7 @@ class Feed
         height: 'auto'
         top: 0
         left: 0
+        # bottom: 2
         bottom: 10
 
       favicon = Ti.UI.createImageView
@@ -98,6 +99,16 @@ class Feed
         font:
           fontSize: 12
 
+      # count = Ti.UI.createLabel
+      #   width: 'auto'
+      #   height: 'auto'
+      #   top: 0
+      #   left: 16
+      #   bottom: 10
+      #   color: '#999'
+      #   font:
+      #     fontSize: 12
+
       imageContainer.add image
       bodyContainer.add name
 
@@ -106,11 +117,13 @@ class Feed
       titleContainer.add favicon
       titleContainer.add title
       bodyContainer.add titleContainer
+      # bodyContainer.add count
 
       name.text    = bookmark.user.name
       comment.text = bookmark.comment ? ""
       title.text   = bookmark.title
       date.text    = bookmark.created_at
+#      count.text   = if bookmark.count > 1 then "#{bookmark.count} users" else "#{bookmark.count} user"
 
       row.add imageContainer
       # row.add name
