@@ -12,7 +12,7 @@ view = Ti.UI.createView
   height: 'auto'
   layout: 'absolute'
   backgroundColor: "#fff"
-  showHorizontalScrollIndicator:true
+  # showHorizontalScrollIndicator:true
 
 win.add view
 
@@ -41,8 +41,15 @@ name = Ti.UI.createLabel
   top: 10
   color: "#000"
   font:
-    fontSize : 18
+    fontSize : 16
     fontWeight: 'bold'
+  shadowColor: "#fff"
+  shadowOffset: x: 0, y: 1
+
+border = Ti.UI.createView
+  backgroundColor: "#ababab"
+  top: 68
+  height: 1
 
 bodyContainer = Ti.UI.createView
   layout: 'vertical'
@@ -141,6 +148,7 @@ date.text    = bookmark.created_at
 # count.text   = ", #{bookmark.count}users"
 
 view.add imageContainer
+view.add border
 view.add name
 view.add bodyContainer
 

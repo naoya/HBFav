@@ -1,4 +1,4 @@
-var bodyContainer, bookmark, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
+var bodyContainer, bookmark, border, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
 Ti.include('feedview.js');
 win = Ti.UI.currentWindow;
 win.layout = 'vertical';
@@ -9,8 +9,7 @@ view = Ti.UI.createView({
   width: 'auto',
   height: 'auto',
   layout: 'absolute',
-  backgroundColor: "#fff",
-  showHorizontalScrollIndicator: true
+  backgroundColor: "#fff"
 });
 win.add(view);
 imageContainer = Ti.UI.createView({
@@ -36,9 +35,19 @@ name = Ti.UI.createLabel({
   top: 10,
   color: "#000",
   font: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold'
+  },
+  shadowColor: "#fff",
+  shadowOffset: {
+    x: 0,
+    y: 1
   }
+});
+border = Ti.UI.createView({
+  backgroundColor: "#ababab",
+  top: 68,
+  height: 1
 });
 bodyContainer = Ti.UI.createView({
   layout: 'vertical',
@@ -126,6 +135,7 @@ title.text = bookmark.title;
 link.text = bookmark.link;
 date.text = bookmark.created_at;
 view.add(imageContainer);
+view.add(border);
 view.add(name);
 view.add(bodyContainer);
 button = Ti.UI.createButton({

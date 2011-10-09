@@ -4,13 +4,78 @@ win = Ti.UI.currentWindow
 bookmark = win.bookmark
 link = encodeURI bookmark.link
 
-## Node側でやる?
+## FIXME: Node側でやる?
 url = "http://b.hatena.ne.jp/entry/jsonlite/?url=#{link}"
 
+## Create Header
+header = Ti.UI.createView
+  top: 0
+  left: 0
+  width: 320
+  height: 68
+  layout: 'vertical'
+  backgroundColor: "stripped"
+
+entryContainer = Ti.UI.createView
+  layout: 'vertical'
+  width: 310
+  height: 'auto'
+  top: 5
+  left: 5
+  bottom: 5
+
+titleContainer = Ti.UI.createView
+  layout: 'horizontal'
+  width: 300
+  height: 68
+  top: 0
+  left: 0
+
+favicon = Ti.UI.createImageView
+  image: bookmark.favicon_url
+  width: 14
+  height: 14
+  top: 2
+  left: 0
+
+title = Ti.UI.createLabel
+  color: '#000'
+  top: 0
+  left: 4
+  width: 'auto'
+  height: 'auto'
+  font:
+    fontSize: 13
+    fontWeight: "bold"
+
+title.text = bookmark.title
+titleContainer.add favicon
+titleContainer.add title
+entryContainer.add titleContainer
+header.add entryContainer
+
+header.addEventListener 'click', ->
+  webView = Ti.UI.createWindow
+    url: 'webview.js'
+    title: bookmark.title
+    backgroundColor: '#fff'
+    link: bookmark.link
+  Ti.UI.currentTab.open webView
+
+border = Ti.UI.createView
+  backgroundColor: "#ababab"
+  top: 68
+  height: 1
+
 table = Ti.UI.createTableView
+  top: 69
   data: []
+
+win.add header
+win.add border
 win.add table
 
+## Retrieving bookmarks
 xhr = Ti.Network.createHTTPClient()
 xhr.timeout = 100000
 xhr.open 'GET', url
@@ -23,7 +88,7 @@ xhr.onerror = (e)->
 
 xhr.onload = ->
   data = JSON.parse @.responseText
-  Ti.API.debug data
+  # Ti.API.debug data
   rows = _(data.bookmarks).map (b) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'

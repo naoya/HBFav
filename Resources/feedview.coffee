@@ -263,6 +263,28 @@ class FeedView
   clear: () ->
     @table.setData []
     @lastRow = 0
+    # loading = Ti.UI.createTableViewRow
+    #   height: 40,
+    #   backgroundColor: '#fff'
+
+    # container = Ti.UI.createView
+    #   layout: 'vertical'
+    #   width: 320
+    #   top: 0
+    #   left: 0
+
+    # label = Ti.UI.createLabel
+    #   width: 'auto'
+    #   height: 'auto'
+    #   color: '#000'
+    #   top: 0
+    #   font:
+    #     fontSize: 12
+    # label.text = 'Loading...'
+
+    # container.add label
+    # loading.add container
+    # @table.appendRow loading
 
   appendFeed: (feed) ->
     rows = feed.toRows(@win)
