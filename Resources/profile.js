@@ -1,4 +1,4 @@
-var image, imageContainer, name, row1, row2, table, user, win;
+var image, imageContainer, name, row1, row2, row3, table, user, win;
 Ti.include('feedview.js');
 win = Ti.UI.currentWindow;
 user = win.user;
@@ -77,5 +77,25 @@ row2.addEventListener('click', function() {
 });
 table.appendRow(row1);
 table.appendRow(row2);
+if (win.showConfig) {
+  row3 = Ti.UI.createTableViewRow({
+    title: 'アカウント設定',
+    header: 'リスト',
+    color: '#385487'
+  });
+  row3.addEventListener('click', function(e) {
+    var config;
+    config = Ti.UI.createWindow({
+      modal: true,
+      url: 'config.js',
+      title: '設定'
+    });
+    config.addEventListener('close', function() {
+      return win.close();
+    });
+    return config.open();
+  });
+  table.appendRow(row3);
+}
 win.add(imageContainer);
 win.add(table);

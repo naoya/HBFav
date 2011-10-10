@@ -22,8 +22,9 @@ nameField = Ti.UI.createTextField({
   paddingRight: 10
 });
 doneButton = Ti.UI.createButton({
-  title: '保存',
-  visible: true
+  style: Ti.UI.iPhone.SystemButtonStyle.DONE,
+  visible: true,
+  title: '保存'
 });
 doneButton.addEventListener('click', function(e) {
   Ti.App.Properties.setString('hatena_id', nameField.value);

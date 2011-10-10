@@ -334,16 +334,23 @@ FeedView = (function() {
     this.header.indicator = actInd;
     this.pager = {};
     this.pager.createRow = function() {
-      return Ti.UI.createTableViewRow({
-        title: "更新中…"
+      var ind, row;
+      row = Ti.UI.createTableViewRow();
+      ind = Ti.UI.createActivityIndicator({
+        top: 10,
+        bottom: 10,
+        style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
       });
+      row.add(ind);
+      ind.show();
+      return row;
     };
     this.pager.show = __bind(function() {
       return this.table.appendRow(this.pager.createRow());
     }, this);
     this.pager.hide = __bind(function() {
       return this.table.deleteRow(this.lastRow, {
-        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
       });
     }, this);
   }

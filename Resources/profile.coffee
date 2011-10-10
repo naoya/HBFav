@@ -69,6 +69,22 @@ row2.addEventListener 'click', ->
 table.appendRow row1
 table.appendRow row2
 
+## 自分の時だけ
+if win.showConfig
+  row3 = Ti.UI.createTableViewRow
+    title: 'アカウント設定'
+    header: 'リスト'
+    color: '#385487'
+  row3.addEventListener 'click', (e) ->
+    config = Ti.UI.createWindow
+      modal: true
+      url: 'config.js'
+      title: '設定'
+    config.addEventListener 'close', () ->
+      win.close()
+    config.open()
+
+  table.appendRow row3
+
 win.add imageContainer
-# win.add border
 win.add table

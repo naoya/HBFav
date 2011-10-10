@@ -244,15 +244,21 @@ class FeedView
 
     @pager = {}
     @pager.createRow = () ->
-      Ti.UI.createTableViewRow
-        title: "更新中…"
-    # @pager.indicator = navActInd
+      row = Ti.UI.createTableViewRow()
+      ind = Ti.UI.createActivityIndicator
+        top: 10
+        bottom: 10
+        style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+      row.add ind
+      ind.show()
+      row
     @pager.show = ()=>
       # @pager.indicator.show()
       @table.appendRow @pager.createRow()
     @pager.hide = ()=>
       @table.deleteRow @lastRow,
-        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        # animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
       # @pager.indicator.hide()
 
   setFeed: (feed) ->
