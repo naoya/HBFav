@@ -16,8 +16,7 @@ class Feed
       row.addEventListener 'click', (e) ->
         permalink = Ti.UI.createWindow
           url: 'permalink.js'
-          title: bookmark.user.name
-          backgroundColor: '#fff'
+          title: "ブックマーク"
           bookmark: bookmark
         Ti.UI.currentTab.open permalink
 

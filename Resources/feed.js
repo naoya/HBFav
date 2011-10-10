@@ -19,8 +19,7 @@ Feed = (function() {
         var permalink;
         permalink = Ti.UI.createWindow({
           url: 'permalink.js',
-          title: bookmark.user.name,
-          backgroundColor: '#fff',
+          title: "ブックマーク",
           bookmark: bookmark
         });
         return Ti.UI.currentTab.open(permalink);
