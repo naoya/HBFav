@@ -15,15 +15,22 @@
 スクリーンショット
 --------------------
 
-![home](http://bloghackers.net/~naoya/images/hbfav01.png)
-![permalink](http://bloghackers.net/~naoya/images/hbfav02.png)
-![webview](http://bloghackers.net/~naoya/images/hbfav03.png)
+![01](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_01.png)
+![02](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_02.png)
+![03](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_03.png)
+![04](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_04.png)
+![05](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_05.png)
+![06](http://bloghackers.net/~naoya/images/hbfav_20111010/hbfav_20111010_06.png)
 
 TODO
 --------------------
 
-* Pull to refresh
-* Paging
-* Link to /entry
-* Connect to Instapaper 
-* Configuration
+* [DONE] Pull to refresh
+* [DONE] Paging
+* [DONE] Link to /entry
+* [DONE] Connect to Instapaper 
+* [DONE] Configuration
+* Post bookmark to the Hatena Bookmark
+* Deploy node server to Heroku or Dotcloud
+* Fix some issues to have better quality
+* Ship it to App Store
