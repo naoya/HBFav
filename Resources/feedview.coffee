@@ -87,6 +87,15 @@ class ReloadStartState extends AbstractState
     @.getFeed @feedView.url
   onload : (data) ->
     @feedView.transitState new ReloadEndState @feedView, data
+  onerror: (err) ->
+    alert err.error
+    ## FIXME: not DRY (1)
+    @feedView.table.setContentInsets({top:0},{animated:true})
+    @feedView.header.lastUpdatedLabel.text = "最後の更新: "
+    @feedView.header.statusLabel.text = "画面を引き下げて…";
+    @feedView.header.indicator.hide()
+    @feedView.header.arrow.show()
+    @feedView.transitState new NormalState @feedView
 
 class ReloadEndState extends AbstractState
   toString : () -> "ReloadEndState"
@@ -95,7 +104,7 @@ class ReloadEndState extends AbstractState
     feed = new Feed @data
     @feedView.setFeed feed
 
-    ## feedview.header.hide()
+    ## FIXME: not DRY (1)
     @feedView.table.setContentInsets({top:0},{animated:true})
     @feedView.header.lastUpdatedLabel.text = "最後の更新: "
     @feedView.header.statusLabel.text = "画面を引き下げて…";
@@ -110,6 +119,10 @@ class PagingStartState extends AbstractState
     @.getFeed @feedView.url + "?of=#{@feedView.lastRow}"
   onload: (data) ->
     @feedView.transitState new PagingEndState @feedView, data
+  onerror: (err) ->
+    alert err.error
+    @feedView.pager.hide()
+    @feedView.transitState new NormalState @feedView
 
 class PagingEndState extends AbstractState
   toString: () -> "PagingEndState"
@@ -135,6 +148,9 @@ class InitStartState extends AbstractState
   onload : (data) ->
     Ti.API.debug 'InitStartState::onload'
     @feedView.transitState new InitEndState @feedView, data
+  onerror : (err) ->
+    alert err.error
+    @feedView.transitState new NormalState @feedView
 
 class InitEndState extends AbstractState
   toString : () -> "InitEndState"

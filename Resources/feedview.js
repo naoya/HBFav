@@ -138,6 +138,19 @@ ReloadStartState = (function() {
   ReloadStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new ReloadEndState(this.feedView, data));
   };
+  ReloadStartState.prototype.onerror = function(err) {
+    alert(err.error);
+    this.feedView.table.setContentInsets({
+      top: 0
+    }, {
+      animated: true
+    });
+    this.feedView.header.lastUpdatedLabel.text = "最後の更新: ";
+    this.feedView.header.statusLabel.text = "画面を引き下げて…";
+    this.feedView.header.indicator.hide();
+    this.feedView.header.arrow.show();
+    return this.feedView.transitState(new NormalState(this.feedView));
+  };
   return ReloadStartState;
 })();
 ReloadEndState = (function() {
@@ -181,6 +194,11 @@ PagingStartState = (function() {
   PagingStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new PagingEndState(this.feedView, data));
   };
+  PagingStartState.prototype.onerror = function(err) {
+    alert(err.error);
+    this.feedView.pager.hide();
+    return this.feedView.transitState(new NormalState(this.feedView));
+  };
   return PagingStartState;
 })();
 PagingEndState = (function() {
@@ -218,6 +236,10 @@ InitStartState = (function() {
   InitStartState.prototype.onload = function(data) {
     Ti.API.debug('InitStartState::onload');
     return this.feedView.transitState(new InitEndState(this.feedView, data));
+  };
+  InitStartState.prototype.onerror = function(err) {
+    alert(err.error);
+    return this.feedView.transitState(new NormalState(this.feedView));
   };
   return InitStartState;
 })();
