@@ -69,22 +69,36 @@ row2.addEventListener 'click', ->
 table.appendRow row1
 table.appendRow row2
 
-## 自分の時だけ
 if win.showConfig
   row3 = Ti.UI.createTableViewRow
-    title: 'アカウント設定'
-    header: 'リスト'
+    title: 'はてなID'
+    header: '設定'
     color: '#385487'
+
   row3.addEventListener 'click', (e) ->
     config = Ti.UI.createWindow
       modal: true
       url: 'config.js'
       title: '設定'
     config.addEventListener 'close', () ->
-      win.close()
+      if user.name isnt Ti.App.Properties.getString 'hatena_id'
+        win.close()
     config.open()
 
+  row4 = Ti.UI.createTableViewRow
+    title: 'Instapaper'
+    color: '#385487'
+
+  row4.addEventListener 'click', (e) ->
+    instapaper = Ti.UI.createWindow
+      modal: true
+      url: 'config_instapaper.js'
+      title: 'Instapaper'
+    instapaper.open()
+
   table.appendRow row3
+  # table.insertRowAfter 2, row4 # もっとましな挿入方法ないの?
+  table.appendRow row4
 
 win.add imageContainer
 win.add table

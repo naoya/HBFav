@@ -1,4 +1,4 @@
-var image, imageContainer, name, row1, row2, row3, table, user, win;
+var image, imageContainer, name, row1, row2, row3, row4, table, user, win;
 Ti.include('feedview.js');
 win = Ti.UI.currentWindow;
 user = win.user;
@@ -79,8 +79,8 @@ table.appendRow(row1);
 table.appendRow(row2);
 if (win.showConfig) {
   row3 = Ti.UI.createTableViewRow({
-    title: 'アカウント設定',
-    header: 'リスト',
+    title: 'はてなID',
+    header: '設定',
     color: '#385487'
   });
   row3.addEventListener('click', function(e) {
@@ -91,11 +91,27 @@ if (win.showConfig) {
       title: '設定'
     });
     config.addEventListener('close', function() {
-      return win.close();
+      if (user.name !== Ti.App.Properties.getString('hatena_id')) {
+        return win.close();
+      }
     });
     return config.open();
   });
+  row4 = Ti.UI.createTableViewRow({
+    title: 'Instapaper',
+    color: '#385487'
+  });
+  row4.addEventListener('click', function(e) {
+    var instapaper;
+    instapaper = Ti.UI.createWindow({
+      modal: true,
+      url: 'config_instapaper.js',
+      title: 'Instapaper'
+    });
+    return instapaper.open();
+  });
   table.appendRow(row3);
+  table.appendRow(row4);
 }
 win.add(imageContainer);
 win.add(table);

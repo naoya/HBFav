@@ -1,18 +1,34 @@
 win = Ti.UI.currentWindow
 win.backgroundColor = 'stripped'
 
+view = Ti.UI.createView
+  layout: 'vertical'
+
+nameLabel = Ti.UI.createLabel
+  width: 'auto'
+  height: 'auto'
+  top: 12
+  left: 15
+  text: "はてなID"
+  color: "#333"
+  shadowColor: "#fff"
+  shadowOffset:
+    x: 0
+    y: 1
+  font:
+    fontSize: 14
+    fontWeight: "bold"
+
 nameField = Ti.UI.createTextField
   color: '#194C7F'
-  top: 25
+  top: 6
   left: 10
-  height: 40
   width: 300
+  height: 40
   hintText: 'はてなID'
-  borderStyle: Ti.UI.INPUT_BORDERSTYLE_LINE
   clearButtonMode: Ti.UI.INPUT_BUTTONMODE_ONFOCUS
   autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
   backgroundColor: "#fff"
-  borderColor: "#ababab"
   borderRadius: 10
   font:
     fontSize: 16
@@ -30,4 +46,16 @@ doneButton.addEventListener 'click', (e) ->
   win.close()
 
 win.setRightNavButton doneButton
-win.add nameField
+
+view.add nameLabel
+view.add nameField
+win.add view
+
+cancelButton = Ti.UI.createButton
+  visible: true
+  title: "キャンセル"
+
+cancelButton.addEventListener 'click', (e) ->
+  win.close()
+
+win.setLeftNavButton cancelButton
