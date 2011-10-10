@@ -84,7 +84,7 @@ xhr.onload = function() {
   var data, rows;
   data = JSON.parse(this.responseText);
   rows = _(data.bookmarks).map(function(b) {
-    var bodyContainer, comment, date, image, imageContainer, name, row, _ref;
+    var bodyContainer, comment, date, image, imageContainer, name, row;
     row = Ti.UI.createTableViewRow({
       height: 'auto',
       layout: 'absolute'
@@ -168,7 +168,7 @@ xhr.onload = function() {
     });
     name.text = b.user;
     comment.text = b.comment;
-    date.text = (_ref = b.timestamp) != null ? _ref : "";
+    date.text = b.timestamp.substr(0, 10);
     bodyContainer.add(name);
     bodyContainer.add(comment);
     row.add(imageContainer);

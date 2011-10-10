@@ -54,7 +54,7 @@ row1.addEventListener('click', function() {
   });
   fv = new FeedView({
     win: bookmarkWin,
-    url: "http://localhost:3000/" + user.name + "/bookmark"
+    url: Ti.App.config.serverRoot + ("/" + user.name + "/bookmark")
   });
   fv.initialize();
   return Ti.UI.currentTab.open(bookmarkWin);
@@ -70,7 +70,7 @@ row2.addEventListener('click', function() {
   });
   fv = new FeedView({
     win: timelineWin,
-    url: "http://localhost:3000/" + user.name
+    url: Ti.App.config.serverRoot + ("/" + user.name)
   });
   fv.initialize();
   return Ti.UI.currentTab.open(timelineWin);

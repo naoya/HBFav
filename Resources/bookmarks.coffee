@@ -167,7 +167,7 @@ xhr.onload = ->
 
     name.text    = b.user
     comment.text = b.comment
-    date.text    = b.timestamp ? ""
+    date.text    = b.timestamp.substr(0, 10)
 
     bodyContainer.add name
     bodyContainer.add comment

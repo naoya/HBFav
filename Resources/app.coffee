@@ -1,3 +1,6 @@
+Ti.App.config =
+  serverRoot: 'http://localhost:3000'
+
 Ti.UI.setBackgroundColor '#fff'
 
 win = Ti.UI.createWindow

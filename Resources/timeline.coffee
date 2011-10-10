@@ -28,7 +28,7 @@ initApp = ()->
     Ti.UI.currentTab.open profile
   win.setRightNavButton icon
 
-  fv.url = "http://localhost:3000/#{user}"
+  fv.url = Ti.App.config.serverRoot + "/#{user}"
   if fv.lastRow > 0
     fv.clear()
   fv.initialize()
