@@ -194,7 +194,7 @@ class FeedView
       font:
         fontSize:12
         fontWeight:"bold"
-      shadowColor:"#999"
+      shadowColor:"#fff"
       shadowOffset:
         x:0
         y:1
@@ -210,12 +210,14 @@ class FeedView
       textAlign:"center"
       font:
         fontSize:11
-      shadowColor:"#999",
+        fontWeight: 'bold'
+      shadowColor:"#fff"
       shadowOffset:
         x:0
         y:1
 
     actInd = Titanium.UI.createActivityIndicator
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
       left:20
       bottom:13
       width:30

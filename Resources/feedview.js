@@ -291,7 +291,7 @@ FeedView = (function() {
         fontSize: 12,
         fontWeight: "bold"
       },
-      shadowColor: "#999",
+      shadowColor: "#fff",
       shadowOffset: {
         x: 0,
         y: 1
@@ -306,15 +306,17 @@ FeedView = (function() {
       color: "#576c89",
       textAlign: "center",
       font: {
-        fontSize: 11
+        fontSize: 11,
+        fontWeight: 'bold'
       },
-      shadowColor: "#999",
+      shadowColor: "#fff",
       shadowOffset: {
         x: 0,
         y: 1
       }
     });
     actInd = Titanium.UI.createActivityIndicator({
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
       left: 20,
       bottom: 13,
       width: 30,
