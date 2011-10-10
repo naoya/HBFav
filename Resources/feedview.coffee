@@ -21,6 +21,10 @@ class AbstractState
       data = JSON.parse @.responseText
       Ti.API.debug 'json parsed'
       onload.apply(self, [ data ])
+
+      xhr.onload = null
+      xhr.onerror = null
+      xhr = null
     xhr.onerror = (err) ->
       onerror.apply(self, [ err ])
     xhr.send()
@@ -255,13 +259,11 @@ class FeedView
       ind.show()
       row
     @pager.show = ()=>
-      # @pager.indicator.show()
       @table.appendRow @pager.createRow()
     @pager.hide = ()=>
       @table.deleteRow @lastRow,
-        # animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+        animated: false
         animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
-      # @pager.indicator.hide()
 
   setFeed: (feed) ->
     Ti.API.debug "setFeed()"

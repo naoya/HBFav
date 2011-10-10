@@ -176,6 +176,9 @@ xhr.onload = function() {
     row.add(date);
     return row;
   });
-  return table.setData(rows);
+  table.setData(rows);
+  xhr.onload = null;
+  xhr.onerror = null;
+  return xhr = null;
 };
 xhr.send();

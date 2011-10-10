@@ -179,4 +179,8 @@ xhr.onload = ->
 
   table.setData rows
 
+  xhr.onload = null
+  xhr.onerror = null
+  xhr = null
+
 xhr.send()

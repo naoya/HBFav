@@ -31,7 +31,10 @@ AbstractState = (function() {
       Ti.API.debug(this.responseText);
       data = JSON.parse(this.responseText);
       Ti.API.debug('json parsed');
-      return onload.apply(self, [data]);
+      onload.apply(self, [data]);
+      xhr.onload = null;
+      xhr.onerror = null;
+      return xhr = null;
     };
     xhr.onerror = function(err) {
       return onerror.apply(self, [err]);
@@ -352,6 +355,7 @@ FeedView = (function() {
     }, this);
     this.pager.hide = __bind(function() {
       return this.table.deleteRow(this.lastRow, {
+        animated: false,
         animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
       });
     }, this);

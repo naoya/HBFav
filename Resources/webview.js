@@ -57,7 +57,7 @@ instapaperButton.addEventListener('click', function(e) {
     if (this.status === 201) {
       messageInd.hide();
       messageLabel.text = "保存しました";
-      return setTimeout(function() {
+      setTimeout(function() {
         return messageWin.close({
           opacity: 0,
           duration: 500
@@ -69,8 +69,11 @@ instapaperButton.addEventListener('click', function(e) {
         title: "Request Failed",
         message: "StatusCode: " + this.status
       });
-      return dialog.show();
+      dialog.show();
     }
+    xhr.onload = null;
+    xhr.onerror = null;
+    return xhr = null;
   };
   xhr.onerror = function(e) {
     messageWin.close();

@@ -82,6 +82,10 @@ instapaperButton.addEventListener 'click', (e) ->
         message: "StatusCode: #{@.status}"
       dialog.show()
 
+    xhr.onload = null
+    xhr.onerror = null
+    xhr = null
+
   xhr.onerror = (e) ->
     messageWin.close()
     alert e.error
