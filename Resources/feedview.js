@@ -266,10 +266,18 @@ FeedView = (function() {
     return this.transitState(new InitStartState(this));
   };
   function FeedView(_arg) {
-    var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
+    var actInd, arrow, border, header, lastUpdatedLabel, loadingInd, loadingRow, statusLabel, table;
     this.win = _arg.win, this.url = _arg.url;
+    loadingRow = Ti.UI.createTableViewRow();
+    loadingInd = Ti.UI.createActivityIndicator({
+      top: 10,
+      bottom: 10,
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+    });
+    loadingInd.show();
+    loadingRow.add(loadingInd);
     table = Ti.UI.createTableView({
-      data: []
+      data: [loadingRow]
     });
     table.addEventListener('scroll', __bind(function(e) {
       return this.state.scroll(e);

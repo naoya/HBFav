@@ -69,9 +69,17 @@ border = Ti.UI.createView
   top: 68
   height: 1
 
+loadingRow = Ti.UI.createTableViewRow()
+ind = Ti.UI.createActivityIndicator
+  top: 10
+  bottom: 10
+  style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+ind.show()
+loadingRow.add ind
+
 table = Ti.UI.createTableView
   top: 69
-  data: []
+  data: [ loadingRow ]
 
 win.add header
 win.add border

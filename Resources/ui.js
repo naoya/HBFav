@@ -13,10 +13,8 @@ HBFav.UI = {
       cacheFile = Ti.Filesystem.getFile(cacheFilePath);
       if (cacheFile.exists()) {
         timestamp = cacheFile.modificationTimestamp();
-        Ti.API.debug("cache hit: " + cacheFilePath + " [" + timestamp + "]");
         return ui.image = cacheFilePath;
       } else {
-        Ti.API.debug("cache miss: " + url);
         ui.addEventListener('load', function() {
           cacheFile = Ti.Filesystem.getFile(cacheFilePath);
           if (!cacheFile.exists()) {

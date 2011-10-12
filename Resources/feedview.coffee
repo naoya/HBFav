@@ -6,8 +6,6 @@ class AbstractState
   toString : () ->  'AbstractState'
   constructor: (@feedView) ->
   getFeed : (url) ->
-    # Ti.API.debug 'getFeed'
-
     self = @
     onload = @.onload
     onerror = @.onerror
@@ -16,10 +14,7 @@ class AbstractState
     xhr.timeout = 100000
     xhr.open 'GET', url
     xhr.onload = ->
-      # Ti.API.debug 'onload'
-      # Ti.API.debug @.responseText
       data = JSON.parse @.responseText
-      # Ti.API.debug 'json parsed'
       onload.apply(self, [ data ])
 
       xhr.onload = null
@@ -184,9 +179,16 @@ class FeedView
     @.transitState new InitStartState @
 
   constructor: (win: @win, url: @url) ->
-    # Ti.API.debug 'new FeedView'
+    loadingRow = Ti.UI.createTableViewRow()
+    loadingInd = Ti.UI.createActivityIndicator
+      top: 10
+      bottom: 10
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+    loadingInd.show()
+    loadingRow.add loadingInd
+
     table = Ti.UI.createTableView
-      data: []
+      data: [ loadingRow ]
 
     table.addEventListener 'scroll', (e) =>
       @state.scroll e

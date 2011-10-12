@@ -12,10 +12,10 @@ HBFav.UI =
 
       if cacheFile.exists()
         timestamp = cacheFile.modificationTimestamp()
-        Ti.API.debug "cache hit: #{cacheFilePath} [#{timestamp}]"
+        # Ti.API.debug "cache hit: #{cacheFilePath} [#{timestamp}]"
         ui.image = cacheFilePath
       else
-        Ti.API.debug "cache miss: #{url}"
+        # Ti.API.debug "cache miss: #{url}"
         ui.addEventListener 'load', () ->
           cacheFile = Ti.Filesystem.getFile cacheFilePath
           if not cacheFile.exists()
