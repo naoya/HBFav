@@ -49,17 +49,29 @@ class NormalState extends AbstractState
       @feedView.header.arrow.animate transform:t, duration:180
       @feedView.header.statusLabel.text = "指をはなして更新…"
       @feedView.transitState new PullingState @feedView
-    else
-      ## paging
-      height   = e.size.height
-      total    = offset + height
-      theEnd   = e.contentSize.height
-      distance = theEnd - total
-      if distance < @lastDistance
-        nearEnd = theEnd * .75
-        if total >= nearEnd
-          @feedView.transitState new PagingStartState @feedView
-      @lastDistance = distance
+    # else
+    #   ## paging
+    #   height   = e.size.height
+    #   total    = offset + height
+    #   theEnd   = e.contentSize.height
+    #   distance = theEnd - total
+    #   if distance < @lastDistance
+    #     nearEnd = theEnd * .75
+    #     if total >= nearEnd
+    #       @feedView.transitState new PagingStartState @feedView
+    #   @lastDistance = distance
+  scrollEnd: (e) ->
+    ## paging
+    offset = e.contentOffset.y;
+    height   = e.size.height
+    total    = offset + height
+    theEnd   = e.contentSize.height
+    distance = theEnd - total
+    if distance < @lastDistance
+      nearEnd = theEnd * .75
+      if total >= nearEnd
+        @feedView.transitState new PagingStartState @feedView
+    @lastDistance = distance
 
 class PullingState extends AbstractState
   toString: () -> "PullingState"

@@ -65,7 +65,7 @@ comment = Ti.UI.createLabel({
   height: 'auto',
   bottom: 10,
   font: {
-    fontSize: 20
+    fontSize: 18
   }
 });
 titleContainer = Ti.UI.createView({

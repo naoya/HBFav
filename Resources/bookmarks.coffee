@@ -105,7 +105,7 @@ xhr.onload = ->
           user:
             name: b.user
             profile_image_url: "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + "/#{b.user}/profile.gif"
-          favicon_url: "http://favicon.st-hatena.com/?url=#{data.entry_url}"
+          favicon_url: "http://favicon.st-hatena.com/?url=#{data.url}"
           title: data.title
           count: data.count
           link: data.url
@@ -120,13 +120,14 @@ xhr.onload = ->
       top: 0
       left: 0
 
+    ## FIXME: サーバサイドとコード被ってる
     image = HBFav.UI.createImageView
       width: 48
       height: 48
       top: 10
       left: 10
       borderRadius: 5
-    image = image.imageWithCache "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + "/#{b.user}/profile.gif"
+    image.imageWithCache "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + "/#{b.user}/profile.gif"
     imageContainer.add image
 
     bodyContainer = Ti.UI.createView

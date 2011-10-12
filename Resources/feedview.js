@@ -56,7 +56,7 @@ NormalState = (function() {
     this.lastDistance = 0;
   }
   NormalState.prototype.scroll = function(e) {
-    var distance, height, nearEnd, offset, t, theEnd, total;
+    var offset, t;
     offset = e.contentOffset.y;
     if (offset <= -65.0) {
       t = Ti.UI.create2DMatrix();
@@ -67,19 +67,22 @@ NormalState = (function() {
       });
       this.feedView.header.statusLabel.text = "指をはなして更新…";
       return this.feedView.transitState(new PullingState(this.feedView));
-    } else {
-      height = e.size.height;
-      total = offset + height;
-      theEnd = e.contentSize.height;
-      distance = theEnd - total;
-      if (distance < this.lastDistance) {
-        nearEnd = theEnd * .75;
-        if (total >= nearEnd) {
-          this.feedView.transitState(new PagingStartState(this.feedView));
-        }
-      }
-      return this.lastDistance = distance;
     }
+  };
+  NormalState.prototype.scrollEnd = function(e) {
+    var distance, height, nearEnd, offset, theEnd, total;
+    offset = e.contentOffset.y;
+    height = e.size.height;
+    total = offset + height;
+    theEnd = e.contentSize.height;
+    distance = theEnd - total;
+    if (distance < this.lastDistance) {
+      nearEnd = theEnd * .75;
+      if (total >= nearEnd) {
+        this.feedView.transitState(new PagingStartState(this.feedView));
+      }
+    }
+    return this.lastDistance = distance;
   };
   return NormalState;
 })();
