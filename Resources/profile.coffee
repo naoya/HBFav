@@ -1,4 +1,5 @@
 Ti.include 'feedview.js'
+Ti.include 'ui.js'
 win = Ti.UI.currentWindow
 user = win.user
 
@@ -10,13 +11,13 @@ imageContainer = Ti.UI.createView
   left: 0
   backgroundColor: "stripped"
 
-image = Ti.UI.createImageView
-  image: user.profile_image_url
+image = HBFav.UI.createImageView
   width: 48
   height: 48
   top: 10
   left: 10
   borderRadius: 5
+image.imageWithCache user.profile_image_url
 
 name = Ti.UI.createLabel
   width: 'auto'

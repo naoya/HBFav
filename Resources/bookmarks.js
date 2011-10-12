@@ -1,5 +1,6 @@
 var bookmark, border, entryContainer, favicon, header, link, table, title, titleContainer, url, win, xhr;
 require('lib/underscore');
+Ti.include('ui.js');
 win = Ti.UI.currentWindow;
 bookmark = win.bookmark;
 link = encodeURI(bookmark.link);
@@ -27,13 +28,13 @@ titleContainer = Ti.UI.createView({
   top: 0,
   left: 0
 });
-favicon = Ti.UI.createImageView({
-  image: bookmark.favicon_url,
+favicon = HBFav.UI.createImageView({
   width: 14,
   height: 14,
   top: 2,
   left: 0
 });
+favicon.imageWithCache(bookmark.favicon_url);
 title = Ti.UI.createLabel({
   color: '#000',
   top: 0,
@@ -117,14 +118,14 @@ xhr.onload = function() {
       top: 0,
       left: 0
     });
-    image = Ti.UI.createImageView({
-      image: "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + ("/" + b.user + "/profile.gif"),
+    image = HBFav.UI.createImageView({
       width: 48,
       height: 48,
       top: 10,
       left: 10,
       borderRadius: 5
     });
+    image = image.imageWithCache("http://www.st-hatena.com/users/" + b.user.substr(0, 2) + ("/" + b.user + "/profile.gif"));
     imageContainer.add(image);
     bodyContainer = Ti.UI.createView({
       layout: 'vertical',

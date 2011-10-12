@@ -1,4 +1,5 @@
 Ti.include 'feedview.js'
+Ti.include 'ui.js'
 
 win = Ti.UI.currentWindow
 win.layout = 'vertical'
@@ -26,13 +27,13 @@ imageContainer = Ti.UI.createView
   # backgroundColor: "#B8C4D2"
   backgroundColor: "stripped"
 
-image = Ti.UI.createImageView
-  image: bookmark.user.profile_image_url
+image = HBFav.UI.createImageView
   width: 48
   height: 48
   top: 10
   left: 10
   borderRadius: 5
+image.imageWithCache bookmark.user.profile_image_url
 
 name = Ti.UI.createLabel
   width: 'auto'
@@ -77,12 +78,12 @@ titleContainer = Ti.UI.createView
   top: 0
   left: 0
 
-favicon = Ti.UI.createImageView
-  image: bookmark.favicon_url
+favicon = HBFav.UI.createImageView
   width: 16
   height: 16
   top: 2
   left: 0
+favicon.imageWithCache bookmark.favicon_url
 
 title = Ti.UI.createLabel
   color: '#3B5998'
