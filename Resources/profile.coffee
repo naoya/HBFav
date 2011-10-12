@@ -35,10 +35,9 @@ name.text = user.name
 imageContainer.add image
 imageContainer.add name
 
-table = Ti.UI.createTableView
-  top: 58
-  data: []
-  style: Ti.UI.iPhone.TableViewStyle.GROUPED
+## ボタン配置
+sections = []
+section1 = Ti.UI.createTableViewSection()
 
 row1 = Ti.UI.createTableViewRow
   hasChild: true
@@ -66,13 +65,18 @@ row2.addEventListener 'click', ->
   fv.initialize()
   Ti.UI.currentTab.open timelineWin
 
-table.appendRow row1
-table.appendRow row2
+section1.add row1
+section1.add row2
+sections.push section1
 
 if win.showConfig
+  section2 = Ti.UI.createTableViewSection
+    visible: true
+    headerTitle: '設定'
+
   row3 = Ti.UI.createTableViewRow
     title: 'はてなID'
-    header: '設定'
+    # header: '設定'
     color: '#385487'
 
   row3.addEventListener 'click', (e) ->
@@ -96,9 +100,19 @@ if win.showConfig
       title: 'Instapaper'
     instapaper.open()
 
-  table.appendRow row3
+  # table.appendRow row3
   # table.insertRowAfter 2, row4 # もっとましな挿入方法ないの?
-  table.appendRow row4
+  # table.appendRow row4
+  # table.add section2
+
+  section2.add row3
+  section2.add row4
+  sections.push section2
+
+table = Ti.UI.createTableView
+  top: 58
+  data: sections
+  style: Ti.UI.iPhone.TableViewStyle.GROUPED
 
 win.add imageContainer
 win.add table

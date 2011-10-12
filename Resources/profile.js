@@ -1,4 +1,4 @@
-var image, imageContainer, name, row1, row2, row3, row4, table, user, win;
+var image, imageContainer, name, row1, row2, row3, row4, section1, section2, sections, table, user, win;
 Ti.include('feedview.js');
 win = Ti.UI.currentWindow;
 user = win.user;
@@ -38,11 +38,8 @@ name = Ti.UI.createLabel({
 name.text = user.name;
 imageContainer.add(image);
 imageContainer.add(name);
-table = Ti.UI.createTableView({
-  top: 58,
-  data: [],
-  style: Ti.UI.iPhone.TableViewStyle.GROUPED
-});
+sections = [];
+section1 = Ti.UI.createTableViewSection();
 row1 = Ti.UI.createTableViewRow({
   hasChild: true,
   title: "ブックマーク"
@@ -75,12 +72,16 @@ row2.addEventListener('click', function() {
   fv.initialize();
   return Ti.UI.currentTab.open(timelineWin);
 });
-table.appendRow(row1);
-table.appendRow(row2);
+section1.add(row1);
+section1.add(row2);
+sections.push(section1);
 if (win.showConfig) {
+  section2 = Ti.UI.createTableViewSection({
+    visible: true,
+    headerTitle: '設定'
+  });
   row3 = Ti.UI.createTableViewRow({
     title: 'はてなID',
-    header: '設定',
     color: '#385487'
   });
   row3.addEventListener('click', function(e) {
@@ -110,8 +111,14 @@ if (win.showConfig) {
     });
     return instapaper.open();
   });
-  table.appendRow(row3);
-  table.appendRow(row4);
+  section2.add(row3);
+  section2.add(row4);
+  sections.push(section2);
 }
+table = Ti.UI.createTableView({
+  top: 58,
+  data: sections,
+  style: Ti.UI.iPhone.TableViewStyle.GROUPED
+});
 win.add(imageContainer);
 win.add(table);

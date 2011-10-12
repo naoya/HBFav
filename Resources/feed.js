@@ -8,7 +8,7 @@ Feed = (function() {
   Feed.prototype.size = function() {
     return this.f.bookmarks.length;
   };
-  Feed.prototype.toRows = function(win) {
+  Feed.prototype.toRows = function() {
     return _(this.f.bookmarks).map(function(bookmark) {
       var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref, _ref2;
       row = Ti.UI.createTableViewRow({

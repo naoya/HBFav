@@ -372,7 +372,7 @@ FeedView = (function() {
     }, this);
   }
   FeedView.prototype.setFeed = function(feed) {
-    this.table.setData(feed.toRows(this.win));
+    this.table.setData(feed.toRows());
     return this.lastRow = feed.size();
   };
   FeedView.prototype.clear = function() {
@@ -380,13 +380,15 @@ FeedView = (function() {
     return this.lastRow = 0;
   };
   FeedView.prototype.appendFeed = function(feed) {
-    var rows;
-    rows = feed.toRows(this.win);
-    _(rows).each(__bind(function(row) {
-      return this.table.appendRow(row, {
-        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-      });
-    }, this));
+    var current, rows, sec;
+    rows = feed.toRows();
+    current = this.table.data;
+    sec = Ti.UI.createTableViewSection();
+    _(rows).each(function(row) {
+      return sec.add(row);
+    });
+    current.push(sec);
+    this.table.setData(current);
     return this.lastRow += feed.size();
   };
   return FeedView;

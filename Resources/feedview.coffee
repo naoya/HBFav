@@ -283,7 +283,7 @@ class FeedView
 
   setFeed: (feed) ->
     # Ti.API.debug "setFeed()"
-    @table.setData feed.toRows(@win)
+    @table.setData feed.toRows()
     @lastRow = feed.size()
 
   clear: () ->
@@ -313,8 +313,11 @@ class FeedView
     # @table.appendRow loading
 
   appendFeed: (feed) ->
-    rows = feed.toRows(@win)
-    _(rows).each (row) =>
-      @table.appendRow row,
-        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+    rows = feed.toRows()
+    current = @table.data
+    sec = Ti.UI.createTableViewSection()
+    _(rows).each (row) ->
+      sec.add row
+    current.push sec
+    @table.setData current
     @lastRow += feed.size()

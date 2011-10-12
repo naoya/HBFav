@@ -7,7 +7,7 @@ class Feed
   size: ->
     @f.bookmarks.length
 
-  toRows: (win) ->
+  toRows: ->
     return _(@f.bookmarks).map (bookmark) ->
       row = Ti.UI.createTableViewRow
         height: 'auto'
