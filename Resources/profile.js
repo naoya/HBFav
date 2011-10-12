@@ -26,7 +26,7 @@ name = Ti.UI.createLabel({
   color: "#000",
   textAlign: "left",
   font: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold'
   },
   shadowColor: "#fff",

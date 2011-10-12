@@ -6,7 +6,7 @@ class AbstractState
   toString : () ->  'AbstractState'
   constructor: (@feedView) ->
   getFeed : (url) ->
-    Ti.API.debug 'getFeed'
+    # Ti.API.debug 'getFeed'
 
     self = @
     onload = @.onload
@@ -16,10 +16,10 @@ class AbstractState
     xhr.timeout = 100000
     xhr.open 'GET', url
     xhr.onload = ->
-      Ti.API.debug 'onload'
-      Ti.API.debug @.responseText
+      # Ti.API.debug 'onload'
+      # Ti.API.debug @.responseText
       data = JSON.parse @.responseText
-      Ti.API.debug 'json parsed'
+      # Ti.API.debug 'json parsed'
       onload.apply(self, [ data ])
 
       xhr.onload = null
@@ -140,13 +140,13 @@ class PagingEndState extends AbstractState
 class InitStartState extends AbstractState
   toString : () -> "InitStartState"
   constructor: (@feedView) ->
-    Ti.API.debug 'constructor'
+    # Ti.API.debug 'constructor'
   execute: () ->
-    Ti.API.debug 'start execute'
+    # Ti.API.debug 'start execute'
     @.getFeed @feedView.url
-    Ti.API.debug 'end execute'
+    # Ti.API.debug 'end execute'
   onload : (data) ->
-    Ti.API.debug 'InitStartState::onload'
+    # Ti.API.debug 'InitStartState::onload'
     @feedView.transitState new InitEndState @feedView, data
   onerror : (err) ->
     alert err.error
@@ -158,7 +158,7 @@ class InitEndState extends AbstractState
   execute : () ->
     feed = new Feed @data
     @feedView.setFeed feed
-    Ti.API.debug 'setFeed done.'
+    # Ti.API.debug 'setFeed done.'
     @feedView.transitState new NormalState @feedView
 
 class FeedView
@@ -172,7 +172,7 @@ class FeedView
     @.transitState new InitStartState @
 
   constructor: (win: @win, url: @url) ->
-    Ti.API.debug 'new FeedView'
+    # Ti.API.debug 'new FeedView'
     table = Ti.UI.createTableView
       data: []
 
@@ -182,7 +182,7 @@ class FeedView
       @state.scrollEnd e
 
     @win.add table
-    Ti.API.debug 'Added table'
+    # Ti.API.debug 'Added table'
 
     ## Pull to Refresh 用
     border = Ti.UI.createView
@@ -282,7 +282,7 @@ class FeedView
         animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
 
   setFeed: (feed) ->
-    Ti.API.debug "setFeed()"
+    # Ti.API.debug "setFeed()"
     @table.setData feed.toRows(@win)
     @lastRow = feed.size()
 

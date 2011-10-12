@@ -51,7 +51,7 @@ class Feed
         bottom: 5
         color: "#000"
         font:
-          "font-size" : 12
+          fontSize : 15
           fontWeight: 'bold'
 
       comment = Ti.UI.createLabel
@@ -62,7 +62,7 @@ class Feed
         height: 'auto'
         bottom: 6
         font:
-          "font-size": 14
+          fontSize: 15
 
       titleContainer = Ti.UI.createView
         layout: 'horizontal'
@@ -75,8 +75,8 @@ class Feed
 
       favicon = Ti.UI.createImageView
         image: bookmark.favicon_url
-        width: 14
-        height: 14
+        width: 16
+        height: 16
         top: 2
         left: 0
 
@@ -87,7 +87,7 @@ class Feed
         width: 'auto'
         height: 'auto'
         font:
-          "font-size": 14
+          fontSize: 15
 
       date = Ti.UI.createLabel
         width: 'auto'
@@ -96,7 +96,7 @@ class Feed
         right: 10
         color: '#999'
         font:
-          fontSize: 12
+          fontSize: 14
 
       # count = Ti.UI.createLabel
       #   width: 'auto'

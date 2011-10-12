@@ -143,7 +143,7 @@ xhr.onload = ->
       bottom: 5
       color: '#000'
       font:
-        "font-size" : 12
+        fontSize : 16
         fontWeight: 'bold'
 
     comment = Ti.UI.createLabel
@@ -154,7 +154,7 @@ xhr.onload = ->
       height: 'auto'
       bottom: 10
       font:
-        "font-size": 14
+        fontSize: 16
 
     date = Ti.UI.createLabel
       width: 'auto'
@@ -163,7 +163,7 @@ xhr.onload = ->
       right: 10
       color: '#999'
       font:
-        fontSize: 12
+        fontSize: 14
 
     name.text    = b.user
     comment.text = b.comment

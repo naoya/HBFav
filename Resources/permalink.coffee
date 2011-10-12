@@ -41,7 +41,7 @@ name = Ti.UI.createLabel
   top: 10
   color: "#000"
   font:
-    fontSize : 16
+    fontSize : 18
     fontWeight: 'bold'
   shadowColor: "#fff"
   shadowOffset: x: 0, y: 1
@@ -67,7 +67,7 @@ comment = Ti.UI.createLabel
   height: 'auto'
   bottom: 10
   font:
-    fontSize: 18
+    fontSize: 20
 
 titleContainer = Ti.UI.createView
   layout: 'horizontal'
@@ -91,7 +91,7 @@ title = Ti.UI.createLabel
   width: 'auto'
   height: 'auto'
   font:
-    fontSize: 16
+    fontSize: 18
 
 link = Ti.UI.createLabel
   color: '#666'

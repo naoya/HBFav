@@ -18,7 +18,6 @@ AbstractState = (function() {
   }
   AbstractState.prototype.getFeed = function(url) {
     var onerror, onload, self, xhr;
-    Ti.API.debug('getFeed');
     self = this;
     onload = this.onload;
     onerror = this.onerror;
@@ -27,10 +26,7 @@ AbstractState = (function() {
     xhr.open('GET', url);
     xhr.onload = function() {
       var data;
-      Ti.API.debug('onload');
-      Ti.API.debug(this.responseText);
       data = JSON.parse(this.responseText);
-      Ti.API.debug('json parsed');
       onload.apply(self, [data]);
       xhr.onload = null;
       xhr.onerror = null;
@@ -226,15 +222,11 @@ InitStartState = (function() {
   };
   function InitStartState(feedView) {
     this.feedView = feedView;
-    Ti.API.debug('constructor');
   }
   InitStartState.prototype.execute = function() {
-    Ti.API.debug('start execute');
-    this.getFeed(this.feedView.url);
-    return Ti.API.debug('end execute');
+    return this.getFeed(this.feedView.url);
   };
   InitStartState.prototype.onload = function(data) {
-    Ti.API.debug('InitStartState::onload');
     return this.feedView.transitState(new InitEndState(this.feedView, data));
   };
   InitStartState.prototype.onerror = function(err) {
@@ -256,7 +248,6 @@ InitEndState = (function() {
     var feed;
     feed = new Feed(this.data);
     this.feedView.setFeed(feed);
-    Ti.API.debug('setFeed done.');
     return this.feedView.transitState(new NormalState(this.feedView));
   };
   return InitEndState;
@@ -274,7 +265,6 @@ FeedView = (function() {
   function FeedView(_arg) {
     var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
     this.win = _arg.win, this.url = _arg.url;
-    Ti.API.debug('new FeedView');
     table = Ti.UI.createTableView({
       data: []
     });
@@ -285,7 +275,6 @@ FeedView = (function() {
       return this.state.scrollEnd(e);
     }, this));
     this.win.add(table);
-    Ti.API.debug('Added table');
     border = Ti.UI.createView({
       backgroundColor: "#576c89",
       height: 2,
@@ -383,7 +372,6 @@ FeedView = (function() {
     }, this);
   }
   FeedView.prototype.setFeed = function(feed) {
-    Ti.API.debug("setFeed()");
     this.table.setData(feed.toRows(this.win));
     return this.lastRow = feed.size();
   };

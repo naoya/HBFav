@@ -1,7 +1,8 @@
 var tab1, tabGroup, win;
 Ti.App.config = {
-  serverRoot: 'http://localhost:3000'
+  serverRoot: 'http://hbfav.herokuapp.com'
 };
+Ti.API.debug("serverRoot: " + Ti.App.config.serverRoot);
 Ti.UI.setBackgroundColor('#fff');
 win = Ti.UI.createWindow({
   url: 'timeline.js',

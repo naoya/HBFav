@@ -54,7 +54,7 @@ Feed = (function() {
         bottom: 5,
         color: "#000",
         font: {
-          "font-size": 12,
+          fontSize: 15,
           fontWeight: 'bold'
         }
       });
@@ -66,7 +66,7 @@ Feed = (function() {
         height: 'auto',
         bottom: 6,
         font: {
-          "font-size": 14
+          fontSize: 15
         }
       });
       titleContainer = Ti.UI.createView({
@@ -79,8 +79,8 @@ Feed = (function() {
       });
       favicon = Ti.UI.createImageView({
         image: bookmark.favicon_url,
-        width: 14,
-        height: 14,
+        width: 16,
+        height: 16,
         top: 2,
         left: 0
       });
@@ -91,7 +91,7 @@ Feed = (function() {
         width: 'auto',
         height: 'auto',
         font: {
-          "font-size": 14
+          fontSize: 15
         }
       });
       date = Ti.UI.createLabel({
@@ -101,7 +101,7 @@ Feed = (function() {
         right: 10,
         color: '#999',
         font: {
-          fontSize: 12
+          fontSize: 14
         }
       });
       imageContainer.add(image);

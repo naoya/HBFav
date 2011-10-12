@@ -55,7 +55,7 @@ rss2timeline = (url, cb) ->
       try
         parser.parseString body
       catch e
-        console.log response.statusCode
+        # console.log response.statusCode
         console.log e
 
 app.get "/:id", (req, res) ->

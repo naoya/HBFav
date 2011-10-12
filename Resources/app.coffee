@@ -1,5 +1,9 @@
 Ti.App.config =
-  serverRoot: 'http://localhost:3000'
+  serverRoot: 'http://hbfav.herokuapp.com'
+  # serverRoot: 'http://localhost:3000'
+  # serverRoot: 'http://192.168.11.6:3000'
+
+Ti.API.debug "serverRoot: #{Ti.App.config.serverRoot}"
 
 Ti.UI.setBackgroundColor '#fff'
 
