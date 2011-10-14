@@ -172,7 +172,7 @@ bodyContainer.addEventListener('click', function() {
     url: 'webview.js',
     title: bookmark.title,
     backgroundColor: '#fff',
-    link: bookmark.link
+    bookmark: bookmark
   });
   return Ti.UI.currentTab.open(webView);
 });

@@ -55,7 +55,7 @@ Feed = (function() {
         bottom: 5,
         color: "#000",
         font: {
-          fontSize: 15,
+          fontSize: 16,
           fontWeight: 'bold'
         }
       });
@@ -67,7 +67,7 @@ Feed = (function() {
         height: 'auto',
         bottom: 6,
         font: {
-          fontSize: 15
+          fontSize: 16
         }
       });
       titleContainer = Ti.UI.createView({
@@ -92,7 +92,7 @@ Feed = (function() {
         width: 'auto',
         height: 'auto',
         font: {
-          fontSize: 15
+          fontSize: 16
         }
       });
       date = Ti.UI.createLabel({

@@ -1,9 +1,24 @@
-var flexSpace, instapaperButton, messageInd, messageLabel, messageView, messageWin, webview, win;
+var bookmark, countButton, flexSpace, instapaperButton, messageInd, messageLabel, messageView, messageWin, webview, win;
 win = Ti.UI.currentWindow;
+bookmark = win.bookmark;
 webview = Ti.UI.createWebView({
-  url: win.link
+  url: bookmark.link
 });
 win.add(webview);
+countButton = Ti.UI.createButton({
+  title: "" + bookmark.count + "users"
+});
+countButton.addEventListener('click', function() {
+  var bookmarksWin;
+  bookmarksWin = Ti.UI.createWindow({
+    url: 'bookmarks.js',
+    title: "" + bookmark.count + " users",
+    backgroundColor: "#fff",
+    bookmark: bookmark
+  });
+  return Ti.UI.currentTab.open(bookmarksWin);
+});
+win.setRightNavButton(countButton);
 messageWin = Ti.UI.createWindow({
   height: 40,
   width: 250,

@@ -1,6 +1,8 @@
 win = Ti.UI.currentWindow
+bookmark = win.bookmark
+
 webview = Ti.UI.createWebView
-  url: win.link
+  url: bookmark.link
 
 ## 要る?
 # backButton = Ti.UI.createButton
@@ -19,6 +21,20 @@ webview = Ti.UI.createWebView
 
 win.add webview
 
+## to /entry
+countButton = Ti.UI.createButton
+  title: "#{bookmark.count}users"
+
+countButton.addEventListener 'click', ->
+  bookmarksWin = Ti.UI.createWindow
+    url: 'bookmarks.js'
+    title: "#{bookmark.count} users"
+    backgroundColor: "#fff"
+    bookmark: bookmark
+  Ti.UI.currentTab.open bookmarksWin
+win.setRightNavButton countButton
+
+## InstaPaper
 messageWin = Ti.UI.createWindow
   height: 40
   width: 250

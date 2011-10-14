@@ -183,5 +183,6 @@ bodyContainer.addEventListener 'click', ->
     url: 'webview.js'
     title: bookmark.title
     backgroundColor: '#fff'
-    link: bookmark.link
+    # link: bookmark.link
+    bookmark: bookmark
   Ti.UI.currentTab.open webView

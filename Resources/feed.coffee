@@ -53,7 +53,7 @@ class Feed
         bottom: 5
         color: "#000"
         font:
-          fontSize : 15
+          fontSize : 16
           fontWeight: 'bold'
 
       comment = Ti.UI.createLabel
@@ -64,7 +64,7 @@ class Feed
         height: 'auto'
         bottom: 6
         font:
-          fontSize: 15
+          fontSize: 16
 
       titleContainer = Ti.UI.createView
         layout: 'horizontal'
@@ -89,7 +89,7 @@ class Feed
         width: 'auto'
         height: 'auto'
         font:
-          fontSize: 15
+          fontSize: 16
 
       date = Ti.UI.createLabel
         width: 'auto'
