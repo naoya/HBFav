@@ -1,38 +1,36 @@
+Ti.include 'HatenaBookmark.js'
+
 win = Ti.UI.currentWindow
 bookmark = win.bookmark
 
 webview = Ti.UI.createWebView
   url: bookmark.link
-
-## 要る?
-# backButton = Ti.UI.createButton
-#   systemButton: Ti.UI.iPhone.SystemButton.REWIND
-#
-# backButton.addEventListener 'click', (e) ->
-#   webview.goBack()
-#
-# refreshButton = Ti.UI.createButton
-#   systemButton: Ti.UI.iPhone.SystemButton.REFRESH
-#
-# refreshButton.addEventListener 'click', (e) ->
-#   webview.reload()
-#
-# win.toolbar = [ backButton, refreshButton ]
-
 win.add webview
 
-## to /entry
-countButton = Ti.UI.createButton
-  title: "#{bookmark.count}users"
+## buttonBack
+buttonBack = Ti.UI.createButton
+  title: String.fromCharCode(0x25c0)
+buttonBack.addEventListener 'click', ->
+  webview.goBack()
 
-countButton.addEventListener 'click', ->
+buttonForward = Ti.UI.createButton
+  title: String.fromCharCode(0x25b6)
+buttonForward.addEventListener 'click', ->
+  webview.goForward()
+
+buttonRefresh = Ti.UI.createButton
+  systemButton: Ti.UI.iPhone.SystemButton.REFRESH
+buttonRefresh.addEventListener 'click', ->
+  webview.reload()
+
+## open /entry
+openBookmarks = () ->
   bookmarksWin = Ti.UI.createWindow
     url: 'bookmarks.js'
     title: "#{bookmark.count} users"
     backgroundColor: "#fff"
     bookmark: bookmark
   Ti.UI.currentTab.open bookmarksWin
-win.setRightNavButton countButton
 
 ## InstaPaper
 messageWin = Ti.UI.createWindow
@@ -70,12 +68,35 @@ messageWin.add messageView
 messageWin.add messageInd
 messageWin.add messageLabel
 
-instapaperButton = Ti.UI.createButton
-  title: 'Read Later'
-  visible: true
-  style: Ti.UI.iPhone.SystemButtonStyle.BORDERED
+## save bookmark
+sendToHatena = () ->
+  messageWin.open()
+  messageInd.show()
 
-instapaperButton.addEventListener 'click', (e) ->
+  entry =
+    url: bookmark.link,
+    comment: ""
+
+  HatenaBookmark.user =
+    id: Ti.App.Properties.getString 'hatena_id'
+    password: Ti.App.Properties.getString 'hatena_password'
+  HatenaBookmark.post entry, () ->
+    if @.status is 201
+      messageInd.hide()
+      messageLabel.text = "保存しました"
+      setTimeout ->
+        messageWin.close
+          opacity: 0
+          duration: 500
+      ,1000
+    else
+      messageWin.close()
+      dialog = Ti.UI.createAlertDialog
+        title: "Request Failed"
+        message: "StatusCode: #{@.status}"
+      dialog.show()
+
+readLater = () ->
   messageWin.open()
   messageInd.show()
 
@@ -114,4 +135,35 @@ instapaperButton.addEventListener 'click', (e) ->
 flexSpace = Ti.UI.createButton
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
 
-win.toolbar = [ flexSpace, instapaperButton ]
+## action
+actionButton = Ti.UI.createButton
+  systemButton: Ti.UI.iPhone.SystemButton.ACTION
+
+dialog = Ti.UI.createOptionDialog()
+dialog.options = [ 'B!', 'Read Later', 'Safariで開く', 'キャンセル' ]
+dialog.cancel = dialog.options.length - 1
+
+dialog.addEventListener 'click', (e) ->
+  switch e.index
+    when 0
+      sendToHatena()
+    when 1
+      readLater()
+    when 2
+      Ti.Platform.openURL webview.url
+#    when 2
+#      Ti.UI.Clipboard.setText webview.url
+
+actionButton.addEventListener 'click', ->
+  dialog.show()
+
+## to /entry
+countButton = Ti.UI.createButton
+  title: "#{bookmark.count}users"
+  style: Ti.UI.iPhone.SystemButtonStyle.BORDERED
+countButton.addEventListener 'click', openBookmarks
+
+# win.setRightNavButton countButton
+# win.toolbar = [ instapaperButton, flexSpace, actionButton ]
+win.toolbar = [ flexSpace, buttonBack, flexSpace, buttonForward, flexSpace, buttonRefresh, flexSpace, actionButton, flexSpace, countButton ]
+# win.setRightNavButton actionButton

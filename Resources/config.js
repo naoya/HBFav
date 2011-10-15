@@ -1,4 +1,4 @@
-var cancelButton, doneButton, nameField, nameLabel, view, win;
+var cancelButton, doneButton, nameField, nameLabel, passwordField, passwordLabel, view, win;
 win = Ti.UI.currentWindow;
 win.backgroundColor = 'stripped';
 view = Ti.UI.createView({
@@ -39,6 +39,41 @@ nameField = Ti.UI.createTextField({
   paddingLeft: 10,
   paddingRight: 10
 });
+passwordLabel = Ti.UI.createLabel({
+  width: 'auto',
+  height: 'auto',
+  top: 12,
+  left: 15,
+  text: "パスワード",
+  color: "#333",
+  shadowColor: "#fff",
+  shadowOffset: {
+    x: 0,
+    y: 1
+  },
+  font: {
+    fontSize: 14,
+    fontWeight: "bold"
+  }
+});
+passwordField = Ti.UI.createTextField({
+  value: Ti.App.Properties.getString('hatena_password'),
+  top: 6,
+  left: 10,
+  width: 300,
+  height: 40,
+  color: '#194C7F',
+  passwordMask: true,
+  hintText: 'パスワード',
+  autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE,
+  backgroundColor: '#fff',
+  font: {
+    fontSize: 16
+  },
+  paddingLeft: 10,
+  paddingRight: 10,
+  borderRadius: 10
+});
 doneButton = Ti.UI.createButton({
   style: Ti.UI.iPhone.SystemButtonStyle.DONE,
   visible: true,
@@ -46,11 +81,14 @@ doneButton = Ti.UI.createButton({
 });
 doneButton.addEventListener('click', function(e) {
   Ti.App.Properties.setString('hatena_id', nameField.value);
+  Ti.App.Properties.setString('hatena_password', passwordField.value);
   return win.close();
 });
 win.setRightNavButton(doneButton);
 view.add(nameLabel);
 view.add(nameField);
+view.add(passwordLabel);
+view.add(passwordField);
 win.add(view);
 cancelButton = Ti.UI.createButton({
   visible: true,
