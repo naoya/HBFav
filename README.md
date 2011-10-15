@@ -30,7 +30,7 @@ TODO
 * [DONE] Link to /entry
 * [DONE] Connect to Instapaper 
 * [DONE] Configuration
-* Post bookmark to the Hatena Bookmark
-* Deploy node server to Heroku or Dotcloud
+* [DONE] Post bookmark to the Hatena Bookmark
+* [DONE] Deploy node server to Heroku or Dotcloud
 * Fix some issues to have better quality
 * Ship it to App Store
