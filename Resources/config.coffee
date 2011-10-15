@@ -68,6 +68,23 @@ passwordField = Ti.UI.createTextField
   paddingRight: 10
   borderRadius: 10
 
+noteLabel = Ti.UI.createLabel
+  width: 'auto'
+  height: 'auto'
+  top: 12
+  left: 30
+  right: 30
+  text: "はてなブックマークへの投稿機能を利用しない場合はパスワードの入力は不要です"
+  textAlign: "center"
+  color: "#333"
+  shadowColor: "#fff"
+  shadowOffset:
+    x: 0
+    y: 1
+  font:
+    fontSize: 12
+    fontWeight: "bold"
+
 doneButton = Ti.UI.createButton
   style: Ti.UI.iPhone.SystemButtonStyle.DONE
   visible: true
@@ -84,6 +101,7 @@ view.add nameLabel
 view.add nameField
 view.add passwordLabel
 view.add passwordField
+view.add noteLabel
 win.add view
 
 cancelButton = Ti.UI.createButton
