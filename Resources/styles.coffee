@@ -41,6 +41,29 @@ HBFav.UI.styles =
       font:
         fontSize: 16
 
+    titleContainer:
+      layout: 'horizontal'
+      width: 245
+      height: 'auto'
+      top: 0
+      left: 0
+      bottom: 10
+
+    titleLabel:
+      color: '#3B5998'
+      top: 0
+      left: 3
+      width: 'auto'
+      height: 'auto'
+      font:
+        fontSize: 16
+
+    favicon:
+      width: 16
+      height: 16
+      top: 2
+      left: 0
+
     dateLabel:
       width: 'auto'
       height: 'auto'
