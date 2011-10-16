@@ -119,67 +119,24 @@ xhr.onload = function() {
       });
       return Ti.UI.currentTab.open(permalink);
     });
-    imageContainer = Ti.UI.createView({
-      layout: 'vertical',
-      width: 320,
-      height: '68',
-      top: 0,
-      left: 0
-    });
-    image = HBFav.UI.createImageView({
-      width: 48,
-      height: 48,
-      top: 10,
-      left: 10,
-      borderRadius: 5
-    });
+    imageContainer = Ti.UI.createView($$.timeline.profileImageContainer);
+    image = HBFav.UI.createImageView($$.timeline.profileImage);
     image.imageWithCache("http://www.st-hatena.com/users/" + b.user.substr(0, 2) + ("/" + b.user + "/profile.gif"));
     imageContainer.add(image);
-    bodyContainer = Ti.UI.createView({
-      layout: 'vertical',
-      width: 245,
-      height: 'auto',
-      left: 65,
-      top: 0
-    });
-    name = Ti.UI.createLabel({
-      width: 'auto',
-      height: 'auto',
-      left: 0,
-      top: 10,
-      bottom: 5,
-      color: '#000',
-      font: {
-        fontSize: 16,
-        fontWeight: 'bold'
-      }
-    });
-    comment = Ti.UI.createLabel({
-      color: '#000',
-      top: 0,
-      left: 0,
-      width: 'auto',
-      height: 'auto',
-      bottom: 10,
-      font: {
-        fontSize: 16
-      }
-    });
-    date = Ti.UI.createLabel({
-      width: 'auto',
-      height: 'auto',
-      top: 10,
-      right: 10,
-      color: '#999',
-      font: {
-        fontSize: 14
-      }
-    });
-    name.text = b.user;
-    comment.text = b.comment;
-    date.text = b.timestamp.substr(0, 10);
+    bodyContainer = Ti.UI.createView($$.timeline.bodyContainer);
+    name = Ti.UI.createLabel(_($$.timeline.nameLabel).extend({
+      text: b.user
+    }));
+    date = Ti.UI.createLabel(_($$.timeline.dateLabel).extend({
+      text: date
+    }));
     bodyContainer.add(name);
-    bodyContainer.add(comment);
+    if (b.comment.length > 0) {
+      comment = Ti.UI.createLabel(_($$.timeline.commentLabel).extend({
+        text: b.comment
+      }));
+      bodyContainer.add(comment);
+    }
     row.add(imageContainer);
     row.add(bodyContainer);
     row.add(date);

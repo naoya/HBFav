@@ -1,48 +1,105 @@
 var $$;
 HBFav.UI.styles = {
-  formLabel: {
-    width: 'auto',
-    height: 'auto',
-    color: "#333",
-    shadowColor: "#fff",
-    shadowOffset: {
-      x: 0,
-      y: 1
+  timeline: {
+    profileImage: {
+      width: 48,
+      height: 48,
+      top: 10,
+      left: 10,
+      borderRadius: 5
     },
-    font: {
-      fontSize: 14,
-      fontWeight: "bold"
+    profileImageContainer: {
+      width: 'auto',
+      height: '68',
+      top: 0,
+      left: 0
+    },
+    bodyContainer: {
+      layout: 'vertical',
+      width: 245,
+      height: 'auto',
+      left: 65,
+      top: 0
+    },
+    nameLabel: {
+      width: 'auto',
+      height: 'auto',
+      left: 0,
+      top: 10,
+      bottom: 5,
+      color: '#000',
+      font: {
+        fontSize: 16,
+        fontWeight: 'bold'
+      }
+    },
+    commentLabel: {
+      color: '#000',
+      top: 0,
+      left: 0,
+      width: 'auto',
+      height: 'auto',
+      bottom: 10,
+      font: {
+        fontSize: 16
+      }
+    },
+    dateLabel: {
+      width: 'auto',
+      height: 'auto',
+      top: 10,
+      right: 10,
+      color: '#999',
+      font: {
+        fontSize: 14
+      }
     }
   },
-  formText: {
-    color: '#194C7F',
-    top: 6,
-    left: 10,
-    width: 300,
-    height: 40,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    font: {
-      fontSize: 16
+  form: {
+    label: {
+      width: 'auto',
+      height: 'auto',
+      color: "#333",
+      shadowColor: "#fff",
+      shadowOffset: {
+        x: 0,
+        y: 1
+      },
+      font: {
+        fontSize: 14,
+        fontWeight: "bold"
+      }
     },
-    paddingLeft: 10,
-    paddingRight: 10
-  },
-  formNotice: {
-    width: 'auto',
-    height: 'auto',
-    left: 30,
-    right: 30,
-    textAlign: "center",
-    color: "#333",
-    shadowColor: "#fff",
-    shadowOffset: {
-      x: 0,
-      y: 1
+    textInput: {
+      color: '#194C7F',
+      top: 6,
+      left: 10,
+      width: 300,
+      height: 40,
+      backgroundColor: "#fff",
+      borderRadius: 10,
+      font: {
+        fontSize: 16
+      },
+      paddingLeft: 10,
+      paddingRight: 10
     },
-    font: {
-      fontSize: 12,
-      fontWeight: "bold"
+    notice: {
+      width: 'auto',
+      height: 'auto',
+      left: 30,
+      right: 30,
+      textAlign: "center",
+      color: "#333",
+      shadowColor: "#fff",
+      shadowOffset: {
+        x: 0,
+        y: 1
+      },
+      font: {
+        fontSize: 12,
+        fontWeight: "bold"
+      }
     }
   }
 };
