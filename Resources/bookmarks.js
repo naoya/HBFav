@@ -82,8 +82,9 @@ table = Ti.UI.createTableView({
 win.add(header);
 win.add(border);
 win.add(table);
-bookmarks2rows = function(bookmarks) {
-  var rows;
+bookmarks2rows = function(data, start, end) {
+  var bookmarks, rows;
+  bookmarks = data.bookmarks.slice(start, end);
   rows = _(bookmarks).map(function(b) {
     var bodyContainer, comment, date, image, imageContainer, name, row, _ref;
     row = Ti.UI.createTableViewRow({
@@ -149,7 +150,7 @@ xhr.onload = function() {
   data = JSON.parse(this.responseText);
   setData = function(offset, limit) {
     var current, label, more, rows, section;
-    rows = bookmarks2rows(data.bookmarks.slice(offset, offset + limit));
+    rows = bookmarks2rows(data, offset, offset + limit);
     section = Ti.UI.createTableViewSection();
     _(rows).each(function(row) {
       return section.add(row);
@@ -172,12 +173,19 @@ xhr.onload = function() {
       });
       section.add(more);
     }
+    if (offset === 0) {
+      table.deleteRow(offset, {
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+      });
+    }
     current = table.data;
     current.push(section);
     table.setData(current);
-    return table.deleteRow(offset, {
-      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-    });
+    if (offset !== 0) {
+      return table.deleteRow(offset, {
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+      });
+    }
   };
   setData(0, 50);
   xhr.onload = null;

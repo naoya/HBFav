@@ -86,7 +86,8 @@ win.add header
 win.add border
 win.add table
 
-bookmarks2rows = (bookmarks) ->
+bookmarks2rows = (data, start, end) ->
+  bookmarks = data.bookmarks.slice start, end
   rows = _(bookmarks).map (b) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'
@@ -151,7 +152,7 @@ xhr.onload = ->
   data = JSON.parse @.responseText
 
   setData = (offset, limit) ->
-    rows = bookmarks2rows data.bookmarks.slice offset, offset + limit
+    rows = bookmarks2rows data, offset, offset + limit
     section = Ti.UI.createTableViewSection()
     _(rows).each (row) ->
       section.add row
@@ -171,11 +172,15 @@ xhr.onload = ->
         setData(offset, limit)
       section.add more
 
+    if offset is 0
+      table.deleteRow offset,
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
     current = table.data
     current.push section
     table.setData current
-    table.deleteRow offset,
-      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+    if offset isnt 0
+      table.deleteRow offset,
+        animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
   setData(0, 50)
 
   xhr.onload = null
