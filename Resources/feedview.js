@@ -9,6 +9,7 @@ var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, par
 }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 require('lib/underscore');
 Ti.include('feed.js');
+Ti.include('util.js');
 AbstractState = (function() {
   AbstractState.prototype.toString = function() {
     return 'AbstractState';
@@ -144,7 +145,7 @@ ReloadStartState = (function() {
     }, {
       animated: true
     });
-    this.feedView.header.lastUpdatedLabel.text = "最後の更新: ";
+    this.feedView.header.lastUpdatedLabel.text = "最後の更新: " + $$$.formatDate();
     this.feedView.header.statusLabel.text = "画面を引き下げて…";
     this.feedView.header.indicator.hide();
     this.feedView.header.arrow.show();
@@ -170,7 +171,7 @@ ReloadEndState = (function() {
     }, {
       animated: true
     });
-    this.feedView.header.lastUpdatedLabel.text = "最後の更新: ";
+    this.feedView.header.lastUpdatedLabel.text = "最後の更新: " + $$$.formatDate();
     this.feedView.header.statusLabel.text = "画面を引き下げて…";
     this.feedView.header.indicator.hide();
     this.feedView.header.arrow.show();
@@ -313,7 +314,7 @@ FeedView = (function() {
       color: "#576c89",
       textAlign: "center",
       font: {
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: "bold"
       },
       shadowColor: "#fff",
@@ -323,7 +324,7 @@ FeedView = (function() {
       }
     });
     lastUpdatedLabel = Ti.UI.createLabel({
-      text: "最後の更新: ",
+      text: "最後の更新: " + $$$.formatDate(),
       left: 55,
       width: 200,
       bottom: 15,
@@ -331,8 +332,7 @@ FeedView = (function() {
       color: "#576c89",
       textAlign: "center",
       font: {
-        fontSize: 11,
-        fontWeight: 'bold'
+        fontSize: 12
       },
       shadowColor: "#fff",
       shadowOffset: {

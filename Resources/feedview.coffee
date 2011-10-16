@@ -1,6 +1,7 @@
 require 'lib/underscore'
 # Feed = require('feed').Feed
 Ti.include 'feed.js'
+Ti.include 'util.js'
 
 class AbstractState
   toString : () ->  'AbstractState'
@@ -44,17 +45,6 @@ class NormalState extends AbstractState
       @feedView.header.arrow.animate transform:t, duration:180
       @feedView.header.statusLabel.text = "指をはなして更新…"
       @feedView.transitState new PullingState @feedView
-    # else
-    #   ## paging
-    #   height   = e.size.height
-    #   total    = offset + height
-    #   theEnd   = e.contentSize.height
-    #   distance = theEnd - total
-    #   if distance < @lastDistance
-    #     nearEnd = theEnd * .75
-    #     if total >= nearEnd
-    #       @feedView.transitState new PagingStartState @feedView
-    #   @lastDistance = distance
   scrollEnd: (e) ->
     ## paging
     offset = e.contentOffset.y;
@@ -98,7 +88,7 @@ class ReloadStartState extends AbstractState
     alert err.error
     ## FIXME: not DRY (1)
     @feedView.table.setContentInsets({top:0},{animated:true})
-    @feedView.header.lastUpdatedLabel.text = "最後の更新: "
+    @feedView.header.lastUpdatedLabel.text = "最後の更新: " + $$$.formatDate()
     @feedView.header.statusLabel.text = "画面を引き下げて…";
     @feedView.header.indicator.hide()
     @feedView.header.arrow.show()
@@ -113,7 +103,7 @@ class ReloadEndState extends AbstractState
 
     ## FIXME: not DRY (1)
     @feedView.table.setContentInsets({top:0},{animated:true})
-    @feedView.header.lastUpdatedLabel.text = "最後の更新: "
+    @feedView.header.lastUpdatedLabel.text = "最後の更新: " + $$$.formatDate()
     @feedView.header.statusLabel.text = "画面を引き下げて…";
     @feedView.header.indicator.hide()
     @feedView.header.arrow.show()
@@ -226,7 +216,7 @@ class FeedView
       color:"#576c89"
       textAlign:"center"
       font:
-        fontSize:12
+        fontSize:14
         fontWeight:"bold"
       shadowColor:"#fff"
       shadowOffset:
@@ -234,8 +224,7 @@ class FeedView
         y:1
 
     lastUpdatedLabel = Ti.UI.createLabel
-      # text:"Last Updated: "+formatDate(),
-      text: "最後の更新: "
+      text: "最後の更新: " + $$$.formatDate()
       left:55
       width:200
       bottom:15
@@ -243,8 +232,7 @@ class FeedView
       color:"#576c89"
       textAlign:"center"
       font:
-        fontSize:11
-        fontWeight: 'bold'
+        fontSize:12
       shadowColor:"#fff"
       shadowOffset:
         x:0
