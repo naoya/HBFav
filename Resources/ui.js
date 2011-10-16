@@ -83,5 +83,28 @@ HBFav.UI = {
       }
     };
     return msgwin;
+  },
+  setupConfigWindow: function(win, callback) {
+    var cancelButton, doneButton;
+    win.backgroundColor = 'stripped';
+    doneButton = Ti.UI.createButton({
+      style: Ti.UI.iPhone.SystemButtonStyle.DONE,
+      visible: true,
+      title: '保存'
+    });
+    doneButton.addEventListener('click', function(e) {
+      callback(e);
+      return win.close();
+    });
+    cancelButton = Ti.UI.createButton({
+      visible: true,
+      title: "キャンセル"
+    });
+    cancelButton.addEventListener('click', function(e) {
+      return win.close();
+    });
+    win.setRightNavButton(doneButton);
+    return win.setLeftNavButton(cancelButton);
   }
 };
+Ti.include('styles.js');

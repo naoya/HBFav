@@ -1,120 +1,43 @@
-var cancelButton, doneButton, nameField, nameLabel, noteLabel, passwordField, passwordLabel, view, win;
-win = Ti.UI.currentWindow;
-win.backgroundColor = 'stripped';
+var nameField, nameLabel, noteLabel, passwordField, passwordLabel, view, win;
+require('lib/underscore');
+Ti.include('ui.js');
 view = Ti.UI.createView({
   layout: 'vertical'
 });
-nameLabel = Ti.UI.createLabel({
-  width: 'auto',
-  height: 'auto',
+nameLabel = Ti.UI.createLabel(_($$.formLabel).extend({
   top: 12,
   left: 15,
-  text: "はてなID",
-  color: "#333",
-  shadowColor: "#fff",
-  shadowOffset: {
-    x: 0,
-    y: 1
-  },
-  font: {
-    fontSize: 14,
-    fontWeight: "bold"
-  }
-});
-nameField = Ti.UI.createTextField({
-  color: '#194C7F',
-  top: 6,
-  left: 10,
-  width: 300,
-  height: 40,
+  text: "はてなID"
+}));
+nameField = Ti.UI.createTextField(_($$.formText).extend({
   hintText: 'はてなID',
-  clearButtonMode: Ti.UI.INPUT_BUTTONMODE_ONFOCUS,
-  autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE,
-  backgroundColor: "#fff",
-  borderRadius: 10,
-  font: {
-    fontSize: 16
-  },
   value: Ti.App.Properties.getString('hatena_id'),
-  paddingLeft: 10,
-  paddingRight: 10
-});
-passwordLabel = Ti.UI.createLabel({
-  width: 'auto',
-  height: 'auto',
+  clearButtonMode: Ti.UI.INPUT_BUTTONMODE_ONFOCUS,
+  autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
+}));
+passwordLabel = Ti.UI.createLabel(_($$.formLabel).extend({
   top: 12,
   left: 15,
-  text: "パスワード",
-  color: "#333",
-  shadowColor: "#fff",
-  shadowOffset: {
-    x: 0,
-    y: 1
-  },
-  font: {
-    fontSize: 14,
-    fontWeight: "bold"
-  }
-});
-passwordField = Ti.UI.createTextField({
-  value: Ti.App.Properties.getString('hatena_password'),
-  top: 6,
-  left: 10,
-  width: 300,
-  height: 40,
-  color: '#194C7F',
-  passwordMask: true,
+  text: "パスワード"
+}));
+passwordField = Ti.UI.createTextField(_($$.formText).extend({
   hintText: 'パスワード',
-  autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE,
-  backgroundColor: '#fff',
-  font: {
-    fontSize: 16
-  },
-  paddingLeft: 10,
-  paddingRight: 10,
-  borderRadius: 10
-});
-noteLabel = Ti.UI.createLabel({
-  width: 'auto',
-  height: 'auto',
+  value: Ti.App.Properties.getString('hatena_password'),
+  passwordMask: true,
+  autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_NONE
+}));
+noteLabel = Ti.UI.createLabel(_($$.formNotice).extend({
   top: 12,
-  left: 30,
-  right: 30,
-  text: "はてなブックマークへの投稿機能を利用しない場合はパスワードの入力は不要です",
-  textAlign: "center",
-  color: "#333",
-  shadowColor: "#fff",
-  shadowOffset: {
-    x: 0,
-    y: 1
-  },
-  font: {
-    fontSize: 12,
-    fontWeight: "bold"
-  }
-});
-doneButton = Ti.UI.createButton({
-  style: Ti.UI.iPhone.SystemButtonStyle.DONE,
-  visible: true,
-  title: '保存'
-});
-doneButton.addEventListener('click', function(e) {
-  Ti.App.Properties.setString('hatena_id', nameField.value);
-  Ti.App.Properties.setString('hatena_password', passwordField.value);
-  return win.close();
-});
-win.setRightNavButton(doneButton);
+  text: "はてなブックマークへの投稿機能を利用しない場合はパスワードの入力は不要です"
+}));
 view.add(nameLabel);
 view.add(nameField);
 view.add(passwordLabel);
 view.add(passwordField);
 view.add(noteLabel);
+win = Ti.UI.currentWindow;
+HBFav.UI.setupConfigWindow(win, function(e) {
+  Ti.App.Properties.setString('hatena_id', nameField.value);
+  return Ti.App.Properties.setString('hatena_password', passwordField.value);
+});
 win.add(view);
-cancelButton = Ti.UI.createButton({
-  visible: true,
-  title: "キャンセル"
-});
-cancelButton.addEventListener('click', function(e) {
-  return win.close();
-});
-win.setLeftNavButton(cancelButton);

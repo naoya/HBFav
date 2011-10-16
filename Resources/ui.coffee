@@ -74,3 +74,27 @@ HBFav.UI =
             duration: 500
         , 1000
     return msgwin
+
+  setupConfigWindow: (win, callback) ->
+    win.backgroundColor = 'stripped'
+
+    doneButton = Ti.UI.createButton
+      style: Ti.UI.iPhone.SystemButtonStyle.DONE
+      visible: true
+      title: '保存'
+
+    doneButton.addEventListener 'click', (e) ->
+      callback e
+      win.close()
+
+    cancelButton = Ti.UI.createButton
+      visible: true
+      title: "キャンセル"
+
+    cancelButton.addEventListener 'click', (e) ->
+      win.close()
+
+    win.setRightNavButton doneButton
+    win.setLeftNavButton cancelButton
+
+Ti.include 'styles.js'
