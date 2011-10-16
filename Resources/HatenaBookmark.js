@@ -8,7 +8,6 @@ HatenaBookmark.post = function(entry, callback) {
   xhr.timeout = 100000;
   xhr.open('POST', 'http://b.hatena.ne.jp/atom/post');
   xhr.setRequestHeader('X-WSSE', wsseHeader(this.user.id, this.user.password));
-  Ti.API.debug(wsseHeader(this.user.id, this.user.password));
   xhr.onload = callback;
   xhr.onerror = function(e) {
     var dialog;

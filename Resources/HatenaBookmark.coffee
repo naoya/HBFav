@@ -15,7 +15,7 @@ HatenaBookmark.post = (entry, callback) ->
   xhr.open 'POST', 'http://b.hatena.ne.jp/atom/post'
   xhr.setRequestHeader 'X-WSSE', wsseHeader(@user.id, @user.password)
 
-  Ti.API.debug wsseHeader(@user.id, @user.password)
+  # Ti.API.debug wsseHeader(@user.id, @user.password)
 
   xhr.onload = callback
   xhr.onerror = (e) ->
