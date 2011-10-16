@@ -2,6 +2,7 @@ var actionButton, bookmark, buttonBack, buttonForward, buttonRefresh, countButto
 Ti.include('HatenaBookmark.js');
 Ti.include('Instapaper.js');
 Ti.include('ui.js');
+Ti.include('util.js');
 win = Ti.UI.currentWindow;
 bookmark = win.bookmark;
 webview = Ti.UI.createWebView({
@@ -12,7 +13,7 @@ openBookmarks = function() {
   var bookmarksWin;
   bookmarksWin = Ti.UI.createWindow({
     url: 'bookmarks.js',
-    title: "" + bookmark.count + " users",
+    title: $$$.count2label(bookmark.count),
     backgroundColor: "#fff",
     bookmark: bookmark
   });
@@ -115,7 +116,7 @@ actionButton.addEventListener('click', function() {
   return dialog.show();
 });
 countButton = Ti.UI.createButton({
-  title: "" + bookmark.count + "users",
+  title: $$$.count2label(bookmark.count),
   style: Ti.UI.iPhone.SystemButtonStyle.BORDERED
 });
 countButton.addEventListener('click', openBookmarks);

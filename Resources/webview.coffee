@@ -1,6 +1,7 @@
 Ti.include 'HatenaBookmark.js'
 Ti.include 'Instapaper.js'
 Ti.include 'ui.js'
+Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
 bookmark = win.bookmark
@@ -13,7 +14,7 @@ win.add webview
 openBookmarks = () ->
   bookmarksWin = Ti.UI.createWindow
     url: 'bookmarks.js'
-    title: "#{bookmark.count} users"
+    title: $$$.count2label bookmark.count
     backgroundColor: "#fff"
     bookmark: bookmark
   Ti.UI.currentTab.open bookmarksWin
@@ -107,7 +108,7 @@ actionButton.addEventListener 'click', ->
 
 ## to /entry
 countButton = Ti.UI.createButton
-  title: "#{bookmark.count}users"
+  title: $$$.count2label bookmark.count
   style: Ti.UI.iPhone.SystemButtonStyle.BORDERED
 countButton.addEventListener 'click', openBookmarks
 
