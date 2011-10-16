@@ -133,7 +133,7 @@ xhr.onload = ->
       text: b.user
 
     date = Ti.UI.createLabel _($$.timeline.dateLabel).extend
-      text: date
+      text: b.timestamp?.substr(0, 10)
 
     bodyContainer.add name
 
