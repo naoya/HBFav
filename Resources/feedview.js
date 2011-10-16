@@ -57,7 +57,7 @@ NormalState = (function() {
     this.lastDistance = 0;
   }
   NormalState.prototype.scroll = function(e) {
-    var offset, t;
+    var distance, height, nearEnd, offset, t, theEnd, total;
     offset = e.contentOffset.y;
     if (offset <= -65.0) {
       t = Ti.UI.create2DMatrix();
@@ -68,22 +68,20 @@ NormalState = (function() {
       });
       this.feedView.header.statusLabel.text = "指をはなして更新…";
       return this.feedView.transitState(new PullingState(this.feedView));
-    }
-  };
-  NormalState.prototype.scrollEnd = function(e) {
-    var distance, height, nearEnd, offset, theEnd, total;
-    offset = e.contentOffset.y;
-    height = e.size.height;
-    total = offset + height;
-    theEnd = e.contentSize.height;
-    distance = theEnd - total;
-    if (distance < this.lastDistance) {
-      nearEnd = theEnd * .75;
-      if (total >= nearEnd) {
-        this.feedView.transitState(new PagingStartState(this.feedView));
+    } else {
+      offset = e.contentOffset.y;
+      height = e.size.height;
+      total = offset + height;
+      theEnd = e.contentSize.height;
+      distance = theEnd - total;
+      if (distance < this.lastDistance) {
+        nearEnd = theEnd * .90;
+        if (total >= nearEnd) {
+          this.feedView.transitState(new PagingStartState(this.feedView));
+        }
       }
+      return this.lastDistance = distance;
     }
-    return this.lastDistance = distance;
   };
   return NormalState;
 })();
@@ -211,10 +209,11 @@ PagingEndState = (function() {
     this.data = data;
   }
   PagingEndState.prototype.execute = function() {
-    var feed;
+    var feed, i;
+    i = this.feedView.lastRow;
     feed = new Feed(this.data);
-    this.feedView.pager.hide();
     this.feedView.appendFeed(feed);
+    this.feedView.pager.hide(i);
     return this.feedView.transitState(new NormalState(this.feedView));
   };
   return PagingEndState;
@@ -375,10 +374,9 @@ FeedView = (function() {
     this.pager.show = __bind(function() {
       return this.table.appendRow(this.pager.createRow());
     }, this);
-    this.pager.hide = __bind(function() {
-      return this.table.deleteRow(this.lastRow, {
-        animated: false,
-        animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
+    this.pager.hide = __bind(function(index) {
+      return this.table.deleteRow(index, {
+        animationStyle: Titanium.UI.iPhone.RowAnimationStyle.NONE
       });
     }, this);
   }

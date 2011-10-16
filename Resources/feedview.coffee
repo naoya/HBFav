@@ -45,18 +45,30 @@ class NormalState extends AbstractState
       @feedView.header.arrow.animate transform:t, duration:180
       @feedView.header.statusLabel.text = "指をはなして更新…"
       @feedView.transitState new PullingState @feedView
-  scrollEnd: (e) ->
-    ## paging
-    offset = e.contentOffset.y;
-    height   = e.size.height
-    total    = offset + height
-    theEnd   = e.contentSize.height
-    distance = theEnd - total
-    if distance < @lastDistance
-      nearEnd = theEnd * .75
-      if total >= nearEnd
-        @feedView.transitState new PagingStartState @feedView
-    @lastDistance = distance
+    else
+      ## paging
+      offset = e.contentOffset.y;
+      height   = e.size.height
+      total    = offset + height
+      theEnd   = e.contentSize.height
+      distance = theEnd - total
+      if distance < @lastDistance
+        nearEnd = theEnd * .90
+        if total >= nearEnd
+          @feedView.transitState new PagingStartState @feedView
+      @lastDistance = distance
+  # scrollEnd: (e) ->
+  #   ## paging
+  #   offset = e.contentOffset.y;
+  #   height   = e.size.height
+  #   total    = offset + height
+  #   theEnd   = e.contentSize.height
+  #   distance = theEnd - total
+  #   if distance < @lastDistance
+  #     nearEnd = theEnd * .90
+  #     if total >= nearEnd
+  #       @feedView.transitState new PagingStartState @feedView
+  #   @lastDistance = distance
 
 class PullingState extends AbstractState
   toString: () -> "PullingState"
@@ -125,25 +137,19 @@ class PagingEndState extends AbstractState
   toString: () -> "PagingEndState"
   constructor: (@feedView, @data) ->
   execute: () ->
+    i = @feedView.lastRow
+
     feed = new Feed @data
-    @feedView.pager.hide()
     @feedView.appendFeed feed
-    ## TODO
-    # tableView.scrollToIndex lastRow - rows.length - 1,
-    #  animated:true
-    #  position:Ti.UI.iPhone.TableViewScrollPosition.BOTTOM
+    @feedView.pager.hide(i)
     @feedView.transitState new NormalState @feedView
 
 class InitStartState extends AbstractState
   toString : () -> "InitStartState"
   constructor: (@feedView) ->
-    # Ti.API.debug 'constructor'
   execute: () ->
-    # Ti.API.debug 'start execute'
     @.getFeed @feedView.url
-    # Ti.API.debug 'end execute'
   onload : (data) ->
-    # Ti.API.debug 'InitStartState::onload'
     @feedView.transitState new InitEndState @feedView, data
   onerror : (err) ->
     alert err.error
@@ -155,7 +161,6 @@ class InitEndState extends AbstractState
   execute : () ->
     feed = new Feed @data
     @feedView.setFeed feed
-    # Ti.API.debug 'setFeed done.'
     @feedView.transitState new NormalState @feedView
 
 class FeedView
@@ -186,7 +191,6 @@ class FeedView
       @state.scrollEnd e
 
     @win.add table
-    # Ti.API.debug 'Added table'
 
     ## Pull to Refresh 用
     border = Ti.UI.createView
@@ -263,9 +267,6 @@ class FeedView
     # @header.show = () ->
 
     ## Paging用
-    # navActInd = Ti.UI.createActivityIndicator()
-    # @win.setLeftNavButton navActInd
-
     @pager = {}
     @pager.createRow = () ->
       row = Ti.UI.createTableViewRow()
@@ -278,41 +279,17 @@ class FeedView
       row
     @pager.show = ()=>
       @table.appendRow @pager.createRow()
-    @pager.hide = ()=>
-      @table.deleteRow @lastRow,
-        animated: false
-        animationStyle: Ti.UI.iPhone.AnimationStyle.NONE
+    @pager.hide = (index)=>
+      @table.deleteRow index,
+        animationStyle: Titanium.UI.iPhone.RowAnimationStyle.NONE
 
   setFeed: (feed) ->
-    # Ti.API.debug "setFeed()"
     @table.setData feed.toRows()
     @lastRow = feed.size()
 
   clear: () ->
     @table.setData []
     @lastRow = 0
-    # loading = Ti.UI.createTableViewRow
-    #   height: 40,
-    #   backgroundColor: '#fff'
-
-    # container = Ti.UI.createView
-    #   layout: 'vertical'
-    #   width: 320
-    #   top: 0
-    #   left: 0
-
-    # label = Ti.UI.createLabel
-    #   width: 'auto'
-    #   height: 'auto'
-    #   color: '#000'
-    #   top: 0
-    #   font:
-    #     fontSize: 12
-    # label.text = 'Loading...'
-
-    # container.add label
-    # loading.add container
-    # @table.appendRow loading
 
   appendFeed: (feed) ->
     rows = feed.toRows()
