@@ -8,7 +8,6 @@ initApp = ()->
   user = Ti.App.Properties.getString 'hatena_id'
 
   icon = Ti.UI.createButton
-    # title: "me"
     systemButton: Ti.UI.iPhone.SystemButton.BOOKMARKS
     style: Ti.UI.iPhone.SystemButtonStyle.PLAIN
     visible: true
@@ -20,7 +19,7 @@ initApp = ()->
       showConfig: true
       user:
         name: user
-        profile_image_url: "http://www.st-hatena.com/users/" + user.substr(0, 2) + "/#{user}/profile.gif"
+        profile_image_url: $$$.profileImageUrl user
 
     profile.addEventListener 'close', () ->
       initApp() if user isnt Ti.App.Properties.getString 'hatena_id'

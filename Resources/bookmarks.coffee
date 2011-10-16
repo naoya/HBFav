@@ -1,6 +1,7 @@
 require 'lib/underscore'
 
 Ti.include 'ui.js'
+Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
 bookmark = win.bookmark
@@ -111,7 +112,7 @@ xhr.onload = ->
         bookmark:
           user:
             name: b.user
-            profile_image_url: "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + "/#{b.user}/profile.gif"
+            profile_image_url: $$$.profileImageUrl b.user
           favicon_url: "http://favicon.st-hatena.com/?url=#{data.url}"
           title: data.title
           count: data.count
@@ -122,9 +123,8 @@ xhr.onload = ->
 
     imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
 
-    ## FIXME: サーバサイドとコード被ってる
     image = HBFav.UI.createImageView $$.timeline.profileImage
-    image.imageWithCache "http://www.st-hatena.com/users/" + b.user.substr(0, 2) + "/#{b.user}/profile.gif"
+    image.imageWithCache $$$.profileImageUrl b.user
     imageContainer.add image
 
     bodyContainer = Ti.UI.createView $$.timeline.bodyContainer

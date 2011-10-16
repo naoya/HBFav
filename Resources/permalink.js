@@ -1,6 +1,7 @@
 var bodyContainer, bookmark, border, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
 Ti.include('feedview.js');
 Ti.include('ui.js');
+Ti.include('util.js');
 win = Ti.UI.currentWindow;
 win.layout = 'vertical';
 bookmark = win.bookmark;
@@ -140,7 +141,7 @@ view.add(border);
 view.add(name);
 view.add(bodyContainer);
 button = Ti.UI.createButton({
-  title: bookmark.count > 1 ? "" + bookmark.count + " users" : "" + bookmark.count + " user",
+  title: $$$.count2label(bookmark.count),
   height: 40,
   width: 300,
   top: 10,
@@ -150,7 +151,7 @@ button.addEventListener('click', function(e) {
   var bookmarksWin;
   bookmarksWin = Ti.UI.createWindow({
     url: 'bookmarks.js',
-    title: "" + bookmark.count + " users",
+    title: $$$.count2label(bookmark.count),
     backgroundColor: "#fff",
     bookmark: bookmark
   });

@@ -1,9 +1,9 @@
 Ti.include 'feedview.js'
 Ti.include 'ui.js'
+Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
 win.layout = 'vertical'
-# win.backgroundColor = "stripped"
 bookmark = win.bookmark
 
 view = Ti.UI.createView
@@ -13,7 +13,6 @@ view = Ti.UI.createView
   height: 'auto'
   layout: 'absolute'
   backgroundColor: "#fff"
-  # showHorizontalScrollIndicator:true
 
 win.add view
 
@@ -23,8 +22,6 @@ imageContainer = Ti.UI.createView
   height: '68'
   top: 0
   left: 0
-  # backgroundColor: "#fff"
-  # backgroundColor: "#B8C4D2"
   backgroundColor: "stripped"
 
 image = HBFav.UI.createImageView
@@ -56,7 +53,6 @@ bodyContainer = Ti.UI.createView
   layout: 'vertical'
   width: 300
   height: 'auto'
-  # backgroundColor: "#000"
   top: 78
   left: 10
 
@@ -74,7 +70,6 @@ titleContainer = Ti.UI.createView
   layout: 'horizontal'
   width: 'auto'
   height: 'auto'
-  # highlightedColor: '#3B5998'
   top: 0
   left: 0
 
@@ -138,7 +133,6 @@ titleContainer.add title
 bodyContainer.add titleContainer
 bodyContainer.add link
 footerContainer.add date
-# footerContainer.add count
 bodyContainer.add footerContainer
 
 name.text    = bookmark.user.name
@@ -146,7 +140,6 @@ comment.text = bookmark.comment ? ""
 title.text   = bookmark.title
 link.text    = bookmark.link
 date.text    = bookmark.created_at
-# count.text   = ", #{bookmark.count}users"
 
 view.add imageContainer
 view.add border
@@ -155,7 +148,7 @@ view.add bodyContainer
 
 ## xx users navigation
 button = Ti.UI.createButton
-  title: if bookmark.count > 1 then "#{bookmark.count} users" else "#{bookmark.count} user"
+  title: $$$.count2label bookmark.count
   height: 40
   width: 300
   top: 10
@@ -164,7 +157,7 @@ button = Ti.UI.createButton
 button.addEventListener 'click', (e) ->
   bookmarksWin = Ti.UI.createWindow
     url: 'bookmarks.js'
-    title: "#{bookmark.count} users"
+    title: $$$.count2label bookmark.count
     backgroundColor: "#fff"
     bookmark: bookmark
   Ti.UI.currentTab.open bookmarksWin
@@ -183,6 +176,5 @@ bodyContainer.addEventListener 'click', ->
     url: 'webview.js'
     title: bookmark.title
     backgroundColor: '#fff'
-    # link: bookmark.link
     bookmark: bookmark
   Ti.UI.currentTab.open webView

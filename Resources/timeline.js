@@ -20,7 +20,7 @@ initApp = function() {
       showConfig: true,
       user: {
         name: user,
-        profile_image_url: "http://www.st-hatena.com/users/" + user.substr(0, 2) + ("/" + user + "/profile.gif")
+        profile_image_url: $$$.profileImageUrl(user)
       }
     });
     profile.addEventListener('close', function() {
