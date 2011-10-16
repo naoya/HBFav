@@ -1,5 +1,6 @@
 var config, fv, initApp, win;
 Ti.include('feedview.js');
+Ti.include('util.js');
 win = Ti.UI.currentWindow;
 fv = new FeedView({
   win: win

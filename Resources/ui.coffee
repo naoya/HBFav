@@ -83,9 +83,7 @@ HBFav.UI =
       visible: true
       title: '保存'
 
-    doneButton.addEventListener 'click', (e) ->
-      callback e
-      win.close()
+    doneButton.addEventListener 'click', callback
 
     cancelButton = Ti.UI.createButton
       visible: true

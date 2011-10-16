@@ -92,10 +92,7 @@ HBFav.UI = {
       visible: true,
       title: '保存'
     });
-    doneButton.addEventListener('click', function(e) {
-      callback(e);
-      return win.close();
-    });
+    doneButton.addEventListener('click', callback);
     cancelButton = Ti.UI.createButton({
       visible: true,
       title: "キャンセル"

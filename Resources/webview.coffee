@@ -45,6 +45,13 @@ sendToHatena = () ->
         message: "StatusCode: #{@.status}"
       dialog.show()
 
+openHatenaConfig = ->
+  config = Ti.UI.createWindow
+    modal: true
+    url: 'config.js'
+    title: '設定'
+  config.open()
+
 readLater = () ->
   msgwin = HBFav.UI.createMessageWin()
   msgwin.indicator.message = "記事を保存中..."
@@ -66,6 +73,13 @@ readLater = () ->
         title: "Request Failed"
         message: "StatusCode: #{@.status}"
       dialog.show()
+
+openInstapaperConfig = ->
+  config = Ti.UI.createWindow
+    modal: true
+    url: 'config_instapaper.js'
+    title: 'Instapaper'
+  config.open()
 
 flexSpace = Ti.UI.createButton
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
@@ -97,9 +111,15 @@ dialog.cancel = dialog.options.length - 1
 dialog.addEventListener 'click', (e) ->
   switch e.index
     when 0
-      sendToHatena()
+      if Ti.App.Properties.getString 'hatena_password'
+        sendToHatena()
+      else
+        openHatenaConfig()
     when 1
-      readLater()
+      if Ti.App.Properties.getString 'instapaper_username'
+        readLater()
+      else
+        openInstapaperConfig()
     when 2
       Ti.Platform.openURL webview.url
 

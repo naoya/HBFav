@@ -1,5 +1,6 @@
 require 'lib/underscore'
 Ti.include 'ui.js'
+Ti.include 'Instapaper.js'
 
 view = Ti.UI.createView
   layout: 'vertical'
@@ -34,7 +35,19 @@ view.add passwordField
 win = Ti.UI.currentWindow
 
 HBFav.UI.setupConfigWindow win, (e) ->
-  Ti.App.Properties.setString 'instapaper_username', nameField.value
-  Ti.App.Properties.setString 'instapaper_password', passwordField.value
+  Instapaper.user =
+    username: nameField.value
+    password: passwordField.value
+
+  Instapaper.authenticate ->
+    if @.status is 200
+      Ti.App.Properties.setString 'instapaper_username', nameField.value
+      Ti.App.Properties.setString 'instapaper_password', passwordField.value
+      win.close()
+    else
+      dialog = Ti.UI.createAlertDialog
+        title: "Authenticate Failed"
+        message: "StatusCode: #{@.status}"
+      dialog.show()
 
 win.add view

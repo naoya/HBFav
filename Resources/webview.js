@@ -1,4 +1,4 @@
-var actionButton, bookmark, buttonBack, buttonForward, buttonRefresh, countButton, dialog, flexSpace, openBookmarks, readLater, sendToHatena, webview, win;
+var actionButton, bookmark, buttonBack, buttonForward, buttonRefresh, countButton, dialog, flexSpace, openBookmarks, openHatenaConfig, openInstapaperConfig, readLater, sendToHatena, webview, win;
 Ti.include('HatenaBookmark.js');
 Ti.include('Instapaper.js');
 Ti.include('ui.js');
@@ -49,6 +49,15 @@ sendToHatena = function() {
     }
   });
 };
+openHatenaConfig = function() {
+  var config;
+  config = Ti.UI.createWindow({
+    modal: true,
+    url: 'config.js',
+    title: '設定'
+  });
+  return config.open();
+};
 readLater = function() {
   var msgwin;
   msgwin = HBFav.UI.createMessageWin();
@@ -74,6 +83,15 @@ readLater = function() {
       return dialog.show();
     }
   });
+};
+openInstapaperConfig = function() {
+  var config;
+  config = Ti.UI.createWindow({
+    modal: true,
+    url: 'config_instapaper.js',
+    title: 'Instapaper'
+  });
+  return config.open();
 };
 flexSpace = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
@@ -105,9 +123,19 @@ dialog.cancel = dialog.options.length - 1;
 dialog.addEventListener('click', function(e) {
   switch (e.index) {
     case 0:
-      return sendToHatena();
+      if (Ti.App.Properties.getString('hatena_password')) {
+        return sendToHatena();
+      } else {
+        return openHatenaConfig();
+      }
+      break;
     case 1:
-      return readLater();
+      if (Ti.App.Properties.getString('instapaper_username')) {
+        return readLater();
+      } else {
+        return openInstapaperConfig();
+      }
+      break;
     case 2:
       return Ti.Platform.openURL(webview.url);
   }

@@ -1,4 +1,5 @@
 Ti.include 'feedview.js'
+Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
 fv = new FeedView

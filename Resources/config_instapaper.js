@@ -1,6 +1,7 @@
 var nameField, nameLabel, passwordField, passwordLabel, view, win;
 require('lib/underscore');
 Ti.include('ui.js');
+Ti.include('Instapaper.js');
 view = Ti.UI.createView({
   layout: 'vertical'
 });
@@ -32,7 +33,23 @@ view.add(passwordLabel);
 view.add(passwordField);
 win = Ti.UI.currentWindow;
 HBFav.UI.setupConfigWindow(win, function(e) {
-  Ti.App.Properties.setString('instapaper_username', nameField.value);
-  return Ti.App.Properties.setString('instapaper_password', passwordField.value);
+  Instapaper.user = {
+    username: nameField.value,
+    password: passwordField.value
+  };
+  return Instapaper.authenticate(function() {
+    var dialog;
+    if (this.status === 200) {
+      Ti.App.Properties.setString('instapaper_username', nameField.value);
+      Ti.App.Properties.setString('instapaper_password', passwordField.value);
+      return win.close();
+    } else {
+      dialog = Ti.UI.createAlertDialog({
+        title: "Authenticate Failed",
+        message: "StatusCode: " + this.status
+      });
+      return dialog.show();
+    }
+  });
 });
 win.add(view);
