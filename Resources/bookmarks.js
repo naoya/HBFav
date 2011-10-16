@@ -1,4 +1,4 @@
-var bookmark, border, entryContainer, favicon, header, ind, link, loadingRow, table, title, titleContainer, url, win, xhr;
+var bookmark, bookmarks2rows, border, entryContainer, favicon, header, ind, link, loadingRow, table, title, titleContainer, url, win, xhr;
 require('lib/underscore');
 Ti.include('ui.js');
 Ti.include('util.js');
@@ -82,18 +82,9 @@ table = Ti.UI.createTableView({
 win.add(header);
 win.add(border);
 win.add(table);
-xhr = Ti.Network.createHTTPClient();
-xhr.timeout = 100000;
-xhr.open('GET', url);
-Ti.API.debug(link);
-Ti.API.debug(url);
-xhr.onerror = function(e) {
-  return alert(e.error);
-};
-xhr.onload = function() {
-  var data, rows;
-  data = JSON.parse(this.responseText);
-  rows = _(data.bookmarks).map(function(b) {
+bookmarks2rows = function(bookmarks) {
+  var rows;
+  rows = _(bookmarks).map(function(b) {
     var bodyContainer, comment, date, image, imageContainer, name, row, _ref;
     row = Ti.UI.createTableViewRow({
       height: 'auto',
@@ -143,7 +134,52 @@ xhr.onload = function() {
     row.add(date);
     return row;
   });
-  table.setData(rows);
+  return rows;
+};
+xhr = Ti.Network.createHTTPClient();
+xhr.timeout = 100000;
+xhr.open('GET', url);
+Ti.API.debug(link);
+Ti.API.debug(url);
+xhr.onerror = function(e) {
+  return alert(e.error);
+};
+xhr.onload = function() {
+  var data, setData;
+  data = JSON.parse(this.responseText);
+  setData = function(offset, limit) {
+    var current, label, more, rows, section;
+    rows = bookmarks2rows(data.bookmarks.slice(offset, offset + limit));
+    section = Ti.UI.createTableViewSection();
+    _(rows).each(function(row) {
+      return section.add(row);
+    });
+    if (rows.length === limit) {
+      more = Ti.UI.createTableViewRow();
+      label = Ti.UI.createLabel({
+        text: "もっと見る",
+        color: "#194C7F",
+        textAlign: "center",
+        font: {
+          fontSize: 16,
+          fontWeight: "bold"
+        }
+      });
+      more.add(label);
+      more.addEventListener('click', function(e) {
+        offset += limit;
+        return setData(offset, limit);
+      });
+      section.add(more);
+    }
+    current = table.data;
+    current.push(section);
+    table.setData(current);
+    return table.deleteRow(offset, {
+      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+    });
+  };
+  setData(0, 50);
   xhr.onload = null;
   xhr.onerror = null;
   return xhr = null;

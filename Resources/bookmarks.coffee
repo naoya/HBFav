@@ -86,20 +86,8 @@ win.add header
 win.add border
 win.add table
 
-## Retrieving bookmarks
-xhr = Ti.Network.createHTTPClient()
-xhr.timeout = 100000
-xhr.open 'GET', url
-
-Ti.API.debug link
-Ti.API.debug url
-
-xhr.onerror = (e)->
-  alert e.error
-
-xhr.onload = ->
-  data = JSON.parse @.responseText
-  rows = _(data.bookmarks).map (b) ->
+bookmarks2rows = (bookmarks) ->
+  rows = _(bookmarks).map (b) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'
       layout: 'absolute'
@@ -146,8 +134,49 @@ xhr.onload = ->
     row.add bodyContainer
     row.add date
     row
+  return rows
 
-  table.setData rows
+## Retrieving bookmarks
+xhr = Ti.Network.createHTTPClient()
+xhr.timeout = 100000
+xhr.open 'GET', url
+
+Ti.API.debug link
+Ti.API.debug url
+
+xhr.onerror = (e)->
+  alert e.error
+
+xhr.onload = ->
+  data = JSON.parse @.responseText
+
+  setData = (offset, limit) ->
+    rows = bookmarks2rows data.bookmarks.slice offset, offset + limit
+    section = Ti.UI.createTableViewSection()
+    _(rows).each (row) ->
+      section.add row
+
+    if rows.length == limit
+      more = Ti.UI.createTableViewRow()
+      label = Ti.UI.createLabel
+        text: "もっと見る"
+        color: "#194C7F"
+        textAlign: "center"
+        font:
+          fontSize: 16
+          fontWeight: "bold"
+      more.add label
+      more.addEventListener 'click', (e) ->
+        offset += limit
+        setData(offset, limit)
+      section.add more
+
+    current = table.data
+    current.push section
+    table.setData current
+    table.deleteRow offset,
+      animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
+  setData(0, 50)
 
   xhr.onload = null
   xhr.onerror = null

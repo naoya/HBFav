@@ -8,13 +8,11 @@ HBFav.Util =
 
   formatDate: ()->
     d = new Date()
-
-    datestr = d.getMonth() + '/' + d.getDate()
-
-    if d.getHours() >= 12
-      datestr += ' ' + if d.getHours() == 12 then d.getHours() else d.getHours() - 12 + ':' + d.getMinutes() + ' PM'
-    else
-      datestr += ' ' + d.getHours() + ':' + d.getMinutes() +' AM';
+    mon = d.getMonth()
+    date = d.getDate()
+    hour = d.getHours()
+    min  = d.getMinutes()
+    datestr = "#{mon}/#{date} #{hour}:#{min}"
     return datestr;
 
 $$$ = HBFav.Util

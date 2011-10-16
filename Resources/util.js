@@ -14,14 +14,13 @@ HBFav.Util = {
     return "http://www.st-hatena.com/users/" + name.substr(0, 2) + ("/" + name + "/profile.gif");
   },
   formatDate: function() {
-    var d, datestr;
+    var d, date, datestr, hour, min, mon;
     d = new Date();
-    datestr = d.getMonth() + '/' + d.getDate();
-    if (d.getHours() >= 12) {
-      datestr += ' ' + (d.getHours() === 12 ? d.getHours() : d.getHours() - 12 + ':' + d.getMinutes() + ' PM');
-    } else {
-      datestr += ' ' + d.getHours() + ':' + d.getMinutes()(+' AM');
-    }
+    mon = d.getMonth();
+    date = d.getDate();
+    hour = d.getHours();
+    min = d.getMinutes();
+    datestr = "" + mon + "/" + date + " " + hour + ":" + min;
     return datestr;
   }
 };
