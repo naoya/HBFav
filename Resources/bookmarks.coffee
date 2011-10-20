@@ -83,12 +83,12 @@ table = Ti.UI.createTableView
   data: [ loadingRow ]
 
 table.addEventListener 'click', (e) ->
-  row = e.RowData
+  row = e.rowData
   if row.bookmark
     Ti.UI.currentTab.open Ti.UI.createWindow
       url: 'permalink.js'
       title: 'ブックマーク'
-      bookmark: bookmark
+      bookmark: row.bookmark
 
 win.add header
 win.add border
@@ -100,6 +100,16 @@ bookmarks2rows = (data, start, end) ->
     row = Ti.UI.createTableViewRow
       height: 'auto'
       layout: 'absolute'
+      bookmark:
+        user:
+          name: b.user
+          profile_image_url: $$$.profileImageUrl b.user
+        favicon_url: "http://favicon.st-hatena.com/?url=#{data.url}"
+        title: data.title
+        count: data.count
+        link: data.url
+        created_at: b.timestamp
+        comment: b.comment
 
     # row.addEventListener 'click', (e) ->
     #   permalink = Ti.UI.createWindow

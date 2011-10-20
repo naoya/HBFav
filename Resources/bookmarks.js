@@ -81,12 +81,12 @@ table = Ti.UI.createTableView({
 });
 table.addEventListener('click', function(e) {
   var row;
-  row = e.RowData;
+  row = e.rowData;
   if (row.bookmark) {
     return Ti.UI.currentTab.open(Ti.UI.createWindow({
       url: 'permalink.js',
       title: 'ブックマーク',
-      bookmark: bookmark
+      bookmark: row.bookmark
     }));
   }
 });
@@ -100,7 +100,19 @@ bookmarks2rows = function(data, start, end) {
     var bodyContainer, comment, date, image, imageContainer, name, row, _ref;
     row = Ti.UI.createTableViewRow({
       height: 'auto',
-      layout: 'absolute'
+      layout: 'absolute',
+      bookmark: {
+        user: {
+          name: b.user,
+          profile_image_url: $$$.profileImageUrl(b.user)
+        },
+        favicon_url: "http://favicon.st-hatena.com/?url=" + data.url,
+        title: data.title,
+        count: data.count,
+        link: data.url,
+        created_at: b.timestamp,
+        comment: b.comment
+      }
     });
     imageContainer = Ti.UI.createView($$.timeline.profileImageContainer);
     image = HBFav.UI.createImageView($$.timeline.profileImage);
