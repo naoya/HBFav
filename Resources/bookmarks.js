@@ -158,6 +158,15 @@ xhr.onload = function() {
       });
       more.add(label);
       more.addEventListener('click', function(e) {
+        var loadingInd;
+        loadingInd = Ti.UI.createActivityIndicator({
+          top: 10,
+          bottom: 10,
+          style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+        });
+        loadingInd.show();
+        more.remove(label);
+        more.add(loadingInd);
         offset += limit;
         return setData(offset, limit);
       });

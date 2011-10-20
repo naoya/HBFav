@@ -176,6 +176,15 @@ xhr.onload = ->
           fontWeight: "bold"
       more.add label
       more.addEventListener 'click', (e) ->
+        loadingInd = Ti.UI.createActivityIndicator
+          top: 10
+          bottom: 10
+          style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+        loadingInd.show()
+
+        more.remove label
+        more.add loadingInd
+
         offset += limit
         setData(offset, limit)
       section.add more
