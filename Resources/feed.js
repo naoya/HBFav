@@ -13,16 +13,8 @@ Feed = (function() {
       var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref;
       row = Ti.UI.createTableViewRow({
         height: 'auto',
-        layout: 'absolute'
-      });
-      row.addEventListener('click', function(e) {
-        var permalink;
-        permalink = Ti.UI.createWindow({
-          url: 'permalink.js',
-          title: "ブックマーク",
-          bookmark: bookmark
-        });
-        return Ti.UI.currentTab.open(permalink);
+        layout: 'absolute',
+        bookmark: bookmark
       });
       imageContainer = Ti.UI.createView($$.timeline.profileImageContainer);
       image = HBFav.UI.createImageView($$.timeline.profileImage);

@@ -185,6 +185,14 @@ class FeedView
     table = Ti.UI.createTableView
       data: [ loadingRow ]
 
+    table.addEventListener 'click', (e) ->
+      row = e.rowData
+      if row.bookmark
+        Ti.UI.currentTab.open Ti.UI.createWindow
+          url: 'permalink.js'
+          title: 'ブックマーク'
+          bookmark: row.bookmark
+
     table.addEventListener 'scroll', (e) =>
       @state.scroll e
     table.addEventListener 'scrollEnd', (e) =>

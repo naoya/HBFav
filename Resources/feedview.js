@@ -279,6 +279,17 @@ FeedView = (function() {
     table = Ti.UI.createTableView({
       data: [loadingRow]
     });
+    table.addEventListener('click', function(e) {
+      var row;
+      row = e.rowData;
+      if (row.bookmark) {
+        return Ti.UI.currentTab.open(Ti.UI.createWindow({
+          url: 'permalink.js',
+          title: 'ブックマーク',
+          bookmark: row.bookmark
+        }));
+      }
+    });
     table.addEventListener('scroll', __bind(function(e) {
       return this.state.scroll(e);
     }, this));

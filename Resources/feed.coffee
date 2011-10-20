@@ -11,13 +11,7 @@ class Feed
       row = Ti.UI.createTableViewRow
         height: 'auto'
         layout: 'absolute'
-
-      row.addEventListener 'click', (e) ->
-        permalink = Ti.UI.createWindow
-          url: 'permalink.js'
-          title: "ブックマーク"
-          bookmark: bookmark
-        Ti.UI.currentTab.open permalink
+        bookmark: bookmark
 
       imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
       image = HBFav.UI.createImageView $$.timeline.profileImage

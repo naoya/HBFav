@@ -82,6 +82,14 @@ table = Ti.UI.createTableView
   top: 69
   data: [ loadingRow ]
 
+table.addEventListener 'click', (e) ->
+  row = e.RowData
+  if row.bookmark
+    Ti.UI.currentTab.open Ti.UI.createWindow
+      url: 'permalink.js'
+      title: 'ブックマーク'
+      bookmark: bookmark
+
 win.add header
 win.add border
 win.add table
@@ -93,22 +101,22 @@ bookmarks2rows = (data, start, end) ->
       height: 'auto'
       layout: 'absolute'
 
-    row.addEventListener 'click', (e) ->
-      permalink = Ti.UI.createWindow
-        url: 'permalink.js'
-        title: b.user
-        backgroundColor: '#fff'
-        bookmark:
-          user:
-            name: b.user
-            profile_image_url: $$$.profileImageUrl b.user
-          favicon_url: "http://favicon.st-hatena.com/?url=#{data.url}"
-          title: data.title
-          count: data.count
-          link: data.url
-          created_at: b.timestamp
-          comment: b.comment
-      Ti.UI.currentTab.open permalink
+    # row.addEventListener 'click', (e) ->
+    #   permalink = Ti.UI.createWindow
+    #     url: 'permalink.js'
+    #     title: b.user
+    #     backgroundColor: '#fff'
+    #     bookmark:
+    #       user:
+    #         name: b.user
+    #         profile_image_url: $$$.profileImageUrl b.user
+    #       favicon_url: "http://favicon.st-hatena.com/?url=#{data.url}"
+    #       title: data.title
+    #       count: data.count
+    #       link: data.url
+    #       created_at: b.timestamp
+    #       comment: b.comment
+    #   Ti.UI.currentTab.open permalink
 
     imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
 
