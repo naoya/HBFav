@@ -3,8 +3,15 @@ Ti.include 'ui.js'
 Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
-win.layout = 'vertical'
+# win.layout = 'vertical'
 bookmark = win.bookmark
+
+scrollView = Ti.UI.createScrollView
+  contentWidth: 320
+  contentHeight: 'auto'
+  top:0
+  bottom: 0
+  showHorizontalScrollIndicator: true
 
 view = Ti.UI.createView
   top: 0
@@ -14,7 +21,8 @@ view = Ti.UI.createView
   layout: 'absolute'
   backgroundColor: "#fff"
 
-win.add view
+scrollView.add view
+win.add scrollView
 
 imageContainer = Ti.UI.createView
   layout: 'vertical'
@@ -60,6 +68,7 @@ bodyContainer = Ti.UI.createView
 
 comment = Ti.UI.createLabel
   color: '#000'
+  backgroundColor: '#fff'
   top: 0
   left: 0
   width: 'auto'
@@ -84,6 +93,7 @@ favicon.imageWithCache bookmark.favicon_url
 
 title = Ti.UI.createLabel
   color: '#3B5998'
+  backgroundColor: '#fff'
   top: 0
   left: 3
   width: 'auto'
@@ -93,6 +103,7 @@ title = Ti.UI.createLabel
 
 link = Ti.UI.createLabel
   color: '#666'
+  backgroundColor: '#fff'
   width: 'auto'
   height: 'auto'
   top: 4
@@ -110,6 +121,7 @@ footerContainer = Ti.UI.createView
 date = Ti.UI.createLabel
   width: 'auto'
   height: 'auto'
+  backgroundColor: '#fff'
   top: 0
   left: 20
   bottom: 10
@@ -143,17 +155,20 @@ title.text   = bookmark.title
 link.text    = bookmark.link
 date.text    = bookmark.created_at
 
-view.add imageContainer
-view.add border
-view.add name
+win.add imageContainer
+win.add name
+win.add border
+
 view.add bodyContainer
 
 ## xx users navigation
 button = Ti.UI.createButton
   title: $$$.count2label bookmark.count
+  backgroundColor: '#fff'
   height: 40
   width: 300
   top: 10
+  bottom: 20
   textAlign: "left"
 
 button.addEventListener 'click', (e) ->
@@ -162,9 +177,11 @@ button.addEventListener 'click', (e) ->
     title: $$$.count2label bookmark.count
     backgroundColor: "#fff"
     bookmark: bookmark
+    bottom: 10
   Ti.UI.currentTab.open bookmarksWin
 
-win.add button
+# win.add button
+bodyContainer.add button
 
 imageContainer.addEventListener 'click', ->
   profile = Ti.UI.createWindow
@@ -173,7 +190,7 @@ imageContainer.addEventListener 'click', ->
     user: bookmark.user
   Ti.UI.currentTab.open profile
 
-bodyContainer.addEventListener 'click', ->
+titleContainer.addEventListener 'click', ->
   webView = Ti.UI.createWindow
     url: 'webview.js'
     title: bookmark.title

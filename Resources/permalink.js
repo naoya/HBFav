@@ -1,10 +1,16 @@
-var bodyContainer, bookmark, border, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, title, titleContainer, view, win, _ref, _ref2;
+var bodyContainer, bookmark, border, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, scrollView, title, titleContainer, view, win, _ref, _ref2;
 Ti.include('feedview.js');
 Ti.include('ui.js');
 Ti.include('util.js');
 win = Ti.UI.currentWindow;
-win.layout = 'vertical';
 bookmark = win.bookmark;
+scrollView = Ti.UI.createScrollView({
+  contentWidth: 320,
+  contentHeight: 'auto',
+  top: 0,
+  bottom: 0,
+  showHorizontalScrollIndicator: true
+});
 view = Ti.UI.createView({
   top: 0,
   left: 0,
@@ -13,7 +19,8 @@ view = Ti.UI.createView({
   layout: 'absolute',
   backgroundColor: "#fff"
 });
-win.add(view);
+scrollView.add(view);
+win.add(scrollView);
 imageContainer = Ti.UI.createView({
   layout: 'vertical',
   width: 320,
@@ -61,6 +68,7 @@ bodyContainer = Ti.UI.createView({
 });
 comment = Ti.UI.createLabel({
   color: '#000',
+  backgroundColor: '#fff',
   top: 0,
   left: 0,
   width: 'auto',
@@ -86,6 +94,7 @@ favicon = HBFav.UI.createImageView({
 favicon.imageWithCache(bookmark.favicon_url);
 title = Ti.UI.createLabel({
   color: '#3B5998',
+  backgroundColor: '#fff',
   top: 0,
   left: 3,
   width: 'auto',
@@ -96,6 +105,7 @@ title = Ti.UI.createLabel({
 });
 link = Ti.UI.createLabel({
   color: '#666',
+  backgroundColor: '#fff',
   width: 'auto',
   height: 'auto',
   top: 4,
@@ -114,6 +124,7 @@ footerContainer = Ti.UI.createView({
 date = Ti.UI.createLabel({
   width: 'auto',
   height: 'auto',
+  backgroundColor: '#fff',
   top: 0,
   left: 20,
   bottom: 10,
@@ -137,15 +148,17 @@ comment.text = (_ref2 = bookmark.comment) != null ? _ref2 : "";
 title.text = bookmark.title;
 link.text = bookmark.link;
 date.text = bookmark.created_at;
-view.add(imageContainer);
-view.add(border);
-view.add(name);
+win.add(imageContainer);
+win.add(name);
+win.add(border);
 view.add(bodyContainer);
 button = Ti.UI.createButton({
   title: $$$.count2label(bookmark.count),
+  backgroundColor: '#fff',
   height: 40,
   width: 300,
   top: 10,
+  bottom: 20,
   textAlign: "left"
 });
 button.addEventListener('click', function(e) {
@@ -154,11 +167,12 @@ button.addEventListener('click', function(e) {
     url: 'bookmarks.js',
     title: $$$.count2label(bookmark.count),
     backgroundColor: "#fff",
-    bookmark: bookmark
+    bookmark: bookmark,
+    bottom: 10
   });
   return Ti.UI.currentTab.open(bookmarksWin);
 });
-win.add(button);
+bodyContainer.add(button);
 imageContainer.addEventListener('click', function() {
   var profile;
   profile = Ti.UI.createWindow({
@@ -168,7 +182,7 @@ imageContainer.addEventListener('click', function() {
   });
   return Ti.UI.currentTab.open(profile);
 });
-bodyContainer.addEventListener('click', function() {
+titleContainer.addEventListener('click', function() {
   var webView;
   webView = Ti.UI.createWindow({
     url: 'webview.js',
