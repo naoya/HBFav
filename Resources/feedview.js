@@ -23,7 +23,7 @@ AbstractState = (function() {
     onload = this.onload;
     onerror = this.onerror;
     xhr = Ti.Network.createHTTPClient();
-    xhr.timeout = 100000;
+    xhr.timeout = 30000;
     xhr.open('GET', url);
     xhr.onload = function() {
       var data;

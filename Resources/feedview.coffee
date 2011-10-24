@@ -12,7 +12,7 @@ class AbstractState
     onerror = @.onerror
 
     xhr = Ti.Network.createHTTPClient()
-    xhr.timeout = 100000
+    xhr.timeout = 30000
     xhr.open 'GET', url
     xhr.onload = ->
       data = JSON.parse @.responseText
