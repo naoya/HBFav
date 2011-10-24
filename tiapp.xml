@@ -11,10 +11,10 @@
     <name>HBFav</name>
     <version>1.0</version>
     <publisher>naoya</publisher>
-    <url>http://b.hatena.ne.jp/naoya</url>
+    <url>https://github.com/naoya/HBFav</url>
     <description>not specified</description>
     <copyright>2011 by naoya</copyright>
-    <icon>appicon.png</icon>
+    <icon>images/appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
