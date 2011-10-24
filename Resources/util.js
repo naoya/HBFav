@@ -1,4 +1,5 @@
 var $$$;
+Ti.include('/lib/sprintf.js');
 if (typeof HBFav === "undefined" || HBFav === null) {
   HBFav = {};
 }
@@ -23,7 +24,7 @@ HBFav.Util = {
     date = d.getDate();
     hour = d.getHours();
     min = d.getMinutes();
-    datestr = "" + mon + "/" + date + " " + hour + ":" + min;
+    datestr = sprintf("%02d/%02d %02d:%02d", mon + 1, date, hour, min);
     return datestr;
   }
 };

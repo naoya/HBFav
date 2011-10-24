@@ -1,3 +1,5 @@
+Ti.include '/lib/sprintf.js'
+
 HBFav ?= {}
 HBFav.Util =
   count2label: (count) ->
@@ -15,7 +17,8 @@ HBFav.Util =
     date = d.getDate()
     hour = d.getHours()
     min  = d.getMinutes()
-    datestr = "#{mon}/#{date} #{hour}:#{min}"
+    datestr = sprintf "%02d/%02d %02d:%02d", mon + 1, date, hour, min
+    # datestr = "#{mon}/#{date} " + String.format ""#{hour}:#{min}"
     return datestr;
 
 $$$ = HBFav.Util
