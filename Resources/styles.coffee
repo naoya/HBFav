@@ -1,15 +1,20 @@
 HBFav.UI.styles =
   timeline:
     profileImage:
-      width: 48
-      height: 48
+      backgroundColor: "#fff"
+      # opacity: 1.0
+      # width: 48
+      # height: 48
+      width: 32
+      height: 32
       top: 10
       left: 10
-      borderRadius: 5
+      # borderRadius: 5
 
     profileImageContainer:
+      backgroundColor: "#fff"
       width: 'auto'
-      height: '68'
+      height: '52'
       top: 0
       left: 0
 
@@ -17,7 +22,8 @@ HBFav.UI.styles =
       layout: 'vertical'
       width: 245
       height: 'auto'
-      left: 65
+      # left: 65
+      left: 50
       top: 0
 
     nameLabel:
@@ -27,11 +33,14 @@ HBFav.UI.styles =
       top: 10
       bottom: 5
       color: '#000'
+      backgroundColor: "#fff"
       font:
         fontSize : 16
         fontWeight: 'bold'
 
     commentLabel:
+      backgroundColor: "#fff"
+      opaque: true
       color: '#000'
       top: 0
       left: 0
@@ -50,6 +59,9 @@ HBFav.UI.styles =
       bottom: 10
 
     titleLabel:
+      backgroundColor: "#fff"
+      opacity: 1.0
+      opaque: true
       color: '#3B5998'
       top: 0
       left: 3
@@ -59,6 +71,8 @@ HBFav.UI.styles =
         fontSize: 16
 
     favicon:
+      backgroundColor: "#fff"
+      opacity: 1.0
       width: 16
       height: 16
       top: 2
@@ -70,6 +84,8 @@ HBFav.UI.styles =
       top: 10
       right: 10
       color: '#999'
+      backgroundColor: "#fff"
+      opacity: 1.0
       font:
         fontSize: 14
 

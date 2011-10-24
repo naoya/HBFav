@@ -11,6 +11,9 @@ HBFav.Util = {
     }
   },
   profileImageUrl: function(name) {
+    return "http://www.st-hatena.com/users/" + name.substr(0, 2) + ("/" + name + "/profile_l.gif");
+  },
+  profileImageUrlLarge: function(name) {
     return "http://www.st-hatena.com/users/" + name.substr(0, 2) + ("/" + name + "/profile.gif");
   },
   formatDate: function() {

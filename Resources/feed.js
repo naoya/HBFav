@@ -1,6 +1,7 @@
 var Feed;
 require('lib/underscore');
 Ti.include('ui.js');
+Ti.include('util.js');
 Feed = (function() {
   function Feed(f) {
     this.f = f;
@@ -18,7 +19,7 @@ Feed = (function() {
       });
       imageContainer = Ti.UI.createView($$.timeline.profileImageContainer);
       image = HBFav.UI.createImageView($$.timeline.profileImage);
-      image.imageWithCache(bookmark.user.profile_image_url);
+      image.imageWithCache($$$.profileImageUrl(bookmark.user.name));
       imageContainer.add(image);
       bodyContainer = Ti.UI.createView($$.timeline.bodyContainer);
       name = Ti.UI.createLabel(_($$.timeline.nameLabel).extend({

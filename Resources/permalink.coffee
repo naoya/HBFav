@@ -30,7 +30,8 @@ image = HBFav.UI.createImageView
   top: 10
   left: 10
   borderRadius: 5
-image.imageWithCache bookmark.user.profile_image_url
+# image.imageWithCache bookmark.user.profile_image_url
+image.imageWithCache $$$.profileImageUrlLarge bookmark.user.name
 
 name = Ti.UI.createLabel
   width: 'auto'
@@ -43,6 +44,7 @@ name = Ti.UI.createLabel
     fontWeight: 'bold'
   shadowColor: "#fff"
   shadowOffset: x: 0, y: 1
+  backgroundColor: "transparent"
 
 border = Ti.UI.createView
   backgroundColor: "#ababab"

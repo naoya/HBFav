@@ -18,7 +18,7 @@ image = HBFav.UI.createImageView({
   left: 10,
   borderRadius: 5
 });
-image.imageWithCache(user.profile_image_url);
+image.imageWithCache($$$.profileImageUrlLarge(user.name));
 name = Ti.UI.createLabel({
   width: 'auto',
   height: 48,
@@ -36,6 +36,7 @@ name = Ti.UI.createLabel({
     y: 1
   }
 });
+name.backgroundColor = "transparent";
 name.text = user.name;
 imageContainer.add(image);
 imageContainer.add(name);

@@ -29,7 +29,7 @@ image = HBFav.UI.createImageView({
   left: 10,
   borderRadius: 5
 });
-image.imageWithCache(bookmark.user.profile_image_url);
+image.imageWithCache($$$.profileImageUrlLarge(bookmark.user.name));
 name = Ti.UI.createLabel({
   width: 'auto',
   height: 48,
@@ -43,7 +43,8 @@ name = Ti.UI.createLabel({
   shadowColor: "#fff",
   shadowOffset: {
     x: 0,
-    y: 1
+    y: 1,
+    backgroundColor: "transparent"
   }
 });
 border = Ti.UI.createView({

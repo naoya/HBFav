@@ -50,6 +50,7 @@ title = Ti.UI.createLabel
   font:
     fontSize: 13
     fontWeight: "bold"
+  backgroundColor: 'transparent'
 
 title.text = bookmark.title
 titleContainer.add favicon

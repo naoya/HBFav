@@ -1,6 +1,7 @@
 require 'lib/underscore'
 
 Ti.include 'ui.js'
+Ti.include 'util.js'
 
 class Feed
   constructor: (@f) ->
@@ -15,7 +16,8 @@ class Feed
 
       imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
       image = HBFav.UI.createImageView $$.timeline.profileImage
-      image.imageWithCache bookmark.user.profile_image_url
+      # image.imageWithCache bookmark.user.profile_image_url
+      image.imageWithCache $$$.profileImageUrl bookmark.user.name
       imageContainer.add image
 
       bodyContainer = Ti.UI.createView $$.timeline.bodyContainer

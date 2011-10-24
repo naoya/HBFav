@@ -270,6 +270,7 @@ FeedView = (function() {
     this.win = _arg.win, this.url = _arg.url;
     loadingRow = Ti.UI.createTableViewRow();
     loadingInd = Ti.UI.createActivityIndicator({
+      backgroundColor: "#fff",
       top: 10,
       bottom: 10,
       style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
@@ -309,6 +310,7 @@ FeedView = (function() {
     });
     header.add(border);
     arrow = Ti.UI.createView({
+      backgroundColor: "#e2e7ed",
       backgroundImage: "./images/whiteArrow.png",
       width: 23,
       height: 60,
@@ -316,6 +318,7 @@ FeedView = (function() {
       left: 20
     });
     statusLabel = Ti.UI.createLabel({
+      backgroundColor: "#e2e7ed",
       text: "画面を引き下げて…",
       left: 55,
       width: 200,
@@ -334,6 +337,7 @@ FeedView = (function() {
       }
     });
     lastUpdatedLabel = Ti.UI.createLabel({
+      backgroundColor: "#e2e7ed",
       text: "最後の更新: " + $$$.formatDate(),
       left: 55,
       width: 200,
@@ -351,6 +355,7 @@ FeedView = (function() {
       }
     });
     actInd = Titanium.UI.createActivityIndicator({
+      backgroundColor: "#e2e7ed",
       style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
       left: 20,
       bottom: 13,

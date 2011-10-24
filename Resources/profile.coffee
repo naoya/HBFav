@@ -17,7 +17,7 @@ image = HBFav.UI.createImageView
   top: 10
   left: 10
   borderRadius: 5
-image.imageWithCache user.profile_image_url
+image.imageWithCache $$$.profileImageUrlLarge user.name
 
 name = Ti.UI.createLabel
   width: 'auto'
@@ -31,6 +31,7 @@ name = Ti.UI.createLabel
     fontWeight: 'bold'
   shadowColor: "#fff"
   shadowOffset: x: 0, y: 1
+name.backgroundColor = "transparent"
 name.text = user.name
 
 imageContainer.add image
