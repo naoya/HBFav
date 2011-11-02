@@ -1,4 +1,4 @@
-var bodyContainer, bookmark, border, button, comment, date, favicon, footerContainer, image, imageContainer, link, name, scrollView, title, titleContainer, view, win, _ref, _ref2;
+var bodyContainer, bookmark, border, button, comment, date, discind, favicon, footerContainer, image, imageContainer, link, name, scrollView, title, titleContainer, view, win, _ref, _ref2;
 Ti.include('feedview.js');
 Ti.include('ui.js');
 Ti.include('util.js');
@@ -22,7 +22,7 @@ view = Ti.UI.createView({
 scrollView.add(view);
 win.add(scrollView);
 imageContainer = Ti.UI.createView({
-  layout: 'vertical',
+  layout: 'absolute',
   width: 320,
   height: '68',
   top: 0,
@@ -37,6 +37,13 @@ image = HBFav.UI.createImageView({
   borderRadius: 5
 });
 image.imageWithCache($$$.profileImageUrlLarge(bookmark.user.name));
+discind = Ti.UI.createImageView({
+  image: 'images/disc2.png',
+  width: 'auto',
+  height: 'auto',
+  right: 10,
+  top: 26
+});
 name = Ti.UI.createLabel({
   width: 'auto',
   height: 48,
@@ -150,6 +157,7 @@ link.text = bookmark.link;
 date.text = bookmark.created_at;
 win.add(imageContainer);
 win.add(name);
+win.add(discind);
 win.add(border);
 view.add(bodyContainer);
 button = Ti.UI.createButton({

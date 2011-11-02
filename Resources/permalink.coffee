@@ -25,7 +25,7 @@ scrollView.add view
 win.add scrollView
 
 imageContainer = Ti.UI.createView
-  layout: 'vertical'
+  layout: 'absolute'
   width: 320
   height: '68'
   top: 0
@@ -40,6 +40,13 @@ image = HBFav.UI.createImageView
   borderRadius: 5
 # image.imageWithCache bookmark.user.profile_image_url
 image.imageWithCache $$$.profileImageUrlLarge bookmark.user.name
+
+discind = Ti.UI.createImageView
+  image: 'images/disc2.png'
+  width: 'auto'
+  height: 'auto'
+  right: 10
+  top: 26
 
 name = Ti.UI.createLabel
   width: 'auto'
@@ -157,6 +164,7 @@ date.text    = bookmark.created_at
 
 win.add imageContainer
 win.add name
+win.add discind
 win.add border
 
 view.add bodyContainer

@@ -16,7 +16,7 @@ header = Ti.UI.createView
   left: 0
   width: 320
   height: 68
-  layout: 'vertical'
+  layout: 'absolute'
   backgroundColor: "stripped"
 
 entryContainer = Ti.UI.createView
@@ -25,11 +25,17 @@ entryContainer = Ti.UI.createView
   height: 'auto'
   top: 5
   left: 5
-  bottom: 5
+
+discind = Ti.UI.createImageView
+  image: 'images/disc2.png'
+  width: 'auto'
+  height: 'auto'
+  right: 5
+  top: 26
 
 titleContainer = Ti.UI.createView
   layout: 'horizontal'
-  width: 300
+  width: 290
   height: 68
   top: 0
   left: 0
@@ -57,6 +63,7 @@ titleContainer.add favicon
 titleContainer.add title
 entryContainer.add titleContainer
 header.add entryContainer
+header.add discind
 
 header.addEventListener 'click', ->
   webView = Ti.UI.createWindow
@@ -153,6 +160,7 @@ bookmarks2rows = (data, start, end) ->
       bodyContainer.add comment
 
     row.add imageContainer
+    row.add image
     row.add bodyContainer
     row.add date
     row

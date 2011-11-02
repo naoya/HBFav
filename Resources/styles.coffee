@@ -9,6 +9,7 @@ HBFav.UI.styles =
       # height: 32
       top: 10
       left: 10
+      # bottom: 10
       # borderRadius: 5
 
     profileImageContainer:
