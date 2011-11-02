@@ -1,4 +1,6 @@
 .settings
 tmp
 build/
+build.orig/
+server/
 .DS_Store

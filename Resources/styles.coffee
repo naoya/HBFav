@@ -1,12 +1,12 @@
 HBFav.UI.styles =
   timeline:
     profileImage:
-      backgroundColor: "#fff"
       # opacity: 1.0
-      # width: 48
-      # height: 48
-      width: 32
-      height: 32
+      backgroundColor: "#fff"
+      width: 48
+      height: 48
+      # width: 32
+      # height: 32
       top: 10
       left: 10
       # borderRadius: 5
@@ -14,7 +14,8 @@ HBFav.UI.styles =
     profileImageContainer:
       backgroundColor: "#fff"
       width: 'auto'
-      height: '52'
+      height: 68
+      # height: '52'
       top: 0
       left: 0
 
@@ -22,8 +23,8 @@ HBFav.UI.styles =
       layout: 'vertical'
       width: 245
       height: 'auto'
-      # left: 65
-      left: 50
+      left: 65
+      # left: 50
       top: 0
 
     nameLabel:

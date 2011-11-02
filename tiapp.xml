@@ -7,14 +7,14 @@
         <target device="android">false</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <id>HBFav</id>
-    <name>HBFav</name>
-    <version>1.0</version>
-    <publisher>naoya</publisher>
-    <url>https://github.com/naoya/HBFav</url>
-    <description>not specified</description>
-    <copyright>2011 by naoya</copyright>
-    <icon>images/appicon.png</icon>
+<id>HBFav</id>
+<name>HBFav</name>
+<version>1.0</version>
+<publisher>naoya</publisher>
+<url>https://github.com/naoya/HBFav</url>
+<description>not specified</description>
+<copyright>2011 by naoya</copyright>
+<icon>images/appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>

@@ -53,7 +53,7 @@ class NormalState extends AbstractState
       theEnd   = e.contentSize.height
       distance = theEnd - total
       if distance < @lastDistance
-        nearEnd = theEnd * .90
+        nearEnd = theEnd * .98
         if total >= nearEnd
           @feedView.transitState new PagingStartState @feedView
       @lastDistance = distance

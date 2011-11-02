@@ -105,7 +105,7 @@ bookmarks2rows = function(data, start, end) {
       bookmark: {
         user: {
           name: b.user,
-          profile_image_url: $$$.profileImageUrl(b.user)
+          profile_image_url: $$$.profileImageUrlLarge(b.user)
         },
         favicon_url: "http://favicon.st-hatena.com/?url=" + data.url,
         title: data.title,
@@ -117,7 +117,7 @@ bookmarks2rows = function(data, start, end) {
     });
     imageContainer = Ti.UI.createView($$.timeline.profileImageContainer);
     image = HBFav.UI.createImageView($$.timeline.profileImage);
-    image.imageWithCache($$$.profileImageUrl(b.user));
+    image.imageWithCache($$$.profileImageUrlLarge(b.user));
     imageContainer.add(image);
     bodyContainer = Ti.UI.createView($$.timeline.bodyContainer);
     name = Ti.UI.createLabel(_($$.timeline.nameLabel).extend({

@@ -16,10 +16,9 @@ class Feed
 
       imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
       image = HBFav.UI.createImageView $$.timeline.profileImage
-      # image.imageWithCache bookmark.user.profile_image_url
-      image.imageWithCache $$$.profileImageUrl bookmark.user.name
       imageContainer.add image
-
+      # image.imageWithCache $$$.profileImageUrl bookmark.user.name
+      image.imageWithCache $$$.profileImageUrlLarge bookmark.user.name
       bodyContainer = Ti.UI.createView $$.timeline.bodyContainer
 
       name = Ti.UI.createLabel _($$.timeline.nameLabel).extend
