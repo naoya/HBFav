@@ -76,7 +76,7 @@ NormalState = (function() {
       distance = theEnd - total;
       if (distance < this.lastDistance) {
         nearEnd = theEnd * .98;
-        if (total >= nearEnd) {
+        if (total >= nearEnd && this.feedView.lastRow > 20) {
           this.feedView.transitState(new PagingStartState(this.feedView));
         }
       }
@@ -137,7 +137,7 @@ ReloadStartState = (function() {
     return this.feedView.transitState(new ReloadEndState(this.feedView, data));
   };
   ReloadStartState.prototype.onerror = function(err) {
-    alert(err.error);
+    this.feedView.showFailure();
     this.feedView.table.setContentInsets({
       top: 0
     }, {
@@ -193,8 +193,10 @@ PagingStartState = (function() {
     return this.feedView.transitState(new PagingEndState(this.feedView, data));
   };
   PagingStartState.prototype.onerror = function(err) {
-    alert(err.error);
-    this.feedView.pager.hide();
+    var i;
+    this.feedView.showFailure();
+    i = this.feedView.lastRow;
+    this.feedView.pager.hide(i);
     return this.feedView.transitState(new NormalState(this.feedView));
   };
   return PagingStartState;
@@ -227,13 +229,25 @@ InitStartState = (function() {
     this.feedView = feedView;
   }
   InitStartState.prototype.execute = function() {
+    var loadingInd, loadingRow;
+    loadingRow = Ti.UI.createTableViewRow();
+    loadingInd = Ti.UI.createActivityIndicator({
+      backgroundColor: "#fff",
+      top: 10,
+      bottom: 10,
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+    });
+    loadingInd.show();
+    loadingRow.add(loadingInd);
+    this.feedView.table.setData([loadingRow]);
     return this.getFeed(this.feedView.url);
   };
   InitStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new InitEndState(this.feedView, data));
   };
   InitStartState.prototype.onerror = function(err) {
-    alert(err.error);
+    this.feedView.showFailure();
+    this.feedView.clear();
     return this.feedView.transitState(new NormalState(this.feedView));
   };
   return InitStartState;
@@ -266,19 +280,10 @@ FeedView = (function() {
     return this.transitState(new InitStartState(this));
   };
   function FeedView(_arg) {
-    var actInd, arrow, border, header, lastUpdatedLabel, loadingInd, loadingRow, statusLabel, table;
+    var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
     this.win = _arg.win, this.url = _arg.url;
-    loadingRow = Ti.UI.createTableViewRow();
-    loadingInd = Ti.UI.createActivityIndicator({
-      backgroundColor: "#fff",
-      top: 10,
-      bottom: 10,
-      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
-    });
-    loadingInd.show();
-    loadingRow.add(loadingInd);
     table = Ti.UI.createTableView({
-      data: [loadingRow]
+      data: []
     });
     table.addEventListener('click', function(e) {
       var row;
@@ -403,6 +408,14 @@ FeedView = (function() {
   FeedView.prototype.clear = function() {
     this.table.setData([]);
     return this.lastRow = 0;
+  };
+  FeedView.prototype.showFailure = function() {
+    var dialog;
+    dialog = Ti.UI.createAlertDialog({
+      title: "エラー",
+      message: "フィードを取得できません"
+    });
+    return dialog.show();
   };
   FeedView.prototype.appendFeed = function(feed) {
     var current, rows, sec;

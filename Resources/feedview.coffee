@@ -54,7 +54,7 @@ class NormalState extends AbstractState
       distance = theEnd - total
       if distance < @lastDistance
         nearEnd = theEnd * .98
-        if total >= nearEnd
+        if total >= nearEnd and @feedView.lastRow > 20
           @feedView.transitState new PagingStartState @feedView
       @lastDistance = distance
   # scrollEnd: (e) ->
@@ -97,7 +97,7 @@ class ReloadStartState extends AbstractState
   onload : (data) ->
     @feedView.transitState new ReloadEndState @feedView, data
   onerror: (err) ->
-    alert err.error
+    @feedView.showFailure()
     ## FIXME: not DRY (1)
     @feedView.table.setContentInsets({top:0},{animated:true})
     @feedView.header.lastUpdatedLabel.text = "最後の更新: " + $$$.formatDate()
@@ -129,8 +129,10 @@ class PagingStartState extends AbstractState
   onload: (data) ->
     @feedView.transitState new PagingEndState @feedView, data
   onerror: (err) ->
-    alert err.error
-    @feedView.pager.hide()
+    @feedView.showFailure()
+
+    i = @feedView.lastRow
+    @feedView.pager.hide(i)
     @feedView.transitState new NormalState @feedView
 
 class PagingEndState extends AbstractState
@@ -148,12 +150,29 @@ class InitStartState extends AbstractState
   toString : () -> "InitStartState"
   constructor: (@feedView) ->
   execute: () ->
+    loadingRow = Ti.UI.createTableViewRow()
+    loadingInd = Ti.UI.createActivityIndicator
+      backgroundColor: "#fff"
+      top: 10
+      bottom: 10
+      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+    loadingInd.show()
+    loadingRow.add loadingInd
+    @feedView.table.setData [ loadingRow ]
+
     @.getFeed @feedView.url
   onload : (data) ->
     @feedView.transitState new InitEndState @feedView, data
   onerror : (err) ->
-    alert err.error
+    @feedView.showFailure()
+    @feedView.clear()
     @feedView.transitState new NormalState @feedView
+
+# class InitErrorState extends AbstractState
+#   toString : () -> "InitErrorState"
+#   constructor: (@feedView) ->
+#   execute: () ->
+#     @feedView.table.setData []
 
 class InitEndState extends AbstractState
   toString : () -> "InitEndState"
@@ -174,17 +193,8 @@ class FeedView
     @.transitState new InitStartState @
 
   constructor: (win: @win, url: @url) ->
-    loadingRow = Ti.UI.createTableViewRow()
-    loadingInd = Ti.UI.createActivityIndicator
-      backgroundColor: "#fff"
-      top: 10
-      bottom: 10
-      style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
-    loadingInd.show()
-    loadingRow.add loadingInd
-
     table = Ti.UI.createTableView
-      data: [ loadingRow ]
+      data: []
 
     table.addEventListener 'click', (e) ->
       row = e.rowData
@@ -303,6 +313,12 @@ class FeedView
   clear: () ->
     @table.setData []
     @lastRow = 0
+
+  showFailure: () ->
+    dialog = Ti.UI.createAlertDialog
+      title: "エラー"
+      message: "フィードを取得できません"
+    dialog.show()
 
   appendFeed: (feed) ->
     rows = feed.toRows()
