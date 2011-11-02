@@ -105,7 +105,7 @@ actionButton = Ti.UI.createButton
   systemButton: Ti.UI.iPhone.SystemButton.ACTION
 
 dialog = Ti.UI.createOptionDialog()
-dialog.options = [ 'B!', 'Read Later', 'Safariで開く', 'キャンセル' ]
+dialog.options = [ 'B!', 'Read Later', 'Safariで開く', '公式アプリで追加', 'キャンセル' ]
 dialog.cancel = dialog.options.length - 1
 
 dialog.addEventListener 'click', (e) ->
@@ -122,6 +122,10 @@ dialog.addEventListener 'click', (e) ->
         openInstapaperConfig()
     when 2
       Ti.Platform.openURL webview.url
+    when 3
+      url = encodeURIComponent webview.url
+      title = encodeURIComponent bookmark.title
+      Ti.Platform.openURL "hatenabookmark:/entry/add?backurl=hbfav:/&url=#{url}&title=#{title}"
 
 actionButton.addEventListener 'click', ->
   dialog.show()

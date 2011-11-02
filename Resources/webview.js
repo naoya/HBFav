@@ -118,9 +118,10 @@ actionButton = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.ACTION
 });
 dialog = Ti.UI.createOptionDialog();
-dialog.options = ['B!', 'Read Later', 'Safariで開く', 'キャンセル'];
+dialog.options = ['B!', 'Read Later', 'Safariで開く', '公式アプリで追加', 'キャンセル'];
 dialog.cancel = dialog.options.length - 1;
 dialog.addEventListener('click', function(e) {
+  var title, url;
   switch (e.index) {
     case 0:
       if (Ti.App.Properties.getString('hatena_password')) {
@@ -138,6 +139,10 @@ dialog.addEventListener('click', function(e) {
       break;
     case 2:
       return Ti.Platform.openURL(webview.url);
+    case 3:
+      url = encodeURIComponent(webview.url);
+      title = encodeURIComponent(bookmark.title);
+      return Ti.Platform.openURL("hatenabookmark:/entry/add?backurl=hbfav:/&url=" + url + "&title=" + title);
   }
 });
 actionButton.addEventListener('click', function() {
