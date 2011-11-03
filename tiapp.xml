@@ -14,7 +14,7 @@
 <url>https://github.com/naoya/HBFav</url>
 <description>Hatena Bookmark favorite Reader</description>
 <copyright>2011 by naoya</copyright>
-<icon>images/appicon.png</icon>
+<icon>default_app_logo.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
     <statusbar-style>default</statusbar-style>
