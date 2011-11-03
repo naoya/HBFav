@@ -75,7 +75,7 @@ NormalState = (function() {
       distance = theEnd - total;
       if (distance < this.lastDistance) {
         nearEnd = theEnd * .98;
-        if (total >= nearEnd && this.feedView.lastRow > 20) {
+        if (total >= nearEnd && this.feedView.lastRow > 5) {
           this.feedView.transitState(new PagingStartState(this.feedView));
         }
       }

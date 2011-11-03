@@ -52,7 +52,7 @@ class NormalState extends AbstractState
       distance = theEnd - total
       if distance < @lastDistance
         nearEnd = theEnd * .98
-        if total >= nearEnd and @feedView.lastRow > 20
+        if total >= nearEnd and @feedView.lastRow > 5
           @feedView.transitState new PagingStartState @feedView
       @lastDistance = distance
   # scrollEnd: (e) ->
