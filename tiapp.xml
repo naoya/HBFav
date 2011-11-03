@@ -12,7 +12,7 @@
 <version>0.1</version>
 <publisher>naoya</publisher>
 <url>https://github.com/naoya/HBFav</url>
-<description>Hatena Bookmark "favorite" Reader</description>
+<description>Hatena Bookmark favorite Reader</description>
 <copyright>2011 by naoya</copyright>
 <icon>images/appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
