@@ -1,4 +1,3 @@
-Ti.include 'feedview.js'
 Ti.include 'ui.js'
 Ti.include 'util.js'
 

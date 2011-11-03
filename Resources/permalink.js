@@ -1,5 +1,4 @@
 var bodyContainer, bookmark, border, button, comment, date, discind, favicon, footerContainer, image, imageContainer, link, name, scrollView, title, titleContainer, view, win, _ref, _ref2;
-Ti.include('feedview.js');
 Ti.include('ui.js');
 Ti.include('util.js');
 win = Ti.UI.currentWindow;
