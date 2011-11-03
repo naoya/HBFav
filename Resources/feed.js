@@ -10,8 +10,9 @@ Feed = (function() {
     return this.f.bookmarks.length;
   };
   Feed.prototype.toRows = function() {
-    return _(this.f.bookmarks).map(function(bookmark) {
-      var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref;
+    var _ref;
+    return (_ref = this.f.bookmarks) != null ? _ref.map(function(bookmark) {
+      var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref2;
       row = Ti.UI.createTableViewRow({
         height: 'auto',
         layout: 'absolute',
@@ -28,7 +29,7 @@ Feed = (function() {
       bodyContainer.add(name);
       if (bookmark.comment.length > 0) {
         comment = Ti.UI.createLabel(_($$.timeline.commentLabel).extend({
-          text: (_ref = bookmark.comment) != null ? _ref : "",
+          text: (_ref2 = bookmark.comment) != null ? _ref2 : "",
           bottom: 6
         }));
         bodyContainer.add(comment);
@@ -49,7 +50,7 @@ Feed = (function() {
       row.add(bodyContainer);
       row.add(date);
       return row;
-    });
+    }) : void 0;
   };
   return Feed;
 })();

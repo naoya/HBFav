@@ -7,7 +7,6 @@ var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, par
   child.__super__ = parent.prototype;
   return child;
 }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-require('lib/underscore');
 Ti.include('feed.js');
 Ti.include('util.js');
 AbstractState = (function() {
@@ -422,9 +421,11 @@ FeedView = (function() {
     rows = feed.toRows();
     current = this.table.data;
     sec = Ti.UI.createTableViewSection();
-    _(rows).each(function(row) {
-      return sec.add(row);
-    });
+    if (rows != null) {
+      rows.forEach(function(row) {
+        return sec.add(row);
+      });
+    }
     current.push(sec);
     this.table.setData(current);
     return this.lastRow += feed.size();

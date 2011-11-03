@@ -1,5 +1,3 @@
-require 'lib/underscore'
-# Feed = require('feed').Feed
 Ti.include 'feed.js'
 Ti.include 'util.js'
 
@@ -324,7 +322,7 @@ class FeedView
     rows = feed.toRows()
     current = @table.data
     sec = Ti.UI.createTableViewSection()
-    _(rows).each (row) ->
+    rows?.forEach (row) ->
       sec.add row
     current.push sec
     @table.setData current
