@@ -97,13 +97,13 @@ flexSpace = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
 });
 buttonBack = Ti.UI.createButton({
-  title: String.fromCharCode(0x25c0)
+  systemButton: 101
 });
 buttonBack.addEventListener('click', function() {
   return webview.goBack();
 });
 buttonForward = Ti.UI.createButton({
-  title: String.fromCharCode(0x25b6)
+  systemButton: 102
 });
 buttonForward.addEventListener('click', function() {
   return webview.goForward();

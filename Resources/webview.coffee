@@ -86,12 +86,15 @@ flexSpace = Ti.UI.createButton
 
 ## Toolbar
 buttonBack = Ti.UI.createButton
-  title: String.fromCharCode(0x25c0)
+  systemButton: 101
+
 buttonBack.addEventListener 'click', ->
   webview.goBack()
 
 buttonForward = Ti.UI.createButton
-  title: String.fromCharCode(0x25b6)
+  # title: String.fromCharCode(0x25b7)
+  systemButton: 102
+
 buttonForward.addEventListener 'click', ->
   webview.goForward()
 
