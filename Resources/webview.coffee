@@ -81,6 +81,37 @@ openInstapaperConfig = ->
     title: 'Instapaper'
   config.open()
 
+readability = ->
+  msgwin = HBFav.UI.createMessageWin()
+  msgwin.indicator.message = "記事を変換中..."
+  msgwin.indicator.show()
+  msgwin.open()
+
+  xhr = Ti.Network.createHTTPClient()
+  xhr.timeout = 100000
+  xhr.open 'POST', 'http://www.readability.com/api/shortener/v1/urls'
+  xhr.onload = ->
+    data = JSON.parse @.responseText
+
+    msgwin.indicator.hide()
+    msgwin.label.text = "変換しました"
+    msgwin.close()
+
+    wvwin = Ti.UI.createWindow
+      title: bookmark.title
+    wv = Ti.UI.createWebView
+      url: data.meta.rdd_url
+    wvwin.add wv
+    Ti.UI.currentTab.open wvwin
+
+  xhr.onerror = (e) ->
+    dialog = Ti.UI.createAlertDialog
+      title: "Ouch!"
+      message: "StatusCode: #{@.status}"
+    dialog.show()
+  xhr.send
+    url: bookmark.link
+
 flexSpace = Ti.UI.createButton
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
 
@@ -108,7 +139,7 @@ actionButton = Ti.UI.createButton
   systemButton: Ti.UI.iPhone.SystemButton.ACTION
 
 dialog = Ti.UI.createOptionDialog()
-dialog.options = [ 'B!', 'Read Later', 'Safariで開く', '公式アプリで追加', 'キャンセル' ]
+dialog.options = [ 'B!', 'Read Later', 'Readability', 'Safariで開く', '公式アプリで追加', 'キャンセル' ]
 dialog.cancel = dialog.options.length - 1
 
 dialog.addEventListener 'click', (e) ->
@@ -124,8 +155,10 @@ dialog.addEventListener 'click', (e) ->
       else
         openInstapaperConfig()
     when 2
-      Ti.Platform.openURL webview.url
+        readability()
     when 3
+      Ti.Platform.openURL webview.url
+    when 4
       url = encodeURIComponent webview.url
       title = encodeURIComponent bookmark.title
       Ti.Platform.openURL "hatenabookmark:/entry/add?backurl=hbfav:/&url=#{url}&title=#{title}"
