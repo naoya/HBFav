@@ -1,5 +1,5 @@
-var nameField, nameLabel, passwordField, passwordLabel, view, win;
-require('lib/underscore');
+var nameField, nameLabel, passwordField, passwordLabel, view, win, _;
+_ = require('/lib/underscore');
 Ti.include('ui.js');
 Ti.include('Instapaper.js');
 view = Ti.UI.createView({

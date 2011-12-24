@@ -1,5 +1,5 @@
-var nameField, nameLabel, nameNoteLabel, passwordField, passwordLabel, passwordNoteLabel, view, win;
-require('lib/underscore');
+var nameField, nameLabel, nameNoteLabel, passwordField, passwordLabel, passwordNoteLabel, view, win, _;
+_ = require('lib/underscore');
 Ti.include('ui.js');
 view = Ti.UI.createView({
   layout: 'vertical'

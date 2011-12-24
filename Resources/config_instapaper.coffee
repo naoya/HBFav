@@ -1,4 +1,4 @@
-require 'lib/underscore'
+_ = require '/lib/underscore'
 Ti.include 'ui.js'
 Ti.include 'Instapaper.js'
 

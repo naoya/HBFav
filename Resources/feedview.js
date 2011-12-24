@@ -417,17 +417,9 @@ FeedView = (function() {
     return dialog.show();
   };
   FeedView.prototype.appendFeed = function(feed) {
-    var current, rows, sec;
+    var rows;
     rows = feed.toRows();
-    current = this.table.data;
-    sec = Ti.UI.createTableViewSection();
-    if (rows != null) {
-      rows.forEach(function(row) {
-        return sec.add(row);
-      });
-    }
-    current.push(sec);
-    this.table.setData(current);
+    this.table.appendRow(rows);
     return this.lastRow += feed.size();
   };
   return FeedView;

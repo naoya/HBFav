@@ -320,10 +320,12 @@ class FeedView
 
   appendFeed: (feed) ->
     rows = feed.toRows()
-    current = @table.data
-    sec = Ti.UI.createTableViewSection()
-    rows?.forEach (row) ->
-      sec.add row
-    current.push sec
-    @table.setData current
+    # current = @table.data
+    # sec = Ti.UI.createTableViewSection()
+    # rows?.forEach (row) ->
+    #   sec.add row
+    # current.push sec
+    # @table.setData current
+
+    @table.appendRow rows
     @lastRow += feed.size()

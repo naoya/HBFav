@@ -1,4 +1,4 @@
-require 'lib/underscore'
+_ = require '/lib/underscore'
 
 Ti.include 'ui.js'
 Ti.include 'util.js'
@@ -182,9 +182,9 @@ xhr.onload = ->
 
   setData = (offset, limit) ->
     rows = bookmarks2rows data, offset, offset + limit
-    section = Ti.UI.createTableViewSection()
-    _(rows).each (row) ->
-      section.add row
+    # section = Ti.UI.createTableViewSection()
+    # _(rows).each (row) ->
+    #  section.add row
 
     if rows.length == limit
       more = Ti.UI.createTableViewRow()
@@ -208,14 +208,16 @@ xhr.onload = ->
 
         offset += limit
         setData(offset, limit)
-      section.add more
+      # section.add more
+      _(rows).push more
 
     if offset is 0
       table.deleteRow offset,
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
-    current = table.data
-    current.push section
-    table.setData current
+    # current = table.data
+    # current.push section
+    # table.setData current
+    table.appendRow rows
     if offset isnt 0
       table.deleteRow offset,
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE

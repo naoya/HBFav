@@ -1,5 +1,5 @@
-var Feed;
-require('lib/underscore');
+var Feed, _;
+_ = require('/lib/underscore');
 Ti.include('ui.js');
 Ti.include('util.js');
 Feed = (function() {

@@ -1,5 +1,5 @@
-var bookmark, bookmarks2rows, border, discind, entryContainer, favicon, header, ind, link, loadingRow, table, title, titleContainer, url, win, xhr;
-require('lib/underscore');
+var bookmark, bookmarks2rows, border, discind, entryContainer, favicon, header, ind, link, loadingRow, table, title, titleContainer, url, win, xhr, _;
+_ = require('/lib/underscore');
 Ti.include('ui.js');
 Ti.include('util.js');
 win = Ti.UI.currentWindow;
@@ -160,12 +160,8 @@ xhr.onload = function() {
   var data, setData;
   data = JSON.parse(this.responseText);
   setData = function(offset, limit) {
-    var current, label, more, rows, section;
+    var label, more, rows;
     rows = bookmarks2rows(data, offset, offset + limit);
-    section = Ti.UI.createTableViewSection();
-    _(rows).each(function(row) {
-      return section.add(row);
-    });
     if (rows.length === limit) {
       more = Ti.UI.createTableViewRow();
       label = Ti.UI.createLabel({
@@ -191,16 +187,14 @@ xhr.onload = function() {
         offset += limit;
         return setData(offset, limit);
       });
-      section.add(more);
+      _(rows).push(more);
     }
     if (offset === 0) {
       table.deleteRow(offset, {
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
       });
     }
-    current = table.data;
-    current.push(section);
-    table.setData(current);
+    table.appendRow(rows);
     if (offset !== 0) {
       return table.deleteRow(offset, {
         animationStyle: Ti.UI.iPhone.RowAnimationStyle.NONE
