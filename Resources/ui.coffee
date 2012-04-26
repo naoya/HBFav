@@ -43,7 +43,7 @@ HBFav.UI =
       text: ""
       color: "#fff"
       width: 250
-      height: 'auto'
+      height: Ti.UI.SIZE
       textAlign: 'center'
       font:
         fontSize: 13

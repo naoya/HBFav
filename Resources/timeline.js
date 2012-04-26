@@ -1,10 +1,15 @@
 var config, fv, initApp, win;
+
 Ti.include('feedview.js');
+
 Ti.include('util.js');
+
 win = Ti.UI.currentWindow;
+
 fv = new FeedView({
   win: win
 });
+
 initApp = function() {
   var icon, user;
   user = Ti.App.Properties.getString('hatena_id');
@@ -25,19 +30,16 @@ initApp = function() {
       }
     });
     profile.addEventListener('close', function() {
-      if (user !== Ti.App.Properties.getString('hatena_id')) {
-        return initApp();
-      }
+      if (user !== Ti.App.Properties.getString('hatena_id')) return initApp();
     });
     return Ti.UI.currentTab.open(profile);
   });
   win.setRightNavButton(icon);
   fv.url = Ti.App.config.serverRoot + ("/" + user);
-  if (fv.lastRow > 0) {
-    fv.clear();
-  }
+  if (fv.lastRow > 0) fv.clear();
   return fv.initialize();
 };
+
 if (Ti.App.Properties.getString('hatena_id')) {
   initApp();
 } else {

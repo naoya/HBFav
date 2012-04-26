@@ -1,21 +1,21 @@
-var AbstractState, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState;
-var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
-  for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
-  function ctor() { this.constructor = child; }
-  ctor.prototype = parent.prototype;
-  child.prototype = new ctor;
-  child.__super__ = parent.prototype;
-  return child;
-}, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+var AbstractState, FeedView, InitEndState, InitStartState, NormalState, PagingEndState, PagingStartState, PullingState, ReloadEndState, ReloadStartState,
+  __hasProp = Object.prototype.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+
 Ti.include('feed.js');
+
 Ti.include('util.js');
+
 AbstractState = (function() {
+
   AbstractState.prototype.toString = function() {
     return 'AbstractState';
   };
+
   function AbstractState(feedView) {
     this.feedView = feedView;
   }
+
   AbstractState.prototype.getFeed = function(url) {
     var onerror, onload, self, xhr;
     self = this;
@@ -37,24 +37,36 @@ AbstractState = (function() {
     };
     return xhr.send();
   };
+
   AbstractState.prototype.onload = function(data) {};
+
   AbstractState.prototype.scroll = function(e) {};
+
   AbstractState.prototype.scrollEnd = function(e) {};
+
   AbstractState.prototype.execute = function() {};
+
   AbstractState.prototype.onerror = function(err) {
     return alert(err.error);
   };
+
   return AbstractState;
+
 })();
-NormalState = (function() {
-  __extends(NormalState, AbstractState);
+
+NormalState = (function(_super) {
+
+  __extends(NormalState, _super);
+
   NormalState.prototype.toString = function() {
     return 'NormalState';
   };
+
   function NormalState(feedView) {
     this.feedView = feedView;
     this.lastDistance = 0;
   }
+
   NormalState.prototype.scroll = function(e) {
     var distance, height, nearEnd, offset, t, theEnd, total;
     offset = e.contentOffset.y;
@@ -82,16 +94,23 @@ NormalState = (function() {
       return this.lastDistance = distance;
     }
   };
+
   return NormalState;
-})();
-PullingState = (function() {
-  __extends(PullingState, AbstractState);
+
+})(AbstractState);
+
+PullingState = (function(_super) {
+
+  __extends(PullingState, _super);
+
   function PullingState() {
     PullingState.__super__.constructor.apply(this, arguments);
   }
+
   PullingState.prototype.toString = function() {
     return "PullingState";
   };
+
   PullingState.prototype.scroll = function(e) {
     var offset, t;
     offset = e.contentOffset.y;
@@ -105,6 +124,7 @@ PullingState = (function() {
       return this.feedView.transitState(new NormalState(this.feedView));
     }
   };
+
   PullingState.prototype.scrollEnd = function(e) {
     if (e.contentOffset.y <= -65.0) {
       this.feedView.header.arrow.hide();
@@ -119,22 +139,31 @@ PullingState = (function() {
       return this.feedView.transitState(new ReloadStartState(this.feedView));
     }
   };
+
   return PullingState;
-})();
-ReloadStartState = (function() {
-  __extends(ReloadStartState, AbstractState);
+
+})(AbstractState);
+
+ReloadStartState = (function(_super) {
+
+  __extends(ReloadStartState, _super);
+
   function ReloadStartState() {
     ReloadStartState.__super__.constructor.apply(this, arguments);
   }
+
   ReloadStartState.prototype.toString = function() {
     return "ReloadStartState";
   };
+
   ReloadStartState.prototype.execute = function() {
     return this.getFeed(this.feedView.url);
   };
+
   ReloadStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new ReloadEndState(this.feedView, data));
   };
+
   ReloadStartState.prototype.onerror = function(err) {
     this.feedView.showFailure();
     this.feedView.table.setContentInsets({
@@ -148,17 +177,24 @@ ReloadStartState = (function() {
     this.feedView.header.arrow.show();
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return ReloadStartState;
-})();
-ReloadEndState = (function() {
-  __extends(ReloadEndState, AbstractState);
+
+})(AbstractState);
+
+ReloadEndState = (function(_super) {
+
+  __extends(ReloadEndState, _super);
+
   ReloadEndState.prototype.toString = function() {
     return "ReloadEndState";
   };
+
   function ReloadEndState(feedView, data) {
     this.feedView = feedView;
     this.data = data;
   }
+
   ReloadEndState.prototype.execute = function() {
     var feed;
     feed = new Feed(this.data);
@@ -174,23 +210,32 @@ ReloadEndState = (function() {
     this.feedView.header.arrow.show();
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return ReloadEndState;
-})();
-PagingStartState = (function() {
-  __extends(PagingStartState, AbstractState);
+
+})(AbstractState);
+
+PagingStartState = (function(_super) {
+
+  __extends(PagingStartState, _super);
+
   function PagingStartState() {
     PagingStartState.__super__.constructor.apply(this, arguments);
   }
+
   PagingStartState.prototype.toString = function() {
     return "PagingStartState";
   };
+
   PagingStartState.prototype.execute = function() {
     this.feedView.pager.show();
     return this.getFeed(this.feedView.url + ("?of=" + this.feedView.lastRow));
   };
+
   PagingStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new PagingEndState(this.feedView, data));
   };
+
   PagingStartState.prototype.onerror = function(err) {
     var i;
     this.feedView.showFailure();
@@ -198,17 +243,24 @@ PagingStartState = (function() {
     this.feedView.pager.hide(i);
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return PagingStartState;
-})();
-PagingEndState = (function() {
-  __extends(PagingEndState, AbstractState);
+
+})(AbstractState);
+
+PagingEndState = (function(_super) {
+
+  __extends(PagingEndState, _super);
+
   PagingEndState.prototype.toString = function() {
     return "PagingEndState";
   };
+
   function PagingEndState(feedView, data) {
     this.feedView = feedView;
     this.data = data;
   }
+
   PagingEndState.prototype.execute = function() {
     var feed, i;
     i = this.feedView.lastRow;
@@ -217,19 +269,28 @@ PagingEndState = (function() {
     this.feedView.pager.hide(i);
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return PagingEndState;
-})();
-InitStartState = (function() {
-  __extends(InitStartState, AbstractState);
+
+})(AbstractState);
+
+InitStartState = (function(_super) {
+
+  __extends(InitStartState, _super);
+
   InitStartState.prototype.toString = function() {
     return "InitStartState";
   };
+
   function InitStartState(feedView) {
     this.feedView = feedView;
   }
+
   InitStartState.prototype.execute = function() {
     var loadingInd, loadingRow;
-    loadingRow = Ti.UI.createTableViewRow();
+    loadingRow = Ti.UI.createTableViewRow({
+      height: 44
+    });
     loadingInd = Ti.UI.createActivityIndicator({
       backgroundColor: "#fff",
       top: 10,
@@ -241,45 +302,62 @@ InitStartState = (function() {
     this.feedView.table.setData([loadingRow]);
     return this.getFeed(this.feedView.url);
   };
+
   InitStartState.prototype.onload = function(data) {
     return this.feedView.transitState(new InitEndState(this.feedView, data));
   };
+
   InitStartState.prototype.onerror = function(err) {
     this.feedView.showFailure();
     this.feedView.clear();
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return InitStartState;
-})();
-InitEndState = (function() {
-  __extends(InitEndState, AbstractState);
+
+})(AbstractState);
+
+InitEndState = (function(_super) {
+
+  __extends(InitEndState, _super);
+
   InitEndState.prototype.toString = function() {
     return "InitEndState";
   };
+
   function InitEndState(feedView, data) {
     this.feedView = feedView;
     this.data = data;
   }
+
   InitEndState.prototype.execute = function() {
     var feed;
     feed = new Feed(this.data);
     this.feedView.setFeed(feed);
     return this.feedView.transitState(new NormalState(this.feedView));
   };
+
   return InitEndState;
-})();
+
+})(AbstractState);
+
 FeedView = (function() {
+
   FeedView.prototype.state = null;
+
   FeedView.prototype.transitState = function(nextState) {
     Ti.API.debug(" -> " + nextState.toString());
     this.state = nextState;
     return this.state.execute();
   };
+
   FeedView.prototype.initialize = function() {
     return this.transitState(new InitStartState(this));
   };
+
   function FeedView(_arg) {
-    var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table;
+    var actInd, arrow, border, header, lastUpdatedLabel, statusLabel, table,
+      _this = this;
     this.win = _arg.win, this.url = _arg.url;
     table = Ti.UI.createTableView({
       data: []
@@ -295,12 +373,12 @@ FeedView = (function() {
         }));
       }
     });
-    table.addEventListener('scroll', __bind(function(e) {
-      return this.state.scroll(e);
-    }, this));
-    table.addEventListener('scrollEnd', __bind(function(e) {
-      return this.state.scrollEnd(e);
-    }, this));
+    table.addEventListener('scroll', function(e) {
+      return _this.state.scroll(e);
+    });
+    table.addEventListener('scrollEnd', function(e) {
+      return _this.state.scrollEnd(e);
+    });
     this.win.add(table);
     border = Ti.UI.createView({
       backgroundColor: "#576c89",
@@ -327,7 +405,7 @@ FeedView = (function() {
       left: 55,
       width: 200,
       bottom: 30,
-      height: "auto",
+      height: Ti.UI.SIZE,
       color: "#576c89",
       textAlign: "center",
       font: {
@@ -346,7 +424,7 @@ FeedView = (function() {
       left: 55,
       width: 200,
       bottom: 15,
-      height: "auto",
+      height: Ti.UI.SIZE,
       color: "#576c89",
       textAlign: "center",
       font: {
@@ -381,7 +459,9 @@ FeedView = (function() {
     this.pager = {};
     this.pager.createRow = function() {
       var ind, row;
-      row = Ti.UI.createTableViewRow();
+      row = Ti.UI.createTableViewRow({
+        height: 44
+      });
       ind = Ti.UI.createActivityIndicator({
         top: 10,
         bottom: 10,
@@ -391,23 +471,26 @@ FeedView = (function() {
       ind.show();
       return row;
     };
-    this.pager.show = __bind(function() {
-      return this.table.appendRow(this.pager.createRow());
-    }, this);
-    this.pager.hide = __bind(function(index) {
-      return this.table.deleteRow(index, {
+    this.pager.show = function() {
+      return _this.table.appendRow(_this.pager.createRow());
+    };
+    this.pager.hide = function(index) {
+      return _this.table.deleteRow(index, {
         animationStyle: Titanium.UI.iPhone.RowAnimationStyle.NONE
       });
-    }, this);
+    };
   }
+
   FeedView.prototype.setFeed = function(feed) {
     this.table.setData(feed.toRows());
     return this.lastRow = feed.size();
   };
+
   FeedView.prototype.clear = function() {
     this.table.setData([]);
     return this.lastRow = 0;
   };
+
   FeedView.prototype.showFailure = function() {
     var dialog;
     dialog = Ti.UI.createAlertDialog({
@@ -416,11 +499,14 @@ FeedView = (function() {
     });
     return dialog.show();
   };
+
   FeedView.prototype.appendFeed = function(feed) {
     var rows;
     rows = feed.toRows();
     this.table.appendRow(rows);
     return this.lastRow += feed.size();
   };
+
   return FeedView;
+
 })();

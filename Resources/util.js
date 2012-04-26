@@ -1,8 +1,9 @@
 var $$$;
+
 Ti.include('/lib/sprintf.js');
-if (typeof HBFav === "undefined" || HBFav === null) {
-  HBFav = {};
-}
+
+if (typeof HBFav === "undefined" || HBFav === null) HBFav = {};
+
 HBFav.Util = {
   count2label: function(count) {
     if (count > 1) {
@@ -28,4 +29,5 @@ HBFav.Util = {
     return datestr;
   }
 };
+
 $$$ = HBFav.Util;

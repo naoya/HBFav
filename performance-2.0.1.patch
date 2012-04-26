@@ -1,0 +1,187 @@
+diff -Nur build.orig/iphone/Classes/TiUILabel.m build/iphone/Classes/TiUILabel.m
+--- build.orig/iphone/Classes/TiUILabel.m	2012-04-26 17:37:30.000000000 +0900
++++ build/iphone/Classes/TiUILabel.m	2012-04-26 17:39:58.000000000 +0900
+@@ -265,6 +265,20 @@
+ 	[[self label] setShadowOffset:size];
+ }
+ 
++// override
++-(void)setBackgroundColor_:(id)color
++{
++	if ([color isKindOfClass:[UIColor class]])
++	{
++		label.backgroundColor = color;
++	}
++	else
++	{
++		TiColor *ticolor = [TiUtils colorValue:color];
++		label.backgroundColor = [ticolor _color];
++	}
++}
++
+ @end
+ 
+-#endif
+\ No newline at end of file
++#endif
+diff -Nur build.orig/iphone/Classes/TiUIWebView.m build/iphone/Classes/TiUIWebView.m
+--- build.orig/iphone/Classes/TiUIWebView.m	2012-04-26 17:37:31.000000000 +0900
++++ build/iphone/Classes/TiUIWebView.m	2012-04-26 17:40:33.000000000 +0900
+@@ -110,32 +110,33 @@
+ 		
+ 		webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
+ 		webview.delegate = self;
+-		webview.opaque = NO;
++		webview.opaque = YES;
+ 		webview.backgroundColor = [UIColor whiteColor];
+ 		webview.contentMode = UIViewContentModeRedraw;
+ 		[self addSubview:webview];
+-		
+-		// only show the loading indicator if it's a remote URL
+-		if ([self isURLRemote])
+-		{
+-			TiColor *bgcolor = [TiUtils colorValue:[self.proxy valueForKey:@"backgroundColor"]];
+-			UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
+-			if (bgcolor!=nil)
+-			{
+-				// check to see if the background is a dark color and if so, we want to 
+-				// show the white indicator instead
+-				if ([Webcolor isDarkColor:[bgcolor _color]])
+-				{
+-					style = UIActivityIndicatorViewStyleWhite;
+-				} 
+-			}
+-			spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
+-			[spinner setHidesWhenStopped:YES];
+-			spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+-			[self addSubview:spinner];
+-			[spinner sizeToFit];
+-			[spinner startAnimating];
+-		}
++
++    // To remove indicator because it does not work correctly in 2.0.1
++		// // only show the loading indicator if it's a remote URL
++		// if ([self isURLRemote])
++		// {
++		// 	TiColor *bgcolor = [TiUtils colorValue:[self.proxy valueForKey:@"backgroundColor"]];
++		// 	UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleGray;
++		// 	if (bgcolor!=nil)
++		// 	{
++		// 		// check to see if the background is a dark color and if so, we want to 
++		// 		// show the white indicator instead
++		// 		if ([Webcolor isDarkColor:[bgcolor _color]])
++		// 		{
++		// 			style = UIActivityIndicatorViewStyleWhite;
++		// 		} 
++		// 	}
++		// 	spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
++		// 	[spinner setHidesWhenStopped:YES];
++		// 	spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
++		// 	[self addSubview:spinner];
++		// 	[spinner sizeToFit];
++		// 	[spinner startAnimating];
++		// }
+ 	}
+ 	return webview;
+ }
+@@ -753,4 +754,5 @@
+ 
+ @end
+ 
+-#endif
+\ No newline at end of file
++#endif
++
+diff -Nur build.orig/iphone/Classes/UIImage+Resize.m build/iphone/Classes/UIImage+Resize.m
+--- build.orig/iphone/Classes/UIImage+Resize.m	2012-04-26 17:37:31.000000000 +0900
++++ build/iphone/Classes/UIImage+Resize.m	2012-04-26 17:40:14.000000000 +0900
+@@ -21,49 +21,52 @@
+ 					image:(UIImage*)image 
+ 					hires:(BOOL)hires
+ {
+-    CGImageRef imageRef = image.CGImage;
+-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
++  // patched: Do Nothing
++  return image;
++
++  //   CGImageRef imageRef = image.CGImage;
++	// CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+     
+-	CGFloat scale = 1.0;
++	// CGFloat scale = 1.0;
+ 
+-	scale = [image scale];
+-	// Force scaling to 2.0
+-	if ([TiUtils isRetinaDisplay] && hires) {
+-		scale = 2.0;
+-	}
++	// scale = [image scale];
++	// // Force scaling to 2.0
++	// if ([TiUtils isRetinaDisplay] && hires) {
++	// 	scale = 2.0;
++	// }
+ 
+ 
+-    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width*scale, newSize.height*scale));
+-    CGRect transposedRect = CGRectMake(0, 0, newRect.size.height, newRect.size.width);
++  //   CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width*scale, newSize.height*scale));
++  //   CGRect transposedRect = CGRectMake(0, 0, newRect.size.height, newRect.size.width);
+ 	
+-    // Build a context that's the same dimensions as the new size
+-    CGContextRef bitmap = CGBitmapContextCreate(NULL,
+-                                                newRect.size.width,
+-                                                newRect.size.height,
+-                                                8,
+-                                                0,
+-                                                colorSpace,
+-                                                kCGImageAlphaPremultipliedLast);
+-    
+-    // Rotate and/or flip the image if required by its orientation
+-    CGContextConcatCTM(bitmap, transform);
+-    
+-    // Set the quality level to use when rescaling
+-    CGContextSetInterpolationQuality(bitmap, quality);
+-    
+-    // Draw into the context; this scales the image
+-    CGContextDrawImage(bitmap, transpose ? transposedRect : newRect, imageRef);
+-    
+-    // Get the resized image from the context and a UIImage
+-    CGImageRef newImageRef = CGBitmapContextCreateImage(bitmap);
+-    UIImage* newImage = [UIImage imageWithCGImage:newImageRef scale:scale orientation:UIImageOrientationUp];
+-    
+-    // Clean up
+-    CGContextRelease(bitmap);
+-    CGImageRelease(newImageRef);
+-	CGColorSpaceRelease(colorSpace);
++  //   // Build a context that's the same dimensions as the new size
++  //   CGContextRef bitmap = CGBitmapContextCreate(NULL,
++  //                                               newRect.size.width,
++  //                                               newRect.size.height,
++  //                                               8,
++  //                                               0,
++  //                                               colorSpace,
++  //                                               kCGImageAlphaPremultipliedLast);
++    
++  //   // Rotate and/or flip the image if required by its orientation
++  //   CGContextConcatCTM(bitmap, transform);
++    
++  //   // Set the quality level to use when rescaling
++  //   CGContextSetInterpolationQuality(bitmap, quality);
++    
++  //   // Draw into the context; this scales the image
++  //   CGContextDrawImage(bitmap, transpose ? transposedRect : newRect, imageRef);
++    
++  //   // Get the resized image from the context and a UIImage
++  //   CGImageRef newImageRef = CGBitmapContextCreateImage(bitmap);
++  //   UIImage* newImage = [UIImage imageWithCGImage:newImageRef scale:scale orientation:UIImageOrientationUp];
++    
++  //   // Clean up
++  //   CGContextRelease(bitmap);
++  //   CGImageRelease(newImageRef);
++	// CGColorSpaceRelease(colorSpace);
+     
+-    return newImage;
++  //   return newImage;
+ }
+ 
+ // Returns an affine transform that takes into account the image orientation when drawing a scaled image

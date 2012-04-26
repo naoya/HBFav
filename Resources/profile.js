@@ -1,8 +1,13 @@
 var image, imageContainer, name, row1, row2, row3, row4, section1, section2, sections, table, user, win;
+
 Ti.include('feedview.js');
+
 Ti.include('ui.js');
+
 win = Ti.UI.currentWindow;
+
 user = win.user;
+
 imageContainer = Ti.UI.createView({
   layout: 'horizontal',
   width: 320,
@@ -11,6 +16,7 @@ imageContainer = Ti.UI.createView({
   left: 0,
   backgroundColor: "stripped"
 });
+
 image = HBFav.UI.createImageView({
   width: 48,
   height: 48,
@@ -18,7 +24,9 @@ image = HBFav.UI.createImageView({
   left: 10,
   borderRadius: 5
 });
+
 image.imageWithCache($$$.profileImageUrlLarge(user.name));
+
 name = Ti.UI.createLabel({
   width: 'auto',
   height: 48,
@@ -36,16 +44,24 @@ name = Ti.UI.createLabel({
     y: 1
   }
 });
+
 name.backgroundColor = "transparent";
+
 name.text = user.name;
+
 imageContainer.add(image);
+
 imageContainer.add(name);
+
 sections = [];
+
 section1 = Ti.UI.createTableViewSection();
+
 row1 = Ti.UI.createTableViewRow({
   hasChild: true,
   title: "ブックマーク"
 });
+
 row1.addEventListener('click', function() {
   var bookmarkWin, fv;
   bookmarkWin = Ti.UI.createWindow({
@@ -58,10 +74,12 @@ row1.addEventListener('click', function() {
   fv.initialize();
   return Ti.UI.currentTab.open(bookmarkWin);
 });
+
 row2 = Ti.UI.createTableViewRow({
   hasChild: true,
   title: "フォロー"
 });
+
 row2.addEventListener('click', function() {
   var fv, timelineWin;
   timelineWin = Ti.UI.createWindow({
@@ -74,9 +92,13 @@ row2.addEventListener('click', function() {
   fv.initialize();
   return Ti.UI.currentTab.open(timelineWin);
 });
+
 section1.add(row1);
+
 section1.add(row2);
+
 sections.push(section1);
+
 if (win.showConfig) {
   section2 = Ti.UI.createTableViewSection({
     visible: true,
@@ -117,10 +139,13 @@ if (win.showConfig) {
   section2.add(row4);
   sections.push(section2);
 }
+
 table = Ti.UI.createTableView({
   top: 58,
   data: sections,
   style: Ti.UI.iPhone.TableViewStyle.GROUPED
 });
+
 win.add(imageContainer);
+
 win.add(table);

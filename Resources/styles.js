@@ -1,4 +1,5 @@
 var $$;
+
 HBFav.UI.styles = {
   timeline: {
     profileImage: {
@@ -10,7 +11,7 @@ HBFav.UI.styles = {
     },
     profileImageContainer: {
       backgroundColor: "#fff",
-      width: 'auto',
+      width: Ti.UI.SIZE,
       height: 68,
       top: 0,
       left: 0
@@ -18,13 +19,13 @@ HBFav.UI.styles = {
     bodyContainer: {
       layout: 'vertical',
       width: 245,
-      height: 'auto',
+      height: Ti.UI.SIZE,
       left: 65,
       top: 0
     },
     nameLabel: {
-      width: 'auto',
-      height: 'auto',
+      width: Ti.UI.SIZE,
+      height: Ti.UI.SIZE,
       left: 0,
       top: 10,
       bottom: 5,
@@ -41,8 +42,8 @@ HBFav.UI.styles = {
       color: '#000',
       top: 0,
       left: 0,
-      width: 'auto',
-      height: 'auto',
+      width: Ti.UI.SIZE,
+      height: Ti.UI.SIZE,
       bottom: 10,
       font: {
         fontSize: 16
@@ -51,7 +52,8 @@ HBFav.UI.styles = {
     titleContainer: {
       layout: 'horizontal',
       width: 245,
-      height: 'auto',
+      height: Ti.UI.SIZE,
+      backgroundColor: '#fff',
       top: 0,
       left: 0,
       bottom: 10
@@ -63,8 +65,8 @@ HBFav.UI.styles = {
       color: '#3B5998',
       top: 0,
       left: 3,
-      width: 'auto',
-      height: 'auto',
+      width: 225,
+      height: Ti.UI.SIZE,
       font: {
         fontSize: 16
       }
@@ -78,8 +80,8 @@ HBFav.UI.styles = {
       left: 0
     },
     dateLabel: {
-      width: 'auto',
-      height: 'auto',
+      width: Ti.UI.SIZE,
+      height: Ti.UI.SIZE,
       top: 10,
       right: 10,
       color: '#999',
@@ -92,8 +94,8 @@ HBFav.UI.styles = {
   },
   form: {
     label: {
-      width: 'auto',
-      height: 'auto',
+      width: Ti.UI.SIZE,
+      height: Ti.UI.SIZE,
       color: "#333",
       shadowColor: "#fff",
       shadowOffset: {
@@ -120,8 +122,8 @@ HBFav.UI.styles = {
       paddingRight: 10
     },
     notice: {
-      width: 'auto',
-      height: 'auto',
+      width: Ti.UI.SIZE,
+      height: Ti.UI.SIZE,
       left: 30,
       right: 30,
       textAlign: "center",
@@ -138,4 +140,5 @@ HBFav.UI.styles = {
     }
   }
 };
+
 $$ = HBFav.UI.styles;

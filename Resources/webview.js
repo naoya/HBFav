@@ -1,14 +1,38 @@
-var actionButton, bookmark, buttonBack, buttonForward, buttonRefresh, countButton, dialog, flexSpace, openBookmarks, openHatenaConfig, openInstapaperConfig, readLater, readability, sendToHatena, webview, win;
+var actionButton, bookmark, buttonBack, buttonForward, buttonRefresh, countButton, dialog, flexSpace, loadingInd, openBookmarks, openHatenaConfig, openInstapaperConfig, readLater, readability, sendToHatena, webview, win;
+
 Ti.include('HatenaBookmark.js');
+
 Ti.include('Instapaper.js');
+
 Ti.include('ui.js');
+
 Ti.include('util.js');
+
 win = Ti.UI.currentWindow;
+
 bookmark = win.bookmark;
+
 webview = Ti.UI.createWebView({
-  url: bookmark.link
+  url: bookmark.link,
+  loading: false
 });
+
 win.add(webview);
+
+loadingInd = Ti.UI.createActivityIndicator({
+  style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
+  height: 'auto',
+  width: 'auto'
+});
+
+loadingInd.show();
+
+win.add(loadingInd);
+
+webview.addEventListener('load', function() {
+  return loadingInd.hide();
+});
+
 openBookmarks = function() {
   var bookmarksWin;
   bookmarksWin = Ti.UI.createWindow({
@@ -19,6 +43,7 @@ openBookmarks = function() {
   });
   return Ti.UI.currentTab.open(bookmarksWin);
 };
+
 sendToHatena = function() {
   var entry, msgwin;
   msgwin = HBFav.UI.createMessageWin();
@@ -49,6 +74,7 @@ sendToHatena = function() {
     }
   });
 };
+
 openHatenaConfig = function() {
   var config;
   config = Ti.UI.createWindow({
@@ -58,6 +84,7 @@ openHatenaConfig = function() {
   });
   return config.open();
 };
+
 readLater = function() {
   var msgwin;
   msgwin = HBFav.UI.createMessageWin();
@@ -84,6 +111,7 @@ readLater = function() {
     }
   });
 };
+
 openInstapaperConfig = function() {
   var config;
   config = Ti.UI.createWindow({
@@ -93,6 +121,7 @@ openInstapaperConfig = function() {
   });
   return config.open();
 };
+
 readability = function() {
   var msgwin, xhr;
   msgwin = HBFav.UI.createMessageWin();
@@ -129,33 +158,45 @@ readability = function() {
     url: bookmark.link
   });
 };
+
 flexSpace = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.FLEXIBLE_SPACE
 });
+
 buttonBack = Ti.UI.createButton({
   systemButton: 101
 });
+
 buttonBack.addEventListener('click', function() {
   return webview.goBack();
 });
+
 buttonForward = Ti.UI.createButton({
   systemButton: 102
 });
+
 buttonForward.addEventListener('click', function() {
   return webview.goForward();
 });
+
 buttonRefresh = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.REFRESH
 });
+
 buttonRefresh.addEventListener('click', function() {
   return webview.reload();
 });
+
 actionButton = Ti.UI.createButton({
   systemButton: Ti.UI.iPhone.SystemButton.ACTION
 });
+
 dialog = Ti.UI.createOptionDialog();
+
 dialog.options = ['B!', 'Read Later', 'Readability', 'Safariで開く', '公式アプリで追加', 'キャンセル'];
+
 dialog.cancel = dialog.options.length - 1;
+
 dialog.addEventListener('click', function(e) {
   var title, url;
   switch (e.index) {
@@ -183,12 +224,16 @@ dialog.addEventListener('click', function(e) {
       return Ti.Platform.openURL("hatenabookmark:/entry/add?backurl=hbfav:/&url=" + url + "&title=" + title);
   }
 });
+
 actionButton.addEventListener('click', function() {
   return dialog.show();
 });
+
 countButton = Ti.UI.createButton({
   title: $$$.count2label(bookmark.count),
   style: Ti.UI.iPhone.SystemButtonStyle.BORDERED
 });
+
 countButton.addEventListener('click', openBookmarks);
+
 win.toolbar = [buttonBack, flexSpace, buttonForward, flexSpace, buttonRefresh, flexSpace, actionButton, flexSpace, countButton];

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-    <sdk-version>1.8.0.1</sdk-version>
+    <sdk-version>2.0.1.GA2</sdk-version>
     <deployment-targets>
         <target device="mobileweb">false</target>
         <target device="iphone">true</target>
@@ -10,7 +10,7 @@
     </deployment-targets>
 <id>HBFav</id>
 <name>HBFav</name>
-<version>0.1</version>
+<version>0.3</version>
 <publisher>naoya</publisher>
 <url>https://github.com/naoya/HBFav</url>
 <description>Hatena Bookmark favorite Reader</description>

@@ -1,11 +1,19 @@
 var bookmark, bookmarks2rows, border, discind, entryContainer, favicon, header, ind, link, loadingRow, table, title, titleContainer, url, win, xhr, _;
+
 _ = require('/lib/underscore');
+
 Ti.include('ui.js');
+
 Ti.include('util.js');
+
 win = Ti.UI.currentWindow;
+
 bookmark = win.bookmark;
-link = encodeURI(bookmark.link);
+
+link = bookmark.link.replace('#', '%23');
+
 url = "http://b.hatena.ne.jp/entry/jsonlite/?url=" + link;
+
 header = Ti.UI.createView({
   top: 0,
   left: 0,
@@ -14,20 +22,23 @@ header = Ti.UI.createView({
   layout: 'absolute',
   backgroundColor: "stripped"
 });
+
 entryContainer = Ti.UI.createView({
   layout: 'vertical',
   width: 310,
-  height: 'auto',
+  height: Ti.UI.SIZE,
   top: 5,
   left: 5
 });
+
 discind = Ti.UI.createImageView({
   image: 'images/disc2.png',
   width: 'auto',
-  height: 'auto',
+  height: Ti.UI.SIZE,
   right: 5,
   top: 26
 });
+
 titleContainer = Ti.UI.createView({
   layout: 'horizontal',
   width: 290,
@@ -35,31 +46,41 @@ titleContainer = Ti.UI.createView({
   top: 0,
   left: 0
 });
+
 favicon = HBFav.UI.createImageView({
   width: 14,
   height: 14,
   top: 2,
   left: 0
 });
+
 favicon.imageWithCache(bookmark.favicon_url);
+
 title = Ti.UI.createLabel({
   color: '#000',
   top: 0,
   left: 4,
   width: 'auto',
-  height: 'auto',
+  height: Ti.UI.SIZE,
   font: {
     fontSize: 13,
     fontWeight: "bold"
   },
   backgroundColor: 'transparent'
 });
+
 title.text = bookmark.title;
+
 titleContainer.add(favicon);
+
 titleContainer.add(title);
+
 entryContainer.add(titleContainer);
+
 header.add(entryContainer);
+
 header.add(discind);
+
 header.addEventListener('click', function() {
   var webView;
   webView = Ti.UI.createWindow({
@@ -70,23 +91,32 @@ header.addEventListener('click', function() {
   });
   return Ti.UI.currentTab.open(webView);
 });
+
 border = Ti.UI.createView({
   backgroundColor: "#ababab",
   top: 68,
   height: 1
 });
-loadingRow = Ti.UI.createTableViewRow();
+
+loadingRow = Ti.UI.createTableViewRow({
+  height: 44
+});
+
 ind = Ti.UI.createActivityIndicator({
   top: 10,
   bottom: 10,
   style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
 });
+
 ind.show();
+
 loadingRow.add(ind);
+
 table = Ti.UI.createTableView({
   top: 69,
   data: [loadingRow]
 });
+
 table.addEventListener('click', function(e) {
   var row;
   row = e.rowData;
@@ -98,16 +128,20 @@ table.addEventListener('click', function(e) {
     }));
   }
 });
+
 win.add(header);
+
 win.add(border);
+
 win.add(table);
+
 bookmarks2rows = function(data, start, end) {
   var bookmarks, rows;
   bookmarks = data.bookmarks.slice(start, end);
   rows = _(bookmarks).map(function(b) {
     var bodyContainer, comment, date, image, imageContainer, name, row, _ref;
     row = Ti.UI.createTableViewRow({
-      height: 'auto',
+      height: Ti.UI.SIZE,
       layout: 'absolute',
       bookmark: {
         user: {
@@ -148,14 +182,17 @@ bookmarks2rows = function(data, start, end) {
   });
   return rows;
 };
+
 xhr = Ti.Network.createHTTPClient();
+
 xhr.timeout = 100000;
+
 xhr.open('GET', url);
-Ti.API.debug(link);
-Ti.API.debug(url);
+
 xhr.onerror = function(e) {
   return alert(e.error);
 };
+
 xhr.onload = function() {
   var data, setData;
   data = JSON.parse(this.responseText);
@@ -168,6 +205,7 @@ xhr.onload = function() {
         text: "もっと見る",
         color: "#194C7F",
         textAlign: "center",
+        height: 44,
         font: {
           fontSize: 16,
           fontWeight: "bold"
@@ -179,7 +217,9 @@ xhr.onload = function() {
         loadingInd = Ti.UI.createActivityIndicator({
           top: 10,
           bottom: 10,
-          style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+          style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
+          height: 'auto',
+          width: 'auto'
         });
         loadingInd.show();
         more.remove(label);
@@ -206,4 +246,5 @@ xhr.onload = function() {
   xhr.onerror = null;
   return xhr = null;
 };
+
 xhr.send();

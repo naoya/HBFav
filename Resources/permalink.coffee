@@ -16,7 +16,7 @@ view = Ti.UI.createView
   top: 0
   left: 0
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   layout: 'absolute'
   backgroundColor: "#fff"
 
@@ -43,7 +43,7 @@ image.imageWithCache $$$.profileImageUrlLarge bookmark.user.name
 discind = Ti.UI.createImageView
   image: 'images/disc2.png'
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   right: 10
   top: 26
 
@@ -68,7 +68,8 @@ border = Ti.UI.createView
 bodyContainer = Ti.UI.createView
   layout: 'vertical'
   width: 300
-  height: 'auto'
+  height: Ti.UI.SIZE
+  # backgroundColor: 'red'
   top: 78
   left: 10
 
@@ -78,15 +79,16 @@ comment = Ti.UI.createLabel
   top: 0
   left: 0
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   bottom: 10
   font:
     fontSize: 18
 
 titleContainer = Ti.UI.createView
   layout: 'horizontal'
-  width: 'auto'
-  height: 'auto'
+  width:  Ti.UI.FILL
+  height: Ti.UI.SIZE
+  backgroundColor: '#fff'
   top: 0
   left: 0
 
@@ -102,8 +104,8 @@ title = Ti.UI.createLabel
   backgroundColor: '#fff'
   top: 0
   left: 3
-  width: 'auto'
-  height: 'auto'
+  width: 281
+  height: Ti.UI.SIZE
   font:
     fontSize: 18
 
@@ -111,7 +113,7 @@ link = Ti.UI.createLabel
   color: '#666'
   backgroundColor: '#fff'
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   top: 4
   left: 19
   font:
@@ -120,13 +122,14 @@ link = Ti.UI.createLabel
 footerContainer = Ti.UI.createView
   layout: 'horizontal'
   width: 'auto'
-  height: 'auto'
+  height: 16
+  # backgroundColor: 'green'
   top: 3
   left: 0
 
 date = Ti.UI.createLabel
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   backgroundColor: '#fff'
   top: 0
   left: 20

@@ -1,5 +1,7 @@
 var Instapaper;
+
 Instapaper = {};
+
 Instapaper.authenticate = function(callback) {
   var xhr;
   xhr = Ti.Network.createHTTPClient();
@@ -19,6 +21,7 @@ Instapaper.authenticate = function(callback) {
     password: this.user.password
   });
 };
+
 Instapaper.post = function(url, callback) {
   var xhr;
   xhr = Ti.Network.createHTTPClient();

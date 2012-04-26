@@ -8,7 +8,21 @@ bookmark = win.bookmark
 
 webview = Ti.UI.createWebView
   url: bookmark.link
+  loading: false
+  # height: Ti.UI.SIZE
+  # widgh: 320
+
 win.add webview
+
+## 2.0 の bug で組み込みのインジケータが左上の方で回ってしまうので自分で作る
+loadingInd = Ti.UI.createActivityIndicator
+  style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+  height: 'auto'
+  width: 'auto'
+loadingInd.show()
+win.add loadingInd
+webview.addEventListener 'load', () ->
+  loadingInd.hide()
 
 ## open /entry
 openBookmarks = () ->

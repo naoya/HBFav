@@ -5,7 +5,7 @@ Ti.include 'util.js'
 
 win = Ti.UI.currentWindow
 bookmark = win.bookmark
-link = encodeURI bookmark.link
+link = bookmark.link.replace '#', '%23'
 
 ## FIXME: Node側でやる?
 url = "http://b.hatena.ne.jp/entry/jsonlite/?url=#{link}"
@@ -22,14 +22,14 @@ header = Ti.UI.createView
 entryContainer = Ti.UI.createView
   layout: 'vertical'
   width: 310
-  height: 'auto'
+  height: Ti.UI.SIZE
   top: 5
   left: 5
 
 discind = Ti.UI.createImageView
   image: 'images/disc2.png'
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   right: 5
   top: 26
 
@@ -52,7 +52,7 @@ title = Ti.UI.createLabel
   top: 0
   left: 4
   width: 'auto'
-  height: 'auto'
+  height: Ti.UI.SIZE
   font:
     fontSize: 13
     fontWeight: "bold"
@@ -78,7 +78,9 @@ border = Ti.UI.createView
   top: 68
   height: 1
 
-loadingRow = Ti.UI.createTableViewRow()
+loadingRow = Ti.UI.createTableViewRow
+  height: 44
+
 ind = Ti.UI.createActivityIndicator
   top: 10
   bottom: 10
@@ -106,7 +108,7 @@ bookmarks2rows = (data, start, end) ->
   bookmarks = data.bookmarks.slice start, end
   rows = _(bookmarks).map (b) ->
     row = Ti.UI.createTableViewRow
-      height: 'auto'
+      height: Ti.UI.SIZE
       layout: 'absolute'
       bookmark:
         user:
@@ -171,8 +173,8 @@ xhr = Ti.Network.createHTTPClient()
 xhr.timeout = 100000
 xhr.open 'GET', url
 
-Ti.API.debug link
-Ti.API.debug url
+# Ti.API.debug link
+# Ti.API.debug url
 
 xhr.onerror = (e)->
   alert e.error
@@ -192,6 +194,7 @@ xhr.onload = ->
         text: "もっと見る"
         color: "#194C7F"
         textAlign: "center"
+        height: 44
         font:
           fontSize: 16
           fontWeight: "bold"
@@ -201,6 +204,8 @@ xhr.onload = ->
           top: 10
           bottom: 10
           style: Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+          height: 'auto'
+          width: 'auto'
         loadingInd.show()
 
         more.remove label

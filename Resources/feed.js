@@ -1,20 +1,28 @@
 var Feed, _;
+
 _ = require('/lib/underscore');
+
 Ti.include('ui.js');
+
 Ti.include('util.js');
+
 Feed = (function() {
+
   function Feed(f) {
     this.f = f;
   }
+
   Feed.prototype.size = function() {
     return this.f.bookmarks.length;
   };
+
   Feed.prototype.toRows = function() {
     var _ref;
     return (_ref = this.f.bookmarks) != null ? _ref.map(function(bookmark) {
       var bodyContainer, comment, date, favicon, image, imageContainer, name, row, title, titleContainer, _ref2;
       row = Ti.UI.createTableViewRow({
-        height: 'auto',
+        width: Ti.UI.FILL,
+        height: Ti.UI.SIZE,
         layout: 'absolute',
         bookmark: bookmark
       });
@@ -52,5 +60,7 @@ Feed = (function() {
       return row;
     }) : void 0;
   };
+
   return Feed;
+
 })();

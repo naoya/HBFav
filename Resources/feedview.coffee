@@ -148,7 +148,8 @@ class InitStartState extends AbstractState
   toString : () -> "InitStartState"
   constructor: (@feedView) ->
   execute: () ->
-    loadingRow = Ti.UI.createTableViewRow()
+    loadingRow = Ti.UI.createTableViewRow
+      height: 44
     loadingInd = Ti.UI.createActivityIndicator
       backgroundColor: "#fff"
       top: 10
@@ -235,7 +236,7 @@ class FeedView
       left:55
       width:200
       bottom:30
-      height:"auto"
+      height: Ti.UI.SIZE
       color:"#576c89"
       textAlign:"center"
       font:
@@ -252,7 +253,7 @@ class FeedView
       left:55
       width:200
       bottom:15
-      height:"auto"
+      height: Ti.UI.SIZE
       color:"#576c89"
       textAlign:"center"
       font:
@@ -290,7 +291,9 @@ class FeedView
     ## Paging用
     @pager = {}
     @pager.createRow = () ->
-      row = Ti.UI.createTableViewRow()
+      row = Ti.UI.createTableViewRow
+        height: 44
+        # height: Ti.UI.SIZE
       ind = Ti.UI.createActivityIndicator
         top: 10
         bottom: 10

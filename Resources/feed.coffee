@@ -10,14 +10,14 @@ class Feed
   toRows: ->
     return @f.bookmarks?.map (bookmark) ->
       row = Ti.UI.createTableViewRow
-        height: 'auto'
+        width: Ti.UI.FILL
+        height: Ti.UI.SIZE
         layout: 'absolute'
         bookmark: bookmark
 
       imageContainer = Ti.UI.createView $$.timeline.profileImageContainer
       image = HBFav.UI.createImageView $$.timeline.profileImage
       imageContainer.add image
-      # image.imageWithCache $$$.profileImageUrl bookmark.user.name
       image.imageWithCache $$$.profileImageUrlLarge bookmark.user.name
       bodyContainer = Ti.UI.createView $$.timeline.bodyContainer
 
@@ -48,4 +48,5 @@ class Feed
       row.add imageContainer
       row.add bodyContainer
       row.add date
+
       row

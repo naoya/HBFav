@@ -1,7 +1,8 @@
+
 Ti.include('lib/sha1.js');
-if (typeof HBFav === "undefined" || HBFav === null) {
-  HBFav = {};
-}
+
+if (typeof HBFav === "undefined" || HBFav === null) HBFav = {};
+
 HBFav.UI = {
   createImageView: function(options) {
     var ui;
@@ -17,9 +18,7 @@ HBFav.UI = {
       } else {
         ui.addEventListener('load', function() {
           cacheFile = Ti.Filesystem.getFile(cacheFilePath);
-          if (!cacheFile.exists()) {
-            return cacheFile.write(ui.toBlob());
-          }
+          if (!cacheFile.exists()) return cacheFile.write(ui.toBlob());
         });
         return ui.image = url;
       }
@@ -47,7 +46,7 @@ HBFav.UI = {
       text: "",
       color: "#fff",
       width: 250,
-      height: 'auto',
+      height: Ti.UI.SIZE,
       textAlign: 'center',
       font: {
         fontSize: 13
@@ -104,4 +103,5 @@ HBFav.UI = {
     return win.setLeftNavButton(cancelButton);
   }
 };
+
 Ti.include('styles.js');
